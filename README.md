@@ -149,7 +149,7 @@ This [**ESPAsync_WiFiManager_Lite** library](https://github.com/khoih-prog/ESPAs
  6. [`AsyncTCP v1.1.1+`](https://github.com/me-no-dev/AsyncTCP) for ESP32-based boards 
  7. [`ESP_DoubleResetDetector v1.1.1+`](https://github.com/khoih-prog/ESP_DoubleResetDetector) if using DRD feature. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/ESP_DoubleResetDetector.svg?)](https://www.ardu-badge.com/ESP_DoubleResetDetector).
  8. [`ESP_MultiResetDetector v1.1.1+`](https://github.com/khoih-prog/ESP_MultiResetDetector) if using MRD feature. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/ESP_MultiResetDetector.svg?)](https://www.ardu-badge.com/ESP_MultiResetDetector).
- 9. [`LittleFS_esp32 v1.0.5+`](https://github.com/lorol/LITTLEFS) for ESP32-based boards using LittleFS. [![GitHub release](https://img.shields.io/github/release/khoih-prog/ESPAsync_WiFiManager_Lite.svg)](https://github.com/lorol/LITTLEFS/releases)
+ 9. [`LittleFS_esp32 v1.0.5+`](https://github.com/lorol/LITTLEFS) for ESP32-based boards using LittleFS. [![GitHub release](https://img.shields.io/github/release/lorol/LITTLEFS.svg)](https://github.com/lorol/LITTLEFS/releases)
 
 ---
 
@@ -997,9 +997,9 @@ uint16_t NUM_MENU_ITEMS = 0;
 
 ### Debug Terminal output Samples
 
-### 1. [ESPAsync_WiFi](examples/ESPAsync_WiFi) on ESP32_DEV
+### 1. [ESPAsync_WiFi_MQTT](examples/ESPAsync_WiFi_MQTT) on ESP32_DEV
 
-This is the terminal output when running [**ESPAsync_WiFi**](examples/ESPAsync_WiFi) example on **ESP32_DEV**:
+This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAsync_WiFi_MQTT) example on **ESP32_DEV**:
 
 #### 1.1. No Config Data => Open Config Portal
 
