@@ -1,0 +1,55 @@
+####################################################
+# Syntax Coloring Map For ESPAsync_WiFiManager_Lite
+####################################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+ESPAsync_WiFiManager_Lite	KEYWORD1
+ESP_WM_LITE_Configuration KEYWORD1
+MenuItem  KEYWORD1
+WiFi_Credentials  KEYWORD1
+
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+connectWiFi KEYWORD2
+begin KEYWORD2
+run KEYWORD2
+setHostname
+setConfigPortalIP KEYWORD2
+setConfigPortalChannel KEYWORD2
+setConfigPortal KEYWORD2
+setSTAStaticIPConfig	KEYWORD2
+getWiFiSSID KEYWORD2
+getWiFiPW KEYWORD2
+getWiFiStatus KEYWORD2
+getFullConfigData KEYWORD2
+localIP KEYWORD2
+clearConfigData KEYWORD2
+isConfigDataValid KEYWORD2
+resetFunc KEYWORD2
+resetAndEnterConfigPortal KEYWORD2
+resetAndEnterConfigPortalPersistent KEYWORD2
+IPAddressToString KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+#	LITERAL1
+
+CONFIG_DATA_SIZE  LITERAL1
+NUM_MENU_ITEMS  LITERAL1
+ESP_WM_LITE_configHTML_HEAD  LITERAL1
+ESP_WM_LITE_configFLDSET_START LITERAL1
+ESP_WM_LITE_configFLDSET_END LITERAL1
+ESP_WM_LITE_configHTML_PARAM LITERAL1
+ESP_WM_LITE_configHTML_BUTTON  LITERAL1
+ESP_WM_LITE_configHTML_SCRIPT  LITERAL1
+ESP_WM_LITE_configHTML_SCRIPT_ITEM LITERAL1
+ESP_WM_LITE_configHTML_SCRIPT_END  LITERAL1
+ESP_WM_LITE_configHTML_END LITERAL1
