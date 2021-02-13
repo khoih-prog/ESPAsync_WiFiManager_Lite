@@ -9,11 +9,12 @@
   Built by Khoi Hoang https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite
   Licensed under MIT license
   
-  Version: 1.0.0
+  Version: 1.1.0
    
   Version Modified By   Date        Comments
   ------- -----------  ----------   -----------
   1.0.0   K Hoang      09/02/2021  Initial coding for ESP32/ESP8266
+  1.1.0   K Hoang      12/02/2021  Add support to new ESP32-S2
   *****************************************************************************************************************************/
 
 /****************************************************************************************************************************
@@ -303,7 +304,7 @@ void setup()
 
   // Optional to change default AP IP(192.168.4.1) and channel(10)
   //ESPAsync_WiFiManager->setConfigPortalIP(IPAddress(192, 168, 120, 1));
-  ESPAsync_WiFiManager->setConfigPortalChannel(1);
+  ESPAsync_WiFiManager->setConfigPortalChannel(0);
 
   // Set customized DHCP HostName
   ESPAsync_WiFiManager->begin(HOST_NAME);

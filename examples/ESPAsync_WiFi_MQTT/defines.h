@@ -20,7 +20,7 @@
 /* Comment this out to disable prints and save space */
 #define ESP_WM_LITE_DEBUG_OUTPUT      Serial
 
-#define _ESP_WM_LITE_LOGLEVEL_        3
+#define _ESP_WM_LITE_LOGLEVEL_        2
 
 #define USING_MRD                     true
 

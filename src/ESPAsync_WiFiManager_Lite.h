@@ -9,11 +9,12 @@
   Built by Khoi Hoang https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite
   Licensed under MIT license
   
-  Version: 1.0.0
+  Version: 1.1.0
    
   Version Modified By   Date        Comments
   ------- -----------  ----------   -----------
   1.0.0   K Hoang      09/02/2021  Initial coding for ESP32/ESP8266
+  1.1.0   K Hoang      12/02/2021  Add support to new ESP32-S2
  *****************************************************************************************************************************/
 
 #pragma once
@@ -25,7 +26,7 @@
   #error This code is intended to run on the ESP32/ESP8266 platform! Please check your Tools->Board setting.  
 #endif
 
-#define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION        "ESPAsync_WiFiManager_Lite v1.0.0"
+#define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION        "ESPAsync_WiFiManager_Lite v1.1.0"
 
 #ifdef ESP8266
 
@@ -556,6 +557,12 @@ class ESPAsync_WiFiManager_Lite
         if ( configuration_mode && ( configTimeout == 0 ||  millis() < configTimeout ) )
         {
           retryTimes = 0;
+          
+          // Fix ESP32-S2 issue with WebServer (https://github.com/espressif/arduino-esp32/issues/4348)
+          if ( String(ARDUINO_BOARD) == "ESP32S2_DEV" )
+          {
+            delay(1);
+          }
 
           return;
         }
@@ -615,9 +622,14 @@ class ESPAsync_WiFiManager_Lite
 #if ESP8266      
         WiFi.hostname(RFC952_hostname);
 #else
+
+      // Still have bug in ESP32_S2. If using WiFi.setHostname() => WiFi.localIP() always = 255.255.255.255
+      if ( String(ARDUINO_BOARD) != "ESP32S2_DEV" )
+      {
         // See https://github.com/espressif/arduino-esp32/issues/2537
         WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE);
         WiFi.setHostname(RFC952_hostname);
+      } 
 #endif        
       }
     }
@@ -897,7 +909,7 @@ class ESPAsync_WiFiManager_Lite
 #if USE_DYNAMIC_PARAMETERS     
       for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
       {
-        ESP_WML_LOGERROR5("i=", i, ",id=", myMenuItems[i].id, ",data=", myMenuItems[i].pdata);
+        ESP_WML_LOGINFO5("i=", i, ",id=", myMenuItems[i].id, ",data=", myMenuItems[i].pdata);
       }
 #endif               
     }
@@ -2063,7 +2075,7 @@ class ESPAsync_WiFiManager_Lite
           //ESP_WML_LOGDEBUG1(F("h:HTML page size:"), result.length());
           
           request->send(200, "text/html", result);
-
+          
           return;
         }
 
@@ -2184,7 +2196,7 @@ class ESPAsync_WiFiManager_Lite
         ESP_WML_LOGDEBUG3(F("h:key ="), key, ", value =", value);
 
         request->send(200, "text/html", "OK");
-
+        
 #if USE_DYNAMIC_PARAMETERS        
         if (number_items_Updated == NUM_CONFIGURABLE_ITEMS + NUM_MENU_ITEMS)
 #else
@@ -2199,7 +2211,6 @@ class ESPAsync_WiFiManager_Lite
           ESP_WML_LOGERROR(F("h:Updating EEPROM. Please wait for reset"));
 #endif
 
-          //saveConfigData();
           saveAllConfigData();
           
           // Done with CP, Clear CP Flag here if forced
@@ -2255,8 +2266,8 @@ class ESPAsync_WiFiManager_Lite
 
       WiFi.softAP(portal_ssid.c_str(), portal_pass.c_str(), channel);
       
-      ESP_WML_LOGINFO3(F("\nstConf:SSID="), portal_ssid, F(",PW="), portal_pass);
-      ESP_WML_LOGINFO3(F("IP="), portal_apIP.toString(), ",ch=", channel);
+      ESP_WML_LOGERROR3(F("\nstConf:SSID="), portal_ssid, F(",PW="), portal_pass);
+      ESP_WML_LOGERROR3(F("IP="), portal_apIP.toString(), ",ch=", channel);
       
       delay(100); // ref: https://github.com/espressif/arduino-esp32/issues/985#issuecomment-359157428
       WiFi.softAPConfig(portal_apIP, portal_apIP, IPAddress(255, 255, 255, 0));
