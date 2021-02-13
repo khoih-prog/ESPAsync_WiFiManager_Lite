@@ -1,7 +1,7 @@
 {
   "name": "ESPAsync_WiFiManager_Lite",
-  "version": "1.0.0",
-  "keywords": "wifi, wi-fi, Async, Async-WebServer, Async-WiFiManager, MultiWiFi, ESP32, ESP8266, Credentials, Manager, Config Portal, DoubleReset, MultiReset, Detector",
+  "version": "1.1.0",
+  "keywords": "wifi, wi-fi, Async, Async-WebServer, Async-WiFiManager, MultiWiFi, ESP32, ESP32-S2, ESP8266, Credentials, Manager, Config Portal, DoubleReset, MultiReset, Detector",
   "description": "Library using AsyncWebServer to configure MultiWiFi/Credentials at runtime for ESP32/ESP8266 boards. You can also specify DHCP HostName, static AP and STA IP. Use much less memory compared to full-fledge WiFiManager. Config Portal will be auto-adjusted to match the number of dynamic custom parameters. Optional default Credentials to be autoloaded into Config Portal to use or change instead of manually input. Credentials are saved in LittleFS, SPIFFS or EEPROM. New powerful-yet-simple-to-use feature to enable adding dynamic custom parameters from sketch and input using the same Config Portal. Double or MultiDetectDetector as well as Virtual Switches feature permits entering Config Portal as requested.",
   "authors":
   {

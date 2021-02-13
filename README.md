@@ -16,12 +16,27 @@
   * [Why Async is better](#why-async-is-better)
   * [Currently supported Boards](#currently-supported-boards)
 * [Changelog](#changelog)
+  * [Release v1.1.0](#release-v110)
   * [Release v1.0.0](#release-v100)
 * [Prerequisites](#prerequisites)
 * [Installation](#installation)
   * [Use Arduino Library Manager](#use-arduino-library-manager)
   * [Manual Install](#manual-install)
   * [VS Code & PlatformIO](#vs-code--platformio)
+* [HOWTO Install esp32-s2 core for ESP32-S2 (Saola, AI-Thinker ESP-12K) boards into Arduino IDE)](#howto-install-esp32-s2-core-for-esp32-s2-saola-ai-thinker-esp-12k-boards-into-arduino-ide)
+  * [1. Save the original esp32 core](#1-save-the-original-esp32-core)
+  * [2. Download esp32-s2 core](#2-download-esp32-s2-core)
+    * [2.1 Download zip](#21-download-zip)
+    * [2.2 Unzip](#22-unzip)
+    * [2.3 Update esp32-s2 core directories](#23-update-esp32-s2-core-directories)
+  * [3. Download tools](#3-download-tools) 
+    * [3.1 Download Toolchain for Xtensa (ESP32-S2) based on GCC](#31-download-toolchain-for-xtensa-esp32-s2-based-on-gcc)
+    * [3.2 Download esptool](#32-download-esptool)
+    * [3.3 Unzip](#33-unzip)
+  * [4. Update tools](#4-update-tools)
+    * [4.1 Update Toolchain](#41-update-toolchain)
+    * [4.2 Update esptool](#42-update-esptool)
+  * [5. esp32-s2 WebServer Library Patch](#5-esp32-s2-webserver-library-patch)
 * [Note for Platform IO using ESP32 LittleFS](#note-for-platform-io-using-esp32-littlefs)
 * [HOWTO Use analogRead() with ESP32 running WiFi and/or BlueTooth (BT/BLE)](#howto-use-analogread-with-esp32-running-wifi-andor-bluetooth-btble)
   * [1. ESP32 has 2 ADCs, named ADC1 and ADC2](#1--esp32-has-2-adcs-named-adc1-and-adc2)
@@ -54,6 +69,10 @@
     * [2.1 No Config Data => Open Config Portal](#21-no-config-data--open-config-portal)
     * [2.2 Got valid Credentials from Config Portal then connected to WiFi](#22-got-valid-credentials-from-config-portal-then-connected-to-wifi)
     * [2.3 Lost a WiFi and autoconnect to another WiFi AP](#23-lost-a-wifi-and-autoconnect-to-another-wifi-ap)
+  * [3. ESPAsync_WiFi_MQTT on ESP32S2_DEV](#3-espasync_wifi_mqtt-on-esp32s2_dev)
+    * [3.1 No Config Data => Open Config Portal](#31-no-config-data--open-config-portal)
+    * [3.2 Got valid Credentials from Config Portal then connected to WiFi](#32-got-valid-credentials-from-config-portal-then-connected-to-wifi)
+    * [3.3 Lost a WiFi and autoconnect to another WiFi AP](#33-lost-a-wifi-and-autoconnect-to-another-wifi-ap)
 * [Debug](#debug)
 * [Troubleshooting](#troubleshooting)
 * [Releases](#releases)
@@ -132,6 +151,11 @@ This [**ESPAsync_WiFiManager_Lite** library](https://github.com/khoih-prog/ESPAs
 
 ## Changelog
 
+### Release v1.1.0
+
+1. Add support to **ESP32-S2 (ESP32-S2 Saola and AI-Thinker ESP-12K)**
+2. Add [**Instructions to install ESP32-S2 core**](#howto-install-esp32-s2-core-for-esp32-s2-saola-ai-thinker-esp-12k-boards-into-arduino-ide)
+
 ### Release v1.0.0
 
 1. Initial release to support ESP32 and ESP8266 to use the better **asynchronous** [ESPAsyncWebServer](https://github.com/me-no-dev/ESPAsyncWebServer).
@@ -144,12 +168,13 @@ This [**ESPAsync_WiFiManager_Lite** library](https://github.com/khoih-prog/ESPAs
  1. [`Arduino IDE 1.8.13+` for Arduino](https://www.arduino.cc/en/Main/Software)
  2. [`ESP8266 Core 2.7.4+`](https://github.com/esp8266/Arduino) for ESP8266-based boards. [![Latest release](https://img.shields.io/github/release/esp8266/Arduino.svg)](https://github.com/esp8266/Arduino/releases/latest/)
  3. [`ESP32 Core 1.0.4+`](https://github.com/espressif/arduino-esp32) for ESP32-based boards. [Latest stable release ![Release Version](https://img.shields.io/github/release/espressif/arduino-esp32.svg?style=plastic)
- 4. [`ESPAsyncWebServer v1.2.3+`](https://github.com/me-no-dev/ESPAsyncWebServer) for all ESP32/ESP8266-based boards.
- 5. [`ESPAsyncTCP v1.2.2+`](https://github.com/me-no-dev/ESPAsyncTCP) for ESP8266-based boards.
- 6. [`AsyncTCP v1.1.1+`](https://github.com/me-no-dev/AsyncTCP) for ESP32-based boards 
- 7. [`ESP_DoubleResetDetector v1.1.1+`](https://github.com/khoih-prog/ESP_DoubleResetDetector) if using DRD feature. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/ESP_DoubleResetDetector.svg?)](https://www.ardu-badge.com/ESP_DoubleResetDetector).
- 8. [`ESP_MultiResetDetector v1.1.1+`](https://github.com/khoih-prog/ESP_MultiResetDetector) if using MRD feature. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/ESP_MultiResetDetector.svg?)](https://www.ardu-badge.com/ESP_MultiResetDetector).
- 9. [`LittleFS_esp32 v1.0.5+`](https://github.com/lorol/LITTLEFS) for ESP32-based boards using LittleFS. [![GitHub release](https://img.shields.io/github/release/lorol/LITTLEFS.svg)](https://github.com/lorol/LITTLEFS/releases)
+ 4. [`ESP32S2 Core 1.0.4+`](https://github.com/espressif/arduino-esp32/tree/esp32s2) for ESP32S2-based boards.
+ 5. [`ESPAsyncWebServer v1.2.3+`](https://github.com/me-no-dev/ESPAsyncWebServer) for all ESP32/ESP8266-based boards.
+ 6. [`ESPAsyncTCP v1.2.2+`](https://github.com/me-no-dev/ESPAsyncTCP) for ESP8266-based boards.
+ 7. [`AsyncTCP v1.1.1+`](https://github.com/me-no-dev/AsyncTCP) for ESP32-based boards 
+ 8. [`ESP_DoubleResetDetector v1.1.1+`](https://github.com/khoih-prog/ESP_DoubleResetDetector) if using DRD feature. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/ESP_DoubleResetDetector.svg?)](https://www.ardu-badge.com/ESP_DoubleResetDetector).
+ 9. [`ESP_MultiResetDetector v1.1.1+`](https://github.com/khoih-prog/ESP_MultiResetDetector) if using MRD feature. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/ESP_MultiResetDetector.svg?)](https://www.ardu-badge.com/ESP_MultiResetDetector).
+10. [`LittleFS_esp32 v1.0.5+`](https://github.com/lorol/LITTLEFS) for ESP32-based boards using LittleFS. [![GitHub release](https://img.shields.io/github/release/lorol/LITTLEFS.svg)](https://github.com/lorol/LITTLEFS/releases)
 
 ---
 
@@ -174,6 +199,113 @@ You can also use this link [![arduino-library-badge](https://www.ardu-badge.com/
 2. Install [PlatformIO](https://platformio.org/platformio-ide)
 3. Install [**ESPAsync_WiFiManager_Lite** library](https://platformio.org/lib/show/11774/ESPAsync_WiFiManager_Lite) by using [Library Manager](https://platformio.org/lib/show/11774/ESPAsync_WiFiManager_Lite/installation). Search for **ESPAsync_WiFiManager_Lite** in [Platform.io Author's Libraries](https://platformio.org/lib/search?query=author:%22Khoi%20Hoang%22)
 4. Use included [platformio.ini](platformio/platformio.ini) file from examples to ensure that all dependent libraries will installed automatically. Please visit documentation for the other options and examples at [Project Configuration File](https://docs.platformio.org/page/projectconf.html)
+
+---
+---
+
+## HOWTO Install esp32-s2 core for ESP32-S2 (Saola, AI-Thinker ESP-12K) boards into Arduino IDE
+
+
+These are instructions demonstrating the steps to install esp32-s2 core on Ubuntu machines. For Windows or other OS'es, just follow the the similar principles and steps.
+
+Assuming you already installed Arduino IDE ESP32 core and the installed directory is
+
+`/home/your_account/.arduino15/packages/esp32`
+
+
+### 1. Save the original esp32 core
+
+First, copy the whole original esp32 core to another safe place. Then delete all the sub-directories of
+
+`/home/your_account/.arduino15/packages/esp32/hardware/esp32/1.0.4`
+
+---
+
+### 2. Download esp32-s2 core
+
+#### 2.1 Download zip
+
+Download [**esp32-s2 core**](https://github.com/espressif/arduino-esp32/tree/esp32s2) in the `zip` format: 
+
+`arduino-esp32-esp32s2.zip`
+
+#### 2.2 Unzip
+
+<p align="center">
+    <img src="https://github.com/khoih-prog/ESP_WiFiManager_Lite/blob/main/pics/esp32_s2_Core_Unzipped.png">
+</p>
+
+#### 2.3 Update esp32-s2 core directories
+
+Copy all subdirectories of esp32-s2 core into `/home/your_account/.arduino15/packages/esp32/hardware/esp32/1.0.4`
+
+---
+
+### 3 Download tools
+
+
+#### 3.1 Download Toolchain for Xtensa (ESP32-S2) based on GCC
+
+Download [**esp32-s2 Toolchain**](https://docs.espressif.com/projects/esp-idf/en/latest/esp32s2/api-guides/tools/idf-tools.html#xtensa-esp32s2-elf) corresponding to your environment (linux-amd64, win64, etc.).
+
+For example `xtensa-esp32s2-elf-gcc8_4_0-esp-2020r3-linux-amd64.tar.gz`, then un-archive.
+
+
+<p align="center">
+    <img src="https://github.com/khoih-prog/ESP_WiFiManager_Lite/blob/main/pics/esp32_s2_Toolchain.png">
+</p>
+
+#### 3.2 Download esptool
+
+
+Download [esptool](https://github.com/espressif/esptool/releases) int the `zip` format:
+
+`esptool-3.0.zip`
+
+#### 3.3 Unzip
+
+<p align="center">
+    <img src="https://github.com/khoih-prog/ESP_WiFiManager_Lite/blob/main/pics/esp32_s2_esptool.png">
+</p>
+
+---
+
+### 4. Update tools
+
+#### 4.1 Update Toolchain
+
+Copy whole `xtensa-esp32s2-elf` directory into `/home/your_account/.arduino15/packages/esp32/hardware/esp32/1.0.4/tools`
+
+
+#### 4.2 Update esptool
+
+Rename `esptool-3.0` directory to `esptool`
+
+
+Copy whole `esptool` directory into `/home/your_account/.arduino15/packages/esp32/hardware/esp32/1.0.4/tools`
+
+
+<p align="center">
+    <img src="https://github.com/khoih-prog/ESP_WiFiManager_Lite/blob/main/pics/esp32_s2_tools.png">
+</p>
+
+
+### 5. esp32-s2 WebServer Library Patch
+
+If you haven't installed a new version with [WebServer.handleClient delay PR #4350](https://github.com/espressif/arduino-esp32/pull/4350) or haven't applied the above mentioned PR, you have to use the following patch.
+
+
+**To be able to run Config Portal on ESP32-S2 boards**, you have to copy the files in [esp32-s2 WebServer Patch](esp32s2_WebServer_Patch/) directory into esp32-s2 WebServer library directory (~/.arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/WebServer).
+
+Supposing the esp32-s2 version is 1.0.4, these files `WebServer.h/cpp` must be copied into the directory to replace:
+
+- `~/.arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/WebServer/src/WebServer.h`
+- `~/.arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/WebServer/src/WebServer.cpp`
+
+
+---
+
+That's it. You're now ready to compile and test for ESP32-S2 now
 
 ---
 ---
@@ -1005,7 +1137,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
-ESPAsync_WiFiManager_Lite v1.0.0
+ESPAsync_WiFiManager_Lite v1.1.0
 ESP_MultiResetDetector v1.1.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1080,7 +1212,7 @@ NNN
 
 
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
-ESPAsync_WiFiManager_Lite v1.0.0
+ESPAsync_WiFiManager_Lite v1.1.0
 ESP_MultiResetDetector v1.1.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1172,7 +1304,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP8266_NODEMCU
-ESPAsync_WiFiManager_Lite v1.0.0
+ESPAsync_WiFiManager_Lite v1.1.0
 ESP_MultiResetDetector v1.1.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1247,7 +1379,7 @@ NNN
 
 
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP8266_NODEMCU
-ESPAsync_WiFiManager_Lite v1.0.0
+ESPAsync_WiFiManager_Lite v1.1.0
 ESP_MultiResetDetector v1.1.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1327,6 +1459,221 @@ TWTWTWTW TWTWTWTWTW TWTWTWTWTW T
 [WML] run: WiFi reconnected
 H
 ```
+
+---
+
+### 3. [ESPAsync_WiFi_MQTT](examples/ESPAsync_WiFi_MQTT) on ESP32S2_DEV
+
+This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAsync_WiFi_MQTT) example on **ESP32S2_DEV**:
+
+#### 3.1. No Config Data => Open Config Portal
+
+```
+Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
+ESPAsync_WiFiManager_Lite v1.1.0
+ESP_MultiResetDetector v1.1.1
+LittleFS Flag read = 0xFFFE0001
+multiResetDetectorFlag = 0xFFFE0001
+lowerBytes = 0x0001, upperBytes = 0x0001
+No multiResetDetected, number of times = 1
+LittleFS Flag read = 0xFFFE0001
+Saving config file...
+Saving config file OK
+[WML] Hostname=ESP32_S2_Async
+[WML] Check if isForcedCP
+[WML] LoadCPFile 
+[WML] OK
+[WML] bg: isForcedConfigPortal = false
+[WML] bg:Stay forever in CP:No ConfigDat
+[WML] clearForcedCP
+[WML] SaveCPFile 
+[WML] OK
+[WML] SaveBkUpCPFile 
+[WML] OK
+[WML] 
+stConf:SSID=ESP_8A1DF7C,PW=MyESP_8A1DF7C
+[WML] IP=192.168.4.1,ch=1
+[WML] s:configTimeout = 0
+N
+Your stored Credentials :
+AIO_SERVER = io.adafruit.com
+AIO_SERVERPORT = 1883
+AIO_USERNAME = private
+AIO_KEY = private
+AIO_PUB_TOPIC = /feeds/Temperature
+AIO_SUB_TOPIC = /feeds/LED_Control
+NStop multiResetDetecting
+Saving config file...
+Saving config file OK
+NNN N
+```
+
+#### 3.2. Got valid Credentials from Config Portal then connected to WiFi
+
+```
+[WML] h: Init menuItemUpdated
+[WML] h:repl id
+[WML] h:items updated =1
+[WML] h:key =id, value =HueNet1
+[WML] h:repl pw
+[WML] h:items updated =2
+[WML] h:key =pw, value =12345678
+[WML] h:repl id1
+[WML] h:items updated =3
+[WML] h:key =id1, value =HueNet2
+[WML] h:repl pw1
+[WML] h:items updated =4
+[WML] h:key =pw1, value =12345678
+[WML] h:repl nm
+[WML] h:items updated =5
+[WML] h:key =nm, value =ESP32_S2
+[WML] h:svr=io.adafruit.com
+[WML] h:items updated =6
+[WML] h:key =svr, value =io.adafruit.com
+[WML] h:prt=1883
+[WML] h:items updated =7
+[WML] h:key =prt, value =1883
+[WML] h:usr=user_name
+[WML] h:items updated =8
+[WML] h:key =usr, value =user_name
+[WML] h:key=aio_key
+[WML] h:items updated =9
+[WML] h:key =key, value =aio_key
+[WML] h:pub=/feeds/Temperature
+[WML] h:items updated =10
+[WML] h:key =pub, value =/feeds/Temperature
+[WML] h:sub=/feeds/LED_Control
+[WML] h:items updated =11
+[WML] h:key =sub, value =/feeds/LED_Control
+[WML] h:UpdLittleFS
+[WML] SaveCfgFile 
+[WML] WCSum=0x1170
+[WML] OK
+[WML] SaveBkUpCfgFile 
+[WML] OK
+[WML] SaveCredFile 
+[WML] CW1:pdata=io.adafruit.com,len=20
+[WML] CW1:pdata=1883,len=6
+[WML] CW1:pdata=user_name,len=20
+[WML] CW1:pdata=aio_key,len=40
+[WML] CW1:pdata=/feeds/Temperature,len=40
+[WML] CW1:pdata=/feeds/LED_Control,len=40
+[WML] OK
+[WML] CrWCSum=0x2236
+[WML] SaveBkUpCredFile 
+[WML] CW2:pdata=io.adafruit.com,len=20
+[WML] CW2:pdata=1883,len=6
+[WML] CW2:pdata=user_name,len=20
+[WML] CW2:pdata=aio_key,len=40
+[WML] CW2:pdata=/feeds/Temperature,len=40
+[WML] CW2:pdata=/feeds/LED_Control,len=40
+[WML] OK
+[WML] h:Rst
+ESP-ROM:esp32s2-rc4-20191025
+Build:Oct 25 2019
+rst:0x3 (RTC_SW_SYS_RST),boot:0x8 (SPI_FAST_FLASH_BOOT)
+Saved PC:0x40025f35
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3ffe6100,len:0x8
+load:0x3ffe6108,len:0x608
+load:0x4004c000,len:0xa38
+load:0x40050000,len:0x2848
+entry 0x4004c190
+
+
+Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
+ESPAsync_WiFiManager_Lite v1.1.0
+ESP_MultiResetDetector v1.1.1
+LittleFS Flag read = 0xFFFE0001
+multiResetDetectorFlag = 0xFFFE0001
+lowerBytes = 0x0001, upperBytes = 0x0001
+No multiResetDetected, number of times = 1
+LittleFS Flag read = 0xFFFE0001
+Saving config file...
+Saving config file OK
+[WML] Hostname=ESP32_S2_Async
+[WML] LoadCfgFile 
+[WML] OK
+[WML] ======= Start Stored Config Data =======
+[WML] Hdr=ESP_WM_LITE,SSID=HueNet1,PW=12345678
+[WML] SSID1=HueNet2,PW1=12345678
+[WML] BName=ESP32_S2_Async
+[WML] i=0,id=svr,data=io.adafruit.com
+[WML] i=1,id=prt,data=1883
+[WML] i=2,id=usr,data=private
+[WML] i=3,id=key,data=private
+[WML] i=4,id=pub,data=/feeds/Temperature
+[WML] i=5,id=sub,data=/feeds/LED_Control
+[WML] CCSum=0x1170,RCSum=0x1170
+[WML] LoadCredFile 
+[WML] CrR:pdata=io.adafruit.com,len=20
+[WML] CrR:pdata=1883,len=6
+[WML] CrR:pdata=user_name,len=20
+[WML] CrR:pdata=aio_key,len=40
+[WML] CrR:pdata=/feeds/Temperature,len=40
+[WML] CrR:pdata=/feeds/LED_Control,len=40
+[WML] OK
+[WML] CrCCsum=0x2236,CrRCsum=0x2236
+[WML] Valid Stored Dynamic Data
+[WML] Hdr=ESP_WM_LITE,SSID=HueNet1,PW=12345678
+[WML] SSID1=HueNet2,PW1=12345678
+[WML] BName=ESP32_S2_Async
+[WML] i=0,id=svr,data=io.adafruit.com
+[WML] i=1,id=prt,data=1883
+[WML] i=2,id=usr,data=user_name
+[WML] i=3,id=key,data=aio_key
+[WML] i=4,id=pub,data=/feeds/Temperature
+[WML] i=5,id=sub,data=/feeds/LED_Control
+[WML] Check if isForcedCP
+[WML] LoadCPFile 
+[WML] OK
+[WML] bg: noConfigPortal = true
+[WML] Connecting MultiWifi...
+[WML] WiFi connected after time: 1
+[WML] SSID=HueNet1,RSSI=-19
+[WML] Channel=2,IP=192.168.2.116
+[WML] bg: WiFi OK.
+Stop multiResetDetecting
+Saving config file...
+Saving config file OK
+
+Creating new WiFi client object OK
+Creating new MQTT object OK
+AIO_SERVER = io.adafruit.com, AIO_SERVERPORT = 1883
+AIO_USERNAME = user_name, AIO_KEY = aio_key
+Creating new MQTT_Pub_Topic, Temperature = user_name/feeds/Temperature
+Creating new Temperature object OK
+Temperature MQTT_Pub_Topic = user_name/feeds/Temperature
+Creating new AIO_SUB_TOPIC, LED_Control = user_name/feeds/LED_Control
+Creating new LED_Control object OK
+LED_Control AIO_SUB_TOPIC = user_name/feeds/LED_Control
+
+Connecting to WiFi MQTT (3 attempts)...
+WiFi MQTT connection successful!
+TW
+Your stored Credentials :
+AIO_SERVER = io.adafruit.com
+AIO_SERVERPORT = 1883
+AIO_USERNAME = user_name
+AIO_KEY = aio_key
+AIO_PUB_TOPIC = /feeds/Temperature
+AIO_SUB_TOPIC = /feeds/LED_Control
+TWTWTWTW TWTWTW
+```
+
+#### 3.3. Lost a WiFi and autoconnect to another WiFi AP
+
+```
+[WML] run: WiFi lost. Reconnect WiFi
+[WML] Connecting MultiWifi...
+[WML] WiFi connected after time: 1
+[WML] SSID=HueNet2,RSSI=-54
+[WML] Channel=4,IP=192.168.2.116
+[WML] run: WiFi reconnected
+H
+```
+
 ---
 ---
 
@@ -1363,6 +1710,11 @@ If you connect to the created configuration Access Point but the ConfigPortal do
 ---
 
 ## Releases
+
+### Release v1.1.0
+
+1. Add support to **ESP32-S2 (ESP32-S2 Saola and AI-Thinker ESP-12K)**
+2. Add [**Instructions to install ESP32-S2 core**](#howto-install-esp32-s2-core-for-esp32-s2-saola-ai-thinker-esp-12k-boards-into-arduino-ide)
 
 ### Release v1.0.0
 
