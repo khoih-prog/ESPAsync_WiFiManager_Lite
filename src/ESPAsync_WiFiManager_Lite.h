@@ -9,12 +9,13 @@
   Built by Khoi Hoang https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite
   Licensed under MIT license
   
-  Version: 1.1.0
+  Version: 1.2.0
    
   Version Modified By   Date        Comments
   ------- -----------  ----------   -----------
   1.0.0   K Hoang      09/02/2021  Initial coding for ESP32/ESP8266
   1.1.0   K Hoang      12/02/2021  Add support to new ESP32-S2
+  1.2.0   K Hoang      22/02/2021  Add customs HTML header feature. Fix bug.
  *****************************************************************************************************************************/
 
 #pragma once
@@ -26,7 +27,7 @@
   #error This code is intended to run on the ESP32/ESP8266 platform! Please check your Tools->Board setting.  
 #endif
 
-#define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION        "ESPAsync_WiFiManager_Lite v1.1.0"
+#define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION        "ESPAsync_WiFiManager_Lite v1.2.0"
 
 #ifdef ESP8266
 
@@ -279,7 +280,12 @@ extern bool LOAD_DEFAULT_CONFIG_DATA;
 extern ESP_WM_LITE_Configuration defaultConfig;
 
 // -- HTML page fragments
-const char ESP_WM_LITE_HTML_HEAD[]     /*PROGMEM*/ = "<!DOCTYPE html><html><head><title>ESP_WM_LITE</title><style>div,input{padding:5px;font-size:1em;}input{width:95%;}body{text-align: center;}button{background-color:#16A1E7;color:#fff;line-height:2.4rem;font-size:1.2rem;width:100%;}fieldset{border-radius:0.3rem;margin:0px;}</style></head><div style=\"text-align:left;display:inline-block;min-width:260px;\">\
+
+const char ESP_WM_LITE_HTML_HEAD_START[] /*PROGMEM*/ = "<!DOCTYPE html><html><head><title>ESP_ASYNC_WM_LITE</title>";
+
+const char ESP_WM_LITE_HTML_HEAD_STYLE[] /*PROGMEM*/ = "<style>div,input{padding:5px;font-size:1em;}input{width:95%;}body{text-align: center;}button{background-color:#16A1E7;color:#fff;line-height:2.4rem;font-size:1.2rem;width:100%;}fieldset{border-radius:0.3rem;margin:0px;}</style>";
+
+const char ESP_WM_LITE_HTML_HEAD_END[]   /*PROGMEM*/ = "</head><div style=\"text-align:left;display:inline-block;min-width:260px;\">\
 <fieldset><div><label>WiFi SSID</label><input value=\"[[id]]\"id=\"id\"><div></div></div>\
 <div><label>PWD</label><input value=\"[[pw]]\"id=\"pw\"><div></div></div>\
 <div><label>WiFi SSID1</label><input value=\"[[id1]]\"id=\"id1\"><div></div></div>\
@@ -300,8 +306,24 @@ udVal('nm',document.getElementById('nm').value);";
 const char ESP_WM_LITE_HTML_SCRIPT_ITEM[]  /*PROGMEM*/ = "udVal('{d}',document.getElementById('{d}').value);";
 const char ESP_WM_LITE_HTML_SCRIPT_END[]   /*PROGMEM*/ = "alert('Updated');}</script>";
 const char ESP_WM_LITE_HTML_END[]          /*PROGMEM*/ = "</html>";
-///
 
+//////////////////////////////////////////
+
+//KH Add repeatedly used const
+//KH, from v1.2.0
+const char WM_HTTP_HEAD_CL[]         PROGMEM = "Content-Length";
+const char WM_HTTP_HEAD_TEXT_HTML[]  PROGMEM = "text/html";
+const char WM_HTTP_HEAD_TEXT_PLAIN[] PROGMEM = "text/plain";
+
+const char WM_HTTP_CACHE_CONTROL[]   PROGMEM = "Cache-Control";
+const char WM_HTTP_NO_STORE[]        PROGMEM = "no-cache, no-store, must-revalidate";
+const char WM_HTTP_PRAGMA[]          PROGMEM = "Pragma";
+const char WM_HTTP_NO_CACHE[]        PROGMEM = "no-cache";
+const char WM_HTTP_EXPIRES[]         PROGMEM = "Expires";
+const char WM_HTTP_CORS[]            PROGMEM = "Access-Control-Allow-Origin";
+const char WM_HTTP_CORS_ALLOW_ALL[]  PROGMEM = "*";
+
+//////////////////////////////////////////
 
 String IPAddressToString(IPAddress _address)
 {
@@ -315,6 +337,8 @@ String IPAddressToString(IPAddress _address)
   return str;
 }
 
+//////////////////////////////////////////
+
 class ESPAsync_WiFiManager_Lite
 {
     public:
@@ -323,12 +347,16 @@ class ESPAsync_WiFiManager_Lite
     {
  
     }
+    
+    //////////////////////////////////////////
 
     ~ESPAsync_WiFiManager_Lite()
     {
       if (server)
         delete server;
     }
+    
+    //////////////////////////////////////////
         
     void connectWiFi(const char* ssid, const char* pass)
     {
@@ -361,6 +389,8 @@ class ESPAsync_WiFiManager_Lite
       ESP_WML_LOGINFO(F("Conn2WiFi"));
       displayWiFiData();
     }
+    
+    //////////////////////////////////////////
    
     void begin(const char* ssid,
                const char* pass )
@@ -368,6 +398,8 @@ class ESPAsync_WiFiManager_Lite
       ESP_WML_LOGERROR(F("conW"));
       connectWiFi(ssid, pass);
     }
+    
+    //////////////////////////////////////////
 
 #if ESP8266
 
@@ -390,6 +422,8 @@ class ESPAsync_WiFiManager_Lite
   #define LED_ON      HIGH
 
 #endif
+
+    //////////////////////////////////////////
 
     void begin(const char *iHostname = "")
     {
@@ -428,7 +462,7 @@ class ESPAsync_WiFiManager_Lite
 
       if (iHostname[0] == 0)
       {
-        String _hostname = "ESP8266-" + String(ESP_getChipId(), HEX);
+        String _hostname = "ESP_" + String(ESP_getChipId(), HEX);
         _hostname.toUpperCase();
 
         getRFC952_hostname(_hostname.c_str());
@@ -492,6 +526,8 @@ class ESPAsync_WiFiManager_Lite
         startConfigurationMode();
       }
     }
+    
+    //////////////////////////////////////////
 
 #ifndef TIMEOUT_RECONNECT_WIFI
   #define TIMEOUT_RECONNECT_WIFI   10000L
@@ -526,6 +562,8 @@ class ESPAsync_WiFiManager_Lite
     #define CONFIG_TIMEOUT_RETRYTIMES_BEFORE_RESET   100
   #endif
 #endif
+
+    //////////////////////////////////////////
 
     void run()
     {
@@ -830,9 +868,75 @@ class ESPAsync_WiFiManager_Lite
       ESP.restart();
 #endif      
     }
+    
+    //////////////////////////////////////
+    
+    // Add customs headers from v1.2.0
+    
+    // New from v1.2.0, for configure CORS Header, default to WM_HTTP_CORS_ALLOW_ALL = "*"
 
-  //////////////////////////////////////////////
-  
+#if USING_CUSTOMS_STYLE
+    //sets a custom style, such as color
+    // "<style>div,input{padding:5px;font-size:1em;}
+    // input{width:95%;}body{text-align: center;}
+    // button{background-color:#16A1E7;color:#fff;line-height:2.4rem;font-size:1.2rem;width:100%;}
+    // fieldset{border-radius:0.3rem;margin:0px;}</style>";
+    void setCustomsStyle(const char* CustomsStyle = ESP_WM_LITE_HTML_HEAD_STYLE) 
+    {
+      ESP_WM_LITE_HTML_HEAD_CUSTOMS_STYLE = CustomsStyle;
+      ESP_WML_LOGDEBUG1(F("Set CustomsStyle to : "), ESP_WM_LITE_HTML_HEAD_CUSTOMS_STYLE);
+    }
+    
+    //////////////////////////////////////
+    
+    const char* getCustomsStyle()
+    {
+      ESP_WML_LOGDEBUG1(F("Get CustomsStyle = "), ESP_WM_LITE_HTML_HEAD_CUSTOMS_STYLE);
+      return ESP_WM_LITE_HTML_HEAD_CUSTOMS_STYLE;
+    }
+#endif
+
+    //////////////////////////////////////
+
+#if USING_CUSTOMS_HEAD_ELEMENT    
+    //sets a custom element to add to head, like a new style tag
+    void setCustomsHeadElement(const char* CustomsHeadElement = NULL) 
+    {
+      _CustomsHeadElement = CustomsHeadElement;
+      ESP_WML_LOGDEBUG1(F("Set CustomsHeadElement to : "), _CustomsHeadElement);
+    }
+    
+    //////////////////////////////////////
+    
+    const char* getCustomsHeadElement()
+    {
+      ESP_WML_LOGDEBUG1(F("Get CustomsHeadElement = "), _CustomsHeadElement);
+      return _CustomsHeadElement;
+    }
+#endif
+
+    //////////////////////////////////////
+    
+#if USING_CORS_FEATURE   
+    void setCORSHeader(const char* CORSHeaders = NULL)
+    {     
+      _CORS_Header = CORSHeaders;
+
+      ESP_WML_LOGDEBUG1(F("Set CORS Header to : "), _CORS_Header);
+    }
+    
+    //////////////////////////////////////
+    
+    const char* getCORSHeader()
+    {      
+      ESP_WML_LOGDEBUG1(F("Get CORS Header = "), _CORS_Header);
+      return _CORS_Header;
+    }
+#endif
+          
+    //////////////////////////////////////
+
+
   private:
     String ipAddress = "0.0.0.0";
     
@@ -872,7 +976,25 @@ class ESPAsync_WiFiManager_Lite
     IPAddress static_DNS1 = IPAddress(0, 0, 0, 0);
     IPAddress static_DNS2 = IPAddress(0, 0, 0, 0);
 
-#define RFC952_HOSTNAME_MAXLEN      24
+/////////////////////////////////////
+    
+    // Add customs headers from v1.2.0
+    
+#if USING_CUSTOMS_STYLE
+    const char* ESP_WM_LITE_HTML_HEAD_CUSTOMS_STYLE = NULL;
+#endif
+    
+#if USING_CUSTOMS_HEAD_ELEMENT
+    const char* _CustomsHeadElement = NULL;
+#endif
+    
+#if USING_CORS_FEATURE    
+    const char* _CORS_Header        = WM_HTTP_CORS_ALLOW_ALL;   //"*";
+#endif
+       
+    //////////////////////////////////////
+    
+#define RFC952_HOSTNAME_MAXLEN      24  
     
     char RFC952_hostname[RFC952_HOSTNAME_MAXLEN + 1];
 
@@ -899,6 +1021,8 @@ class ESPAsync_WiFiManager_Lite
       return RFC952_hostname;
     }
     
+    //////////////////////////////////////
+    
     void displayConfigData(ESP_WM_LITE_Configuration configData)
     {
       ESP_WML_LOGERROR5(F("Hdr="),   configData.header, F(",SSID="), configData.WiFi_Creds[0].wifi_ssid,
@@ -913,12 +1037,16 @@ class ESPAsync_WiFiManager_Lite
       }
 #endif               
     }
+    
+    //////////////////////////////////////
 
     void displayWiFiData()
     {
       ESP_WML_LOGERROR3(F("SSID="), WiFi.SSID(), F(",RSSI="), WiFi.RSSI());
       ESP_WML_LOGERROR1(F("IP="), localIP() );
     }
+    
+    //////////////////////////////////////
 
 #define ESP_WM_LITE_BOARD_TYPE   "ESP_WM_LITE"
 #define WM_NO_CONFIG             "blank"
@@ -1108,45 +1236,42 @@ class ESPAsync_WiFiManager_Lite
         {
           ESP_WML_LOGDEBUG1(F("ChkCrR: Buffer allocated, sz="), maxBufferLength + 1);
         }          
-      }
      
-      for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
-      {       
-        char* _pointer = readBuffer;
+        for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
+        {       
+          char* _pointer = readBuffer;
 
-        // Actual size of pdata is [maxlen + 1]
-        memset(readBuffer, 0, myMenuItems[i].maxlen + 1);
+          // Actual size of pdata is [maxlen + 1]
+          memset(readBuffer, 0, myMenuItems[i].maxlen + 1);
+          
+          file.readBytes(_pointer, myMenuItems[i].maxlen);
+     
+          ESP_WML_LOGDEBUG3(F("ChkCrR:pdata="), readBuffer, F(",len="), myMenuItems[i].maxlen);      
+                 
+          for (uint16_t j = 0; j < myMenuItems[i].maxlen; j++,_pointer++)
+          {         
+            checkSum += *_pointer;  
+          }       
+        }
+
+        file.readBytes((char *) &readCheckSum, sizeof(readCheckSum));
         
-        file.readBytes(_pointer, myMenuItems[i].maxlen);
-   
-        ESP_WML_LOGDEBUG3(F("ChkCrR:pdata="), readBuffer, F(",len="), myMenuItems[i].maxlen);      
-               
-        for (uint16_t j = 0; j < myMenuItems[i].maxlen; j++,_pointer++)
-        {         
-          checkSum += *_pointer;  
-        }       
-      }
-
-      file.readBytes((char *) &readCheckSum, sizeof(readCheckSum));
-      
-      ESP_WML_LOGINFO(F("OK"));
-      file.close();
-      
-      ESP_WML_LOGINFO3(F("CrCCsum=0x"), String(checkSum, HEX), F(",CrRCsum=0x"), String(readCheckSum, HEX));
-      
-      // Free buffer
-      if (readBuffer != NULL)
-      {
-        free(readBuffer);
+        ESP_WML_LOGINFO(F("OK"));
+        file.close();
+        
+        ESP_WML_LOGINFO3(F("CrCCsum=0x"), String(checkSum, HEX), F(",CrRCsum=0x"), String(readCheckSum, HEX));
+        
+        // Free buffer
+        delete [] readBuffer;
         ESP_WML_LOGDEBUG(F("Buffer freed"));
-      }
+        
+        if ( checkSum == readCheckSum)
+        {
+          return true;
+        }
+      }  
       
-      if ( checkSum != readCheckSum)
-      {
-        return false;
-      }
-      
-      return true;    
+      return false;    
     }
     
     //////////////////////////////////////////////
@@ -1977,53 +2102,61 @@ class ESPAsync_WiFiManager_Lite
 
     //////////////////////////////////////////////
     
+    // NEW
     void createHTML(String& root_html_template)
     {
       String pitem;
       
-      root_html_template = String(ESP_WM_LITE_HTML_HEAD);
+      root_html_template  = ESP_WM_LITE_HTML_HEAD_START;
+      
+  #if USING_CUSTOMS_STYLE
+      // Using Customs style when not NULL
+      if (ESP_WM_LITE_HTML_HEAD_CUSTOMS_STYLE)
+        root_html_template  += ESP_WM_LITE_HTML_HEAD_CUSTOMS_STYLE;
+      else
+        root_html_template  += ESP_WM_LITE_HTML_HEAD_STYLE;
+  #else     
+      root_html_template  += ESP_WM_LITE_HTML_HEAD_STYLE;
+  #endif
+      
+  #if USING_CUSTOMS_HEAD_ELEMENT
+      if (_CustomsHeadElement)
+        root_html_template += _CustomsHeadElement;
+  #endif          
+      
+      root_html_template += String(ESP_WM_LITE_HTML_HEAD_END) + ESP_WM_LITE_FLDSET_START;
 
-#if USE_DYNAMIC_PARAMETERS     
-      if (NUM_MENU_ITEMS > 0)
+#if USE_DYNAMIC_PARAMETERS      
+      for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
       {
-        root_html_template += String(ESP_WM_LITE_FLDSET_START);
-           
-        for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
-        {
-          pitem = String(ESP_WM_LITE_HTML_PARAM);
+        pitem = String(ESP_WM_LITE_HTML_PARAM);
 
-          pitem.replace("{b}", myMenuItems[i].displayName);
-          pitem.replace("{v}", myMenuItems[i].id);
-          pitem.replace("{i}", myMenuItems[i].id);
-          
-          root_html_template += pitem;      
-        }
-            
-        root_html_template += String(ESP_WM_LITE_FLDSET_END);
+        pitem.replace("{b}", myMenuItems[i].displayName);
+        pitem.replace("{v}", myMenuItems[i].id);
+        pitem.replace("{i}", myMenuItems[i].id);
+        
+        root_html_template += pitem;
       }
 #endif
-        
-      root_html_template += String(ESP_WM_LITE_HTML_BUTTON) + ESP_WM_LITE_HTML_SCRIPT;     
+      
+      root_html_template += String(ESP_WM_LITE_FLDSET_END) + ESP_WM_LITE_HTML_BUTTON + ESP_WM_LITE_HTML_SCRIPT;     
 
-#if USE_DYNAMIC_PARAMETERS           
-      if (NUM_MENU_ITEMS > 0)
-      {        
-        for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
-        {
-          pitem = String(ESP_WM_LITE_HTML_SCRIPT_ITEM);
-          
-          pitem.replace("{d}", myMenuItems[i].id);
-          
-          root_html_template += pitem;        
-        }
+#if USE_DYNAMIC_PARAMETERS      
+      for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
+      {
+        pitem = String(ESP_WM_LITE_HTML_SCRIPT_ITEM);
+        
+        pitem.replace("{d}", myMenuItems[i].id);
+        
+        root_html_template += pitem;
       }
-#endif      
+#endif
       
       root_html_template += String(ESP_WM_LITE_HTML_SCRIPT_END) + ESP_WM_LITE_HTML_END;
       
       return;     
     }
-    
+       
     //////////////////////////////////////////////
 
     void handleRequest(AsyncWebServerRequest *request)
@@ -2048,12 +2181,12 @@ class ESPAsync_WiFiManager_Lite
           if ( RFC952_hostname[0] != 0 )
           {
             // Replace only if Hostname is valid
-            result.replace("nRF52_WM_NINA_Lite", RFC952_hostname);
+            result.replace("ESP_ASYNC_WM_LITE", RFC952_hostname);
           }
           else if ( ESP_WM_LITE_config.board_name[0] != 0 )
           {
             // Or replace only if board_name is valid.  Otherwise, keep intact
-            result.replace("nRF52_WM_NINA_Lite", ESP_WM_LITE_config.board_name);
+            result.replace("ESP_ASYNC_WM_LITE", ESP_WM_LITE_config.board_name);
           }
 
           result.replace("[[id]]",     ESP_WM_LITE_config.WiFi_Creds[0].wifi_ssid);
@@ -2070,11 +2203,33 @@ class ESPAsync_WiFiManager_Lite
           }
 #endif
 
-          // Check if HTML size is larger than 2K, warn that WebServer won't work
-          // only with notorious ESP8266-AT 2K buffer limitation.          
-          //ESP_WML_LOGDEBUG1(F("h:HTML page size:"), result.length());
+          ESP_WML_LOGDEBUG1(F("h:HTML page size:"), result.length());
+          ESP_WML_LOGDEBUG1(F("h:HTML="), result);
+
+
+#if ( ARDUINO_ESP32S2_DEV || ARDUINO_FEATHERS2 || ARDUINO_PROS2 || ARDUINO_MICROS2 )
+
+          request->send(200, WM_HTTP_HEAD_TEXT_HTML, result);
           
-          request->send(200, "text/html", result);
+          // Fix ESP32-S2 issue with WebServer (https://github.com/espressif/arduino-esp32/issues/4348)
+          delay(1);
+#else
+
+          AsyncWebServerResponse *response = request->beginResponse(200, FPSTR(WM_HTTP_HEAD_TEXT_HTML), result);
+          response->addHeader(FPSTR(WM_HTTP_CACHE_CONTROL), FPSTR(WM_HTTP_NO_STORE));
+  
+#if USING_CORS_FEATURE
+          // New from v1.2.0, for configure CORS Header, default to WM_HTTP_CORS_ALLOW_ALL = "*"
+          ESP_WML_LOGDEBUG3(F("handleRequest:WM_HTTP_CORS:"), WM_HTTP_CORS, " : ", _CORS_Header);
+          response->addHeader(FPSTR(WM_HTTP_CORS), _CORS_Header);
+#endif
+  
+          response->addHeader(FPSTR(WM_HTTP_PRAGMA), FPSTR(WM_HTTP_NO_CACHE));
+          response->addHeader(FPSTR(WM_HTTP_EXPIRES), "-1");
+          
+          request->send(response);
+          
+#endif    // ARDUINO_ESP32S2_DEV
           
           return;
         }
@@ -2120,6 +2275,7 @@ class ESPAsync_WiFiManager_Lite
           id_Updated = true;
           
           number_items_Updated++;
+          
           if (strlen(value.c_str()) < sizeof(ESP_WM_LITE_config.WiFi_Creds[0].wifi_ssid) - 1)
             strcpy(ESP_WM_LITE_config.WiFi_Creds[0].wifi_ssid, value.c_str());
           else
@@ -2131,6 +2287,7 @@ class ESPAsync_WiFiManager_Lite
           pw_Updated = true;
           
           number_items_Updated++;
+          
           if (strlen(value.c_str()) < sizeof(ESP_WM_LITE_config.WiFi_Creds[0].wifi_pw) - 1)
             strcpy(ESP_WM_LITE_config.WiFi_Creds[0].wifi_pw, value.c_str());
           else
@@ -2142,6 +2299,7 @@ class ESPAsync_WiFiManager_Lite
           id1_Updated = true;
           
           number_items_Updated++;
+          
           if (strlen(value.c_str()) < sizeof(ESP_WM_LITE_config.WiFi_Creds[1].wifi_ssid) - 1)
             strcpy(ESP_WM_LITE_config.WiFi_Creds[1].wifi_ssid, value.c_str());
           else
@@ -2153,6 +2311,7 @@ class ESPAsync_WiFiManager_Lite
           pw1_Updated = true;
           
           number_items_Updated++;
+          
           if (strlen(value.c_str()) < sizeof(ESP_WM_LITE_config.WiFi_Creds[1].wifi_pw) - 1)
             strcpy(ESP_WM_LITE_config.WiFi_Creds[1].wifi_pw, value.c_str());
           else
@@ -2164,30 +2323,36 @@ class ESPAsync_WiFiManager_Lite
           nm_Updated = true;
           
           number_items_Updated++;
+          
           if (strlen(value.c_str()) < sizeof(ESP_WM_LITE_config.board_name) - 1)
             strcpy(ESP_WM_LITE_config.board_name, value.c_str());
           else
             strncpy(ESP_WM_LITE_config.board_name, value.c_str(), sizeof(ESP_WM_LITE_config.board_name) - 1);
         }
         
-#if USE_DYNAMIC_PARAMETERS        
-        for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
-        {
-          if ( !menuItemUpdated[i] && (key == myMenuItems[i].id) )
+#if USE_DYNAMIC_PARAMETERS
+        else
+        {   
+          for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
           {
-            ESP_WML_LOGDEBUG3(F("h:"), myMenuItems[i].id, F("="), value.c_str() );
-            
-            menuItemUpdated[i] = true;
-            
-            number_items_Updated++;
+            if ( !menuItemUpdated[i] && (key == myMenuItems[i].id) )
+            {
+              ESP_WML_LOGDEBUG3(F("h:"), myMenuItems[i].id, F("="), value.c_str() );
+              
+              menuItemUpdated[i] = true;
+              
+              number_items_Updated++;
 
-            // Actual size of pdata is [maxlen + 1]
-            memset(myMenuItems[i].pdata, 0, myMenuItems[i].maxlen + 1);
+              // Actual size of pdata is [maxlen + 1]
+              memset(myMenuItems[i].pdata, 0, myMenuItems[i].maxlen + 1);
 
-            if ((int) strlen(value.c_str()) < myMenuItems[i].maxlen)
-              strcpy(myMenuItems[i].pdata, value.c_str());
-            else
-              strncpy(myMenuItems[i].pdata, value.c_str(), myMenuItems[i].maxlen);
+              if ((int) strlen(value.c_str()) < myMenuItems[i].maxlen)
+                strcpy(myMenuItems[i].pdata, value.c_str());
+              else
+                strncpy(myMenuItems[i].pdata, value.c_str(), myMenuItems[i].maxlen);
+                
+              break;  
+            }
           }
         }
 #endif
@@ -2195,7 +2360,7 @@ class ESPAsync_WiFiManager_Lite
         ESP_WML_LOGDEBUG1(F("h:items updated ="), number_items_Updated);
         ESP_WML_LOGDEBUG3(F("h:key ="), key, ", value =", value);
 
-        request->send(200, "text/html", "OK");
+        request->send(200, WM_HTTP_HEAD_TEXT_HTML, "OK");
         
 #if USE_DYNAMIC_PARAMETERS        
         if (number_items_Updated == NUM_CONFIGURABLE_ITEMS + NUM_MENU_ITEMS)

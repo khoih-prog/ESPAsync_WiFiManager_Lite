@@ -54,6 +54,13 @@
 
 /////////////////////////////////////////////
 
+// Add customs headers from v1.2.0
+#define USING_CUSTOMS_STYLE           true
+#define USING_CUSTOMS_HEAD_ELEMENT    true
+#define USING_CORS_FEATURE            true
+
+/////////////////////////////////////////////
+
 // Force some params
 #define TIMEOUT_RECONNECT_WIFI                    10000L
 #define RESET_IF_CONFIG_TIMEOUT                   true

@@ -16,6 +16,7 @@
   * [Why Async is better](#why-async-is-better)
   * [Currently supported Boards](#currently-supported-boards)
 * [Changelog](#changelog)
+  * [Release v1.2.0](#release-v120)
   * [Release v1.1.0](#release-v110)
   * [Release v1.0.0](#release-v100)
 * [Prerequisites](#prerequisites)
@@ -44,6 +45,16 @@
   * [3. ESP32 WiFi uses ADC2 for WiFi functions](#3-esp32-wifi-uses-adc2-for-wifi-functions)
 * [How It Works](#how-it-works)
 * [How to use](#how-to-use)
+  * [1. Basic usage](#1-basic-usage)
+  * [2. Add custom parameters](#2-add-custom-parameters)
+  * [3. Not using custom parameters](#3-not-using-custom-parameters)
+  * [4. To open Config Portal](#4-to-open-config-portal)
+  * [5. To use different AP WiFi Channel](#5-to-use-different-ap-wifi-channel)
+  * [6. To use different static AP IP from default](#6-to-use-different-static-ap-ip-from-default)
+  * [7. To use custom DHCP HostName](#7-to-use-custom-dhcp-hostname)
+  * [8. To use custom HTML Style](#8-to-use-custom-html-style)
+  * [9. To use custom Head Elements](#9-to-use-custom-head-elements)
+  * [10. To use CORS Header](#10-to-use-cors-header)
 * [Examples](#examples)
   * [ 1. ESPAsync_WiFi](examples/ESPAsync_WiFi)
   * [ 2. ESPAsync_WiFi_MQTT](examples/ESPAsync_WiFi_MQTT)
@@ -143,13 +154,19 @@ To appreciate the power of the [ESPAsyncWebServer](https://github.com/me-no-dev/
 
 This [**ESPAsync_WiFiManager_Lite** library](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite) currently supports these following boards:
 
- 1. **ESP32**
+ 1. **ESP32 including ESP32-S2 (ESP32-S2 Saola, AI-Thinker ESP-12K, etc.)**
  2. **ESP8266**
 
 ---
 ---
 
 ## Changelog
+
+### Release v1.2.0
+
+1. Configurable **Customs HTML Headers**, including Customs Style, Customs Head Elements, CORS Header.
+2. Fix Config Portal Bug. 
+3. Update examples
 
 ### Release v1.1.0
 
@@ -166,15 +183,15 @@ This [**ESPAsync_WiFiManager_Lite** library](https://github.com/khoih-prog/ESPAs
 ## Prerequisites
 
  1. [`Arduino IDE 1.8.13+` for Arduino](https://www.arduino.cc/en/Main/Software)
- 2. [`ESP8266 Core 2.7.4+`](https://github.com/esp8266/Arduino) for ESP8266-based boards. [![Latest release](https://img.shields.io/github/release/esp8266/Arduino.svg)](https://github.com/esp8266/Arduino/releases/latest/)
- 3. [`ESP32 Core 1.0.4+`](https://github.com/espressif/arduino-esp32) for ESP32-based boards. [Latest stable release ![Release Version](https://img.shields.io/github/release/espressif/arduino-esp32.svg?style=plastic)
+2. [`ESP8266 Core 2.7.4+`](https://github.com/esp8266/Arduino) for ESP8266-based boards. [![Latest release](https://img.shields.io/github/release/esp8266/Arduino.svg)](https://github.com/esp8266/Arduino/releases/latest/)
+ 3. [`ESP32 Core 1.0.4+`](https://github.com/espressif/arduino-esp32) for ESP32-based boards. [![Latest release](https://img.shields.io/github/release/espressif/arduino-esp32.svg)](https://github.com/espressif/arduino-esp32/releases/latest/)
  4. [`ESP32S2 Core 1.0.4+`](https://github.com/espressif/arduino-esp32/tree/esp32s2) for ESP32S2-based boards.
  5. [`ESPAsyncWebServer v1.2.3+`](https://github.com/me-no-dev/ESPAsyncWebServer) for all ESP32/ESP8266-based boards.
  6. [`ESPAsyncTCP v1.2.2+`](https://github.com/me-no-dev/ESPAsyncTCP) for ESP8266-based boards.
  7. [`AsyncTCP v1.1.1+`](https://github.com/me-no-dev/AsyncTCP) for ESP32-based boards 
  8. [`ESP_DoubleResetDetector v1.1.1+`](https://github.com/khoih-prog/ESP_DoubleResetDetector) if using DRD feature. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/ESP_DoubleResetDetector.svg?)](https://www.ardu-badge.com/ESP_DoubleResetDetector).
  9. [`ESP_MultiResetDetector v1.1.1+`](https://github.com/khoih-prog/ESP_MultiResetDetector) if using MRD feature. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/ESP_MultiResetDetector.svg?)](https://www.ardu-badge.com/ESP_MultiResetDetector).
-10. [`LittleFS_esp32 v1.0.5+`](https://github.com/lorol/LITTLEFS) for ESP32-based boards using LittleFS. [![GitHub release](https://img.shields.io/github/release/lorol/LITTLEFS.svg)](https://github.com/lorol/LITTLEFS/releases)
+10. [`LittleFS_esp32 v1.0.5+`](https://github.com/lorol/LITTLEFS) for ESP32-based boards using LittleFS. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/LittleFS_esp32.svg?)](https://www.ardu-badge.com/LittleFS_esp32).
 
 ---
 
@@ -232,7 +249,7 @@ Download [**esp32-s2 core**](https://github.com/espressif/arduino-esp32/tree/esp
 #### 2.2 Unzip
 
 <p align="center">
-    <img src="https://github.com/khoih-prog/ESP_WiFiManager_Lite/blob/main/pics/esp32_s2_Core_Unzipped.png">
+    <img src="https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/blob/main/pics/esp32_s2_Core_Unzipped.png">
 </p>
 
 #### 2.3 Update esp32-s2 core directories
@@ -252,7 +269,7 @@ For example `xtensa-esp32s2-elf-gcc8_4_0-esp-2020r3-linux-amd64.tar.gz`, then un
 
 
 <p align="center">
-    <img src="https://github.com/khoih-prog/ESP_WiFiManager_Lite/blob/main/pics/esp32_s2_Toolchain.png">
+    <img src="https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/blob/main/pics/esp32_s2_Toolchain.png">
 </p>
 
 #### 3.2 Download esptool
@@ -265,7 +282,7 @@ Download [esptool](https://github.com/espressif/esptool/releases) int the `zip` 
 #### 3.3 Unzip
 
 <p align="center">
-    <img src="https://github.com/khoih-prog/ESP_WiFiManager_Lite/blob/main/pics/esp32_s2_esptool.png">
+    <img src="https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/blob/main/pics/esp32_s2_esptool.png">
 </p>
 
 ---
@@ -286,7 +303,7 @@ Copy whole `esptool` directory into `/home/your_account/.arduino15/packages/esp3
 
 
 <p align="center">
-    <img src="https://github.com/khoih-prog/ESP_WiFiManager_Lite/blob/main/pics/esp32_s2_tools.png">
+    <img src="https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/blob/main/pics/esp32_s2_tools.png">
 </p>
 
 
@@ -391,6 +408,8 @@ Look in file [**adc_common.c**](https://github.com/espressif/esp-idf/blob/master
 
 ### How to use
 
+#### 1. Basic usage
+
 - Include in your sketch
 
 ```cpp
@@ -399,6 +418,8 @@ Look in file [**adc_common.c**](https://github.com/espressif/esp-idf/blob/master
 
 ESPAsync_WiFiManager_Lite* ESPAsync_WiFiManager;
 ```
+
+#### 2. Add custom parameters
 
 - To add custom parameters, just add
 
@@ -462,11 +483,15 @@ uint16_t NUM_MENU_ITEMS = 0;
 
 ```
 
+#### 3. Not using custom parameters
+
 - If you don't need to add dynamic parameters, use the following in sketch
 
 ```
 #define USE_DYNAMIC_PARAMETERS      false
 ```
+
+#### 4. To open Config Portal
 
 - When you want to open a config portal, just add
 
@@ -475,11 +500,21 @@ ESPAsync_WiFiManager = new ESPAsync_WiFiManager_Lite();
 ESPAsync_WiFiManager->begin();
 ```
 
-- To not use default AP WiFi Channel 10 to avoid conflict with other WiFi APs, call 
+#### 5. To use different AP WiFi Channel
+
+- To not use default AP WiFi Channel 10 to avoid conflict with other WiFi APs :
 
 ```cpp
 ESPAsync_WiFiManager->setConfigPortalChannel(newChannel);
 ```
+
+- To use random AP WiFi Channel to avoid conflict with other WiFi APs : 
+
+```cpp
+ESP_WiFiManager->setConfigPortalChannel(0);
+```
+
+#### 6. To use different static AP IP from default
 
 - To use different static AP IP (not use default `192.168.4.1`), call
 
@@ -487,19 +522,46 @@ ESPAsync_WiFiManager->setConfigPortalChannel(newChannel);
 ESPAsync_WiFiManager->setConfigPortalIP(IPAddress(xxx,xxx,xxx,xxx));
 ```
 
-- To set custom DHCP HostName, cal
+#### 7. To use custom DHCP HostName
+
+- To set custom DHCP HostName :
  
 ```
-  // Set customized DHCP HostName
-  ESPAsync_WiFiManager->begin("SAMD_ABCDEF");
+// Set customized DHCP HostName
+ESPAsync_WiFiManager->begin("SAMD_ABCDEF");
 ```
  
 or just use the default Hostname, for example "ESP_XXXXXX" for SAMD
 
 ```
-  //Or use default Hostname "ESP_XXXXXX"
-  //ESPAsync_WiFiManager->begin();
+// Or use default Hostname "ESP_XXXXXX"
+ESPAsync_WiFiManager->begin();
 ```
+
+#### 8. To use custom HTML Style
+
+```
+const char NewCustomsStyle[] /*PROGMEM*/ = "<style>div,input{padding:5px;font-size:1em;}input{width:95%;}body{text-align: center;}\
+button{background-color:blue;color:white;line-height:2.4rem;font-size:1.2rem;width:100%;}fieldset{border-radius:0.3rem;margin:0px;}</style>";
+
+...
+
+ESPAsync_WiFiManager->setCustomsStyle(NewCustomsStyle);
+```
+
+#### 9. To use custom Head Elements
+
+
+```
+ESPAsync_WiFiManager->setCustomsHeadElement("<style>html{filter: invert(10%);}</style>");
+```
+
+#### 10. To use CORS Header
+
+```
+ESPAsync_WiFiManager->setCORSHeader("Your Access-Control-Allow-Origin");
+```
+
 
 While in AP mode, connect to it using its `SSID` (ESP_XXXXXX) / `Password` ("MyESP_XXXXXX"), then open a browser to the Portal AP IP, default `192.168.4.1`, configure wifi then click **Save**. The Credentials / WiFi connection information will be saved in non-volatile memory. It will then autoconnect.
 
@@ -809,6 +871,11 @@ void check_status()
 
 ESPAsync_WiFiManager_Lite* ESPAsync_WiFiManager;
 
+#if USING_CUSTOMS_STYLE
+const char NewCustomsStyle[] /*PROGMEM*/ = "<style>div,input{padding:5px;font-size:1em;}input{width:95%;}body{text-align: center;}\
+button{background-color:blue;color:white;line-height:2.4rem;font-size:1.2rem;width:100%;}fieldset{border-radius:0.3rem;margin:0px;}</style>";
+#endif
+
 void setup()
 {
   // Debug console
@@ -831,7 +898,19 @@ void setup()
 
   // Optional to change default AP IP(192.168.4.1) and channel(10)
   //ESPAsync_WiFiManager->setConfigPortalIP(IPAddress(192, 168, 120, 1));
-  //ESPAsync_WiFiManager->setConfigPortalChannel(1);
+  ESPAsync_WiFiManager->setConfigPortalChannel(0);
+
+#if USING_CUSTOMS_STYLE
+  ESPAsync_WiFiManager->setCustomsStyle(NewCustomsStyle);
+#endif
+
+#if USING_CUSTOMS_HEAD_ELEMENT
+  ESPAsync_WiFiManager->setCustomsHeadElement("<style>html{filter: invert(10%);}</style>");
+#endif
+
+#if USING_CORS_FEATURE  
+  ESPAsync_WiFiManager->setCORSHeader("Your Access-Control-Allow-Origin");
+#endif
 
   // Set customized DHCP HostName
   ESPAsync_WiFiManager->begin(HOST_NAME);
@@ -901,7 +980,7 @@ void loop()
 /* Comment this out to disable prints and save space */
 #define ESP_WM_LITE_DEBUG_OUTPUT      Serial
 
-#define _ESP_WM_LITE_LOGLEVEL_        3
+#define _ESP_WM_LITE_LOGLEVEL_        2
 
 #define USING_MRD                     true
 
@@ -932,6 +1011,13 @@ void loop()
 // LittleFS has higher priority than SPIFFS
   #define USE_LITTLEFS    true
   #define USE_SPIFFS      false
+
+/////////////////////////////////////////////
+
+// Add customs headers from v1.2.0
+#define USING_CUSTOMS_STYLE           true
+#define USING_CUSTOMS_HEAD_ELEMENT    true
+#define USING_CORS_FEATURE            true
 
 /////////////////////////////////////////////
 
@@ -1137,7 +1223,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
-ESPAsync_WiFiManager_Lite v1.1.0
+ESPAsync_WiFiManager_Lite v1.2.0
 ESP_MultiResetDetector v1.1.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1212,7 +1298,7 @@ NNN
 
 
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
-ESPAsync_WiFiManager_Lite v1.1.0
+ESPAsync_WiFiManager_Lite v1.2.0
 ESP_MultiResetDetector v1.1.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1304,7 +1390,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP8266_NODEMCU
-ESPAsync_WiFiManager_Lite v1.1.0
+ESPAsync_WiFiManager_Lite v1.2.0
 ESP_MultiResetDetector v1.1.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1379,7 +1465,7 @@ NNN
 
 
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP8266_NODEMCU
-ESPAsync_WiFiManager_Lite v1.1.0
+ESPAsync_WiFiManager_Lite v1.2.0
 ESP_MultiResetDetector v1.1.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1470,7 +1556,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
-ESPAsync_WiFiManager_Lite v1.1.0
+ESPAsync_WiFiManager_Lite v1.2.0
 ESP_MultiResetDetector v1.1.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1583,7 +1669,7 @@ entry 0x4004c190
 
 
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
-ESPAsync_WiFiManager_Lite v1.1.0
+ESPAsync_WiFiManager_Lite v1.2.0
 ESP_MultiResetDetector v1.1.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1711,6 +1797,12 @@ If you connect to the created configuration Access Point but the ConfigPortal do
 
 ## Releases
 
+### Release v1.2.0
+
+1. Configurable **Customs HTML Headers**, including Customs Style, Customs Head Elements, CORS Header.
+2. Fix Config Portal Bug. 
+3. Update examples
+
 ### Release v1.1.0
 
 1. Add support to **ESP32-S2 (ESP32-S2 Saola and AI-Thinker ESP-12K)**
@@ -1746,7 +1838,7 @@ Submit issues to: [ESPAsync_WiFiManager_Lite issues](https://github.com/khoih-pr
  6. Change Synch XMLHttpRequest to Async
  7. Add configurable Static IP, GW, Subnet Mask and 2 DNS Servers' IP Addresses.
  8. Add checksums
- 9. Add support to **ESP32 and ESP8266**
+ 9. Add support to **ESP32 including ESP32-S2 (ESP32-S2 Saola, AI-Thinker ESP-12K, etc.) and ESP8266**
 10. Add MultiWiFi features with auto(re)connect
 11. Easy-to-use **Dynamic Parameters** without the necessity to write complicated ArduinoJSon functions
 12. Permit to input special chars such as **%** and **#** into data fields.
@@ -1755,6 +1847,7 @@ Submit issues to: [ESPAsync_WiFiManager_Lite issues](https://github.com/khoih-pr
 15. Configurable Config Portal Title
 16. Re-structure all examples to separate Credentials / Defines / Dynamic Params / Code so that you can change Credentials / Dynamic Params quickly for each device.
 17. Add Table of Contents and Version String
+18. Configurable **Customs HTML Headers**, including Customs Style, Customs Head Elements, CORS Header
 
 
 ---

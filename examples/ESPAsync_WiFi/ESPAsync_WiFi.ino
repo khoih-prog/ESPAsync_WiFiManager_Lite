@@ -9,12 +9,13 @@
   Built by Khoi Hoang https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite
   Licensed under MIT license
   
-  Version: 1.1.0
+  Version: 1.2.0
    
   Version Modified By   Date        Comments
   ------- -----------  ----------   -----------
   1.0.0   K Hoang      09/02/2021  Initial coding for ESP32/ESP8266
   1.1.0   K Hoang      12/02/2021  Add support to new ESP32-S2
+  1.2.0   K Hoang      22/02/2021  Add customs HTML header feature. Fix bug.
   *****************************************************************************************************************************/
   
 #include "defines.h"
@@ -57,6 +58,11 @@ void check_status()
 
 ESPAsync_WiFiManager_Lite* ESPAsync_WiFiManager;
 
+#if USING_CUSTOMS_STYLE
+const char NewCustomsStyle[] /*PROGMEM*/ = "<style>div,input{padding:5px;font-size:1em;}input{width:95%;}body{text-align: center;}\
+button{background-color:blue;color:white;line-height:2.4rem;font-size:1.2rem;width:100%;}fieldset{border-radius:0.3rem;margin:0px;}</style>";
+#endif
+
 void setup()
 {
   // Debug console
@@ -80,6 +86,18 @@ void setup()
   // Optional to change default AP IP(192.168.4.1) and channel(10)
   //ESPAsync_WiFiManager->setConfigPortalIP(IPAddress(192, 168, 120, 1));
   ESPAsync_WiFiManager->setConfigPortalChannel(0);
+
+#if USING_CUSTOMS_STYLE
+  ESPAsync_WiFiManager->setCustomsStyle(NewCustomsStyle);
+#endif
+
+#if USING_CUSTOMS_HEAD_ELEMENT
+  ESPAsync_WiFiManager->setCustomsHeadElement("<style>html{filter: invert(10%);}</style>");
+#endif
+
+#if USING_CORS_FEATURE  
+  ESPAsync_WiFiManager->setCORSHeader("Your Access-Control-Allow-Origin");
+#endif
 
   // Set customized DHCP HostName
   ESPAsync_WiFiManager->begin(HOST_NAME);
