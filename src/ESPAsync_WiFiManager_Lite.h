@@ -9,13 +9,14 @@
   Built by Khoi Hoang https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite
   Licensed under MIT license
   
-  Version: 1.2.0
+  Version: 1.3.0
    
   Version Modified By   Date        Comments
   ------- -----------  ----------   -----------
   1.0.0   K Hoang      09/02/2021  Initial coding for ESP32/ESP8266
   1.1.0   K Hoang      12/02/2021  Add support to new ESP32-S2
   1.2.0   K Hoang      22/02/2021  Add customs HTML header feature. Fix bug.
+  1.3.0   K Hoang      12/04/2021  Fix invalid "blank" Config Data treated as Valid. Fix EEPROM_SIZE bug
  *****************************************************************************************************************************/
 
 #pragma once
@@ -27,7 +28,7 @@
   #error This code is intended to run on the ESP32/ESP8266 platform! Please check your Tools->Board setting.  
 #endif
 
-#define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION        "ESPAsync_WiFiManager_Lite v1.2.0"
+#define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION        "ESPAsync_WiFiManager_Lite v1.3.0"
 
 #ifdef ESP8266
 
@@ -52,7 +53,8 @@
     #include <LittleFS.h>
   #else
     #include <EEPROM.h>
-    #define FS_Name       "EEPROM"
+    #define FS_Name         "EEPROM"
+    #define EEPROM_SIZE     2048
     #warning Using EEPROM in ESPAsync_WiFiManager_Lite.h
   #endif
  
@@ -90,7 +92,8 @@
     #warning Using SPIFFS in ESPAsync_WiFiManager_Lite.h
   #else
     #include <EEPROM.h>
-    #define FS_Name       "EEPROM"
+    #define FS_Name         "EEPROM"
+    #define EEPROM_SIZE     2048
     #warning Using EEPROM in ESPAsync_WiFiManager_Lite.h
   #endif
   
@@ -286,10 +289,10 @@ const char ESP_WM_LITE_HTML_HEAD_START[] /*PROGMEM*/ = "<!DOCTYPE html><html><he
 const char ESP_WM_LITE_HTML_HEAD_STYLE[] /*PROGMEM*/ = "<style>div,input{padding:5px;font-size:1em;}input{width:95%;}body{text-align: center;}button{background-color:#16A1E7;color:#fff;line-height:2.4rem;font-size:1.2rem;width:100%;}fieldset{border-radius:0.3rem;margin:0px;}</style>";
 
 const char ESP_WM_LITE_HTML_HEAD_END[]   /*PROGMEM*/ = "</head><div style=\"text-align:left;display:inline-block;min-width:260px;\">\
-<fieldset><div><label>WiFi SSID</label><input value=\"[[id]]\"id=\"id\"><div></div></div>\
-<div><label>PWD</label><input value=\"[[pw]]\"id=\"pw\"><div></div></div>\
-<div><label>WiFi SSID1</label><input value=\"[[id1]]\"id=\"id1\"><div></div></div>\
-<div><label>PWD1</label><input value=\"[[pw1]]\"id=\"pw1\"><div></div></div></fieldset>\
+<fieldset><div><label>*WiFi SSID</label><input value=\"[[id]]\"id=\"id\"><div></div></div>\
+<div><label>*PWD (8+ chars)</label><input value=\"[[pw]]\"id=\"pw\"><div></div></div>\
+<div><label>*WiFi SSID1</label><input value=\"[[id1]]\"id=\"id1\"><div></div></div>\
+<div><label>*PWD1 (8+ chars)</label><input value=\"[[pw1]]\"id=\"pw1\"><div></div></div></fieldset>\
 <fieldset><div><label>Board Name</label><input value=\"[[nm]]\"id=\"nm\"><div></div></div></fieldset>";
 
 const char ESP_WM_LITE_FLDSET_START[]  /*PROGMEM*/ = "<fieldset>";
@@ -423,6 +426,13 @@ class ESPAsync_WiFiManager_Lite
 
 #endif
 
+// New from v1.3.0
+#if !defined(REQUIRE_ONE_SET_SSID_PW)
+  #define REQUIRE_ONE_SET_SSID_PW     false
+#endif
+
+#define PASSWORD_MIN_LEN        8
+
     //////////////////////////////////////////
 
     void begin(const char *iHostname = "")
@@ -490,7 +500,10 @@ class ESPAsync_WiFiManager_Lite
 
         for (uint16_t i = 0; i < NUM_WIFI_CREDENTIALS; i++)
         {
-          wifiMulti.addAP(ESP_WM_LITE_config.WiFi_Creds[i].wifi_ssid, ESP_WM_LITE_config.WiFi_Creds[i].wifi_pw);
+          if ( strlen(ESP_WM_LITE_config.WiFi_Creds[i].wifi_pw) >= PASSWORD_MIN_LEN )
+          {
+            wifiMulti.addAP(ESP_WM_LITE_config.WiFi_Creds[i].wifi_ssid, ESP_WM_LITE_config.WiFi_Creds[i].wifi_pw);
+          }
         }
 
         if (connectMultiWiFi() == WL_CONNECTED)
@@ -1062,7 +1075,43 @@ class ESPAsync_WiFiManager_Lite
       return checkSum;
     }
     
-//////////////////////////////////////////////    
+    //////////////////////////////////////////////
+       
+    bool isWiFiConfigValid()
+    {
+      #if REQUIRE_ONE_SET_SSID_PW
+      // If SSID ="blank" or NULL, or PWD length < 8 (as required by standard) => return false
+      // Only need 1 set of valid SSID/PWD
+      if (!( ( ( strncmp(ESP_WM_LITE_config.WiFi_Creds[0].wifi_ssid, WM_NO_CONFIG, strlen(WM_NO_CONFIG)) && strlen(ESP_WM_LITE_config.WiFi_Creds[0].wifi_ssid) >  0 )  &&
+             (   strlen(ESP_WM_LITE_config.WiFi_Creds[0].wifi_pw) >= PASSWORD_MIN_LEN ) ) ||
+             ( ( strncmp(ESP_WM_LITE_config.WiFi_Creds[1].wifi_ssid, WM_NO_CONFIG, strlen(WM_NO_CONFIG)) && strlen(ESP_WM_LITE_config.WiFi_Creds[1].wifi_ssid) >  0 )  &&
+               ( strlen(ESP_WM_LITE_config.WiFi_Creds[1].wifi_pw) >= PASSWORD_MIN_LEN ) ) ))
+      #else
+      // If SSID ="blank" or NULL, or PWD length < 8 (as required by standard) => invalid set
+      // Need both sets of valid SSID/PWD
+      if ( !strncmp(ESP_WM_LITE_config.WiFi_Creds[0].wifi_ssid,   WM_NO_CONFIG, strlen(WM_NO_CONFIG) )  ||
+           !strncmp(ESP_WM_LITE_config.WiFi_Creds[0].wifi_pw,     WM_NO_CONFIG, strlen(WM_NO_CONFIG) )  ||
+           !strncmp(ESP_WM_LITE_config.WiFi_Creds[1].wifi_ssid,   WM_NO_CONFIG, strlen(WM_NO_CONFIG) )  ||
+           !strncmp(ESP_WM_LITE_config.WiFi_Creds[1].wifi_pw,     WM_NO_CONFIG, strlen(WM_NO_CONFIG) )  ||
+           ( strlen(ESP_WM_LITE_config.WiFi_Creds[0].wifi_ssid) == 0 ) || 
+           ( strlen(ESP_WM_LITE_config.WiFi_Creds[1].wifi_ssid) == 0 ) ||
+           ( strlen(ESP_WM_LITE_config.WiFi_Creds[0].wifi_pw)   < PASSWORD_MIN_LEN ) ||
+           ( strlen(ESP_WM_LITE_config.WiFi_Creds[1].wifi_pw)   < PASSWORD_MIN_LEN ) )
+      #endif     
+      {
+        // If SSID, PW ="blank" or NULL, set the flag
+        ESP_WML_LOGERROR(F("Invalid Stored WiFi Config Data"));
+        
+        hadConfigData = false;
+        
+        return false;
+      }
+      
+      return true;
+    }
+    
+
+//////////////////////////////////////////////
 
 #if ( USE_LITTLEFS || USE_SPIFFS )
     
@@ -1430,10 +1479,10 @@ class ESPAsync_WiFiManager_Lite
       ESP_WM_LITE_config.WiFi_Creds[1].wifi_pw  [PASS_MAX_LEN - 1] = 0;
       ESP_WM_LITE_config.board_name[BOARD_NAME_MAX_LEN - 1]  = 0;
     }
+    
+    //////////////////////////////////////////////
 
-    //////////////////////////////////////////////    
-
-    void loadConfigData()
+    bool loadConfigData()
     {
       File file = FileFS.open(CONFIG_FILENAME, "r");
       ESP_WML_LOGINFO(F("LoadCfgFile "));
@@ -1449,7 +1498,7 @@ class ESPAsync_WiFiManager_Lite
         if (!file)
         {
           ESP_WML_LOGINFO(F("failed"));
-          return;
+          return false;
         }
       }
 
@@ -1457,6 +1506,8 @@ class ESPAsync_WiFiManager_Lite
 
       ESP_WML_LOGINFO(F("OK"));
       file.close();
+      
+      return isWiFiConfigValid();
     }
     
     //////////////////////////////////////////////
@@ -1577,8 +1628,12 @@ class ESPAsync_WiFiManager_Lite
       else if ( FileFS.exists(CONFIG_FILENAME) || FileFS.exists(CONFIG_FILENAME_BACKUP) )
 #endif   
       {
-        // if config file exists, load
-        loadConfigData();
+        // Load stored config data from LittleFS
+        // Get config data. If "blank" or NULL, set false flag and exit
+        if (!loadConfigData())
+        {
+          return false;
+        }
         
         ESP_WML_LOGINFO(F("======= Start Stored Config Data ======="));
         displayConfigData(ESP_WM_LITE_config);
@@ -1656,16 +1711,9 @@ class ESPAsync_WiFiManager_Lite
         
         return false;        
       }
-      else if ( !strncmp(ESP_WM_LITE_config.WiFi_Creds[0].wifi_ssid,   WM_NO_CONFIG, strlen(WM_NO_CONFIG) )  ||
-                !strncmp(ESP_WM_LITE_config.WiFi_Creds[0].wifi_pw,     WM_NO_CONFIG, strlen(WM_NO_CONFIG) )  ||
-                !strncmp(ESP_WM_LITE_config.WiFi_Creds[1].wifi_ssid,   WM_NO_CONFIG, strlen(WM_NO_CONFIG) )  ||
-                !strncmp(ESP_WM_LITE_config.WiFi_Creds[1].wifi_pw,     WM_NO_CONFIG, strlen(WM_NO_CONFIG) )  ||
-                !strlen(ESP_WM_LITE_config.WiFi_Creds[0].wifi_ssid) || 
-                !strlen(ESP_WM_LITE_config.WiFi_Creds[1].wifi_ssid) ||
-                !strlen(ESP_WM_LITE_config.WiFi_Creds[0].wifi_pw)   ||
-                !strlen(ESP_WM_LITE_config.WiFi_Creds[1].wifi_pw)  )
+      else if ( !isWiFiConfigValid() )
       {
-        // If SSID, PW ="nothing", stay in config mode forever until having config Data.
+        // If SSID, PW ="blank" or NULL, stay in config mode forever until having config Data.
         return false;
       }
       else
@@ -1687,6 +1735,10 @@ class ESPAsync_WiFiManager_Lite
       #warning EEPROM_SIZE must be <= 2048. Reset to 2048
       #undef EEPROM_SIZE
       #define EEPROM_SIZE     2048
+    #elif (EEPROM_SIZE < 2048)
+      #warning Preset EEPROM_SIZE <= 2048. Reset to 2048
+      #undef EEPROM_SIZE
+      #define EEPROM_SIZE     2048
     #endif
     // FLAG_DATA_SIZE is 4, to store DRD/MRD flag
     #if (EEPROM_SIZE < FLAG_DATA_SIZE + CONFIG_DATA_SIZE)
@@ -1706,7 +1758,6 @@ class ESPAsync_WiFiManager_Lite
 
 // Stating positon to store ESP_WM_LITE_config
 #define CONFIG_EEPROM_START    (EEPROM_START + FLAG_DATA_SIZE)
-
 
     //////////////////////////////////////////////
     
@@ -1965,6 +2016,12 @@ class ESPAsync_WiFiManager_Lite
       {
         // Load data from EEPROM
         EEPROM.get(CONFIG_EEPROM_START, ESP_WM_LITE_config);
+        
+        if ( !isWiFiConfigValid() )
+        {
+          // If SSID, PW ="blank" or NULL, stay in config mode forever until having config Data.
+          return false;
+        }
           
         ESP_WML_LOGINFO(F("======= Start Stored Config Data ======="));
         displayConfigData(ESP_WM_LITE_config);
@@ -2037,16 +2094,9 @@ class ESPAsync_WiFiManager_Lite
         
         return false;        
       }
-      else if ( !strncmp(ESP_WM_LITE_config.WiFi_Creds[0].wifi_ssid,   WM_NO_CONFIG, strlen(WM_NO_CONFIG) )  ||
-                !strncmp(ESP_WM_LITE_config.WiFi_Creds[0].wifi_pw,     WM_NO_CONFIG, strlen(WM_NO_CONFIG) )  ||
-                !strncmp(ESP_WM_LITE_config.WiFi_Creds[1].wifi_ssid,   WM_NO_CONFIG, strlen(WM_NO_CONFIG) )  ||
-                !strncmp(ESP_WM_LITE_config.WiFi_Creds[1].wifi_pw,     WM_NO_CONFIG, strlen(WM_NO_CONFIG) )  ||
-                !strlen(ESP_WM_LITE_config.WiFi_Creds[0].wifi_ssid) || 
-                !strlen(ESP_WM_LITE_config.WiFi_Creds[1].wifi_ssid) ||
-                !strlen(ESP_WM_LITE_config.WiFi_Creds[0].wifi_pw)   ||
-                !strlen(ESP_WM_LITE_config.WiFi_Creds[1].wifi_pw)  )
+      else if ( !isWiFiConfigValid() )
       {
-        // If SSID, PW ="nothing", stay in config mode forever until having config Data.
+        // If SSID, PW ="blank" or NULL, stay in config mode forever until having config Data.
         return false;
       }
       else
