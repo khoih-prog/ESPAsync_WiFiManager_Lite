@@ -9,7 +9,7 @@
   Built by Khoi Hoang https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite
   Licensed under MIT license
   
-  Version: 1.3.0
+  Version: 1.4.0
    
   Version Modified By   Date        Comments
   ------- -----------  ----------   -----------
@@ -17,6 +17,7 @@
   1.1.0   K Hoang      12/02/2021  Add support to new ESP32-S2
   1.2.0   K Hoang      22/02/2021  Add customs HTML header feature. Fix bug.
   1.3.0   K Hoang      12/04/2021  Fix invalid "blank" Config Data treated as Valid. Fix EEPROM_SIZE bug
+  1.4.0   K Hoang      21/04/2021  Add support to new ESP32-C3 using SPIFFS or EEPROM
  *****************************************************************************************************************************/
 
 #pragma once
@@ -24,11 +25,21 @@
 #ifndef ESPAsync_WiFiManager_Lite_h
 #define ESPAsync_WiFiManager_Lite_h
 
-#if !( ESP32 || ESP8266)
-  #error This code is intended to run on the ESP32/ESP8266 platform! Please check your Tools->Board setting.  
+#if !( defined(ESP8266) ||  defined(ESP32) )
+  #error This code is intended to run on the ESP8266 or ESP32 platform! Please check your Tools->Board setting.
+#elif ( ARDUINO_ESP32S2_DEV || ARDUINO_FEATHERS2 || ARDUINO_ESP32S2_THING_PLUS || ARDUINO_MICROS2 || \
+        ARDUINO_METRO_ESP32S2 || ARDUINO_MAGTAG29_ESP32S2 || ARDUINO_FUNHOUSE_ESP32S2 || \
+        ARDUINO_ADAFRUIT_FEATHER_ESP32S2_NOPSRAM )
+  #warning Using ESP32_S2. To follow library instructions to install esp32-s2 core and WebServer Patch
+  //#warning You have to select HUGE APP or 1.9-2.0 MB APP to be able to run Config Portal. Must use PSRAM
+  #define USING_ESP32_S2        true
+#elif ( ARDUINO_ESP32C3_DEV )
+  #warning Using ESP32_C3. To follow library instructions to install esp32-c3 core. Only SPIFFS and EEPROM OK.
+  //#warning You have to select HUGE APP or 1.9-2.0 MB APP to be able to run Config Portal. Must use PSRAM
+  #define USING_ESP32_C3        true
 #endif
 
-#define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION        "ESPAsync_WiFiManager_Lite v1.3.0"
+#define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION        "ESPAsync_WiFiManager_Lite v1.4.0"
 
 #ifdef ESP8266
 
@@ -64,6 +75,16 @@
   #include <WiFiMulti.h>
   #include <ESPAsyncWebServer.h>
   
+  // To be sure no LittleFS for ESP32-C3
+  #if ( ARDUINO_ESP32C3_DEV )
+    // Currently, ESP32-C3 only supporting SPIFFS and EEPROM. Will fix to support LittleFS
+    #if USE_LITTLEFS
+      #undef USE_LITTLEFS
+      #define USE_LITTLEFS            false
+      #undef USE_SPIFFS
+      #define USE_SPIFFS              true
+    #endif
+  #endif
   
   // LittleFS has higher priority than SPIFFS. 
   // But if not specified any, use SPIFFS to not forcing user to install LITTLEFS library

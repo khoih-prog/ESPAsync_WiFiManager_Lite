@@ -49,8 +49,14 @@
 /////////////////////////////////////////////
 
 // LittleFS has higher priority than SPIFFS
+#if ( ARDUINO_ESP32C3_DEV )
+  // Currently, ESP32-C3 only supporting SPIFFS and EEPROM. Will fix to support LittleFS
+  #define USE_LITTLEFS          false
+  #define USE_SPIFFS            true
+#else
   #define USE_LITTLEFS    true
   #define USE_SPIFFS      false
+#endif
 
 /////////////////////////////////////////////
 
