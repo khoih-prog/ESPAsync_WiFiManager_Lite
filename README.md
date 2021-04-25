@@ -16,6 +16,7 @@
   * [Why Async is better](#why-async-is-better)
   * [Currently supported Boards](#currently-supported-boards)
 * [Changelog](#changelog)
+  * [Major Release v1.5.0](#major-release-v150)
   * [Release v1.4.0](#release-v140)
   * [Release v1.3.0](#release-v130)
   * [Release v1.2.0](#release-v120)
@@ -61,6 +62,12 @@
   * [ 9. To use custom Head Elements](#9-to-use-custom-head-elements)
   * [10. To use CORS Header](#10-to-use-cors-header)
   * [11. To use and input only one set of WiFi SSID and PWD](#11-to-use-and-input-only-one-set-of-wifi-ssid-and-pwd)
+    * [11.1 If you need to use and input only one set of WiFi SSID/PWD](#111-if-you-need-to-use-and-input-only-one-set-of-wifi-ssidpwd)
+    * [11.2 If you need to use both sets of WiFi SSID/PWD](#112-if-you-need-to-use-both-sets-of-wifi-ssidpwd)
+  * [12. To enable auto-scan of WiFi networks for selection in Configuration Portal](#12-to-enable-auto-scan-of-wifi-networks-for-selection-in-configuration-portal)
+    * [12.1 Enable auto-scan of WiFi networks for selection in Configuration Portal](#121-enable-auto-scan-of-wifi-networks-for-selection-in-configuration-portal)
+    * [12.2 Disable manually input SSIDs](#122-disable-manually-input-ssids)
+    * [12.3 Select maximum number of SSIDs in the list](#123-select-maximum-number-of-ssids-in-the-list)
 * [Examples](#examples)
   * [ 1. ESPAsync_WiFi](examples/ESPAsync_WiFi)
   * [ 2. ESPAsync_WiFi_MQTT](examples/ESPAsync_WiFi_MQTT)
@@ -93,6 +100,9 @@
   * [4. ESPAsync_WiFi_MQTT on ESP32S2_DEV to demo MultiResetDetector](#4-espasync_wifi_mqtt-on-esp32s2_dev-to-demo-multiresetdetector)
     * [4.1 MultiResetDetected => Open Config Portal](#41-multiresetdetected--open-config-portal)
     * [4.2 Got valid Credentials from Config Portal then connected to WiFi](#42-got-valid-credentials-from-config-portal-then-connected-to-wifi)
+  * [5. ESPAsync_WiFi_MQTT on ESP32_DEV to demo WiFi Scan](#5-espasync_wifi_mqtt-on-esp32_dev-to-demo-wifi-scan)
+    * [5.1 MRD/DRD => Open Config Portal](#51-mrddrd--open-config-portal)
+    * [5.2 Config Data Saved => Connection to Adafruit MQTT](#52-config-data-saved--connection-to-adafruit-mqtt)
 * [Debug](#debug)
 * [Troubleshooting](#troubleshooting)
 * [Releases](#releases)
@@ -138,8 +148,11 @@ New recent features:
 - Control Config Portal from software or Virtual Switches
 - To permit autoreset after configurable timeout if DRD/MRD or non-persistent forced-CP
 - Use new ESP32 LittleFS features
+- **Scan WiFi networks** for selection in Configuration Portal
+
 
 Thanks to this [ESPAsync_WiFiManager_Lite library](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite) is based on and sync'ed with [`ESP_WiFiManager_Lite`](https://github.com/khoih-prog/ESP_WiFiManager_Lite), all the features currently supported by [`ESP_WiFiManager_Lite`](https://github.com/khoih-prog/ESP_WiFiManager_Lite) will be available.
+
 
 ### Why Async is better
 
@@ -163,13 +176,19 @@ To appreciate the power of the [ESPAsyncWebServer](https://github.com/me-no-dev/
 
 This [**ESPAsync_WiFiManager_Lite** library](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite) currently supports these following boards:
 
- 1. **ESP32 including ESP32-S2 (ESP32-S2 Saola, AI-Thinker ESP-12K, etc.)**
- 2. **ESP8266**
+ 1. **ESP8266 and ESP32-based boards using EEPROM, SPIFFS or LittleFS**.
+ 2. **ESP32-S2 (ESP32-S2 Saola, AI-Thinker ESP-12K, etc.) using EEPROM, SPIFFS or LittleFS**.
+ 3. **ESP32-C3 (ARDUINO_ESP32C3_DEV) using EEPROM or SPIFFS**.
 
 ---
 ---
 
 ## Changelog
+
+### Major Release v1.5.0
+
+1. Enable scan of WiFi networks for selection in Configuration Portal. Check [PR for v1.3.0 - Enable scan of WiFi networks #10](https://github.com/khoih-prog/WiFiManager_NINA_Lite/pull/10). Now you can select optional **SCAN_WIFI_NETWORKS**, **MANUAL_SSID_INPUT_ALLOWED** to be able to manually input SSID, not only from a scanned SSID lists and **MAX_SSID_IN_LIST** (from 2-6 for ESP8266-AT or 2-15 for other)
+2. Minor enhancement to not display garbage when data is invalid
 
 ### Release v1.4.0
 
@@ -667,7 +686,7 @@ Once Credentials / WiFi network information is saved in the host non-volatile me
 
 #### 11. To use and input only one set of WiFi SSID and PWD
 
-#### If you need to use and input only one set of WiFi SSID/PWD.
+#### 11.1 If you need to use and input only one set of WiFi SSID/PWD
 
 ```
 // Permit input only one set of WiFi SSID/PWD. The other can be "NULL or "blank"
@@ -676,13 +695,44 @@ Once Credentials / WiFi network information is saved in the host non-volatile me
 ```
 But it's always advisable to use and input both sets for reliability.
  
-#### If you need to use both sets of WiFi SSID/PWD
+#### 11.2 If you need to use both sets of WiFi SSID/PWD
 
 ```
 // Permit input only one set of WiFi SSID/PWD. The other can be "NULL or "blank"
 // Default is false (if not defined) => must input 2 sets of SSID/PWD
 #define REQUIRE_ONE_SET_SSID_PW       false
 ```
+
+#### 12. To enable auto-scan of WiFi networks for selection in Configuration Portal
+
+#### 12.1 Enable auto-scan of WiFi networks for selection in Configuration Portal
+
+
+```
+#define SCAN_WIFI_NETWORKS                  true
+```
+
+The manual input of SSIDs is default enabled, so that users can input arbitrary SSID, not only from the scanned list. This is for the sample use-cases in which users can input the known SSIDs of another place, then send the boards to that place. The boards can connect to WiFi without users entering Config Portal to re-configure.
+
+#### 12.2 Disable manually input SSIDs
+
+```
+// To disable manually input SSID, only from a scanned SSID lists
+#define MANUAL_SSID_INPUT_ALLOWED           false
+```
+
+This is for normal use-cases in which users can only select an SSID from a scanned list of SSIDs to avoid typo mistakes and/or security.
+
+#### 12.3 Select maximum number of SSIDs in the list
+
+The maximum number of SSIDs in the list is seletable from 2 to 15. If invalid number of SSIDs is selected, the default number of 10 will be used.
+
+
+```
+// From 2-15
+#define MAX_SSID_IN_LIST                    8
+```
+
 
 ---
 ---
@@ -707,9 +757,27 @@ After you connected, please, go to http://192.168.4.1 or newly configured AP IP,
 
 Enter your credentials, 
 
+### 1. Without SCAN_WIFI_NETWORKS
+
+Enter your credentials, 
+
+<p align="center">
+    <img src="https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/blob/main/pics/Input.png">
+</p>
+
+or
+
 <p align="center">
     <img src="https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/blob/main/pics/MQTT.png">
 </p>
+
+### 2. With SCAN_WIFI_NETWORKS
+
+
+<p align="center">
+    <img src="https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/blob/main/pics/Input_With_Scan.png">
+</p>
+
 
 then click `Save`. 
 
@@ -1165,6 +1233,16 @@ void loop()
 
 /////////////////////////////////////////////
 
+#define SCAN_WIFI_NETWORKS                  true
+
+// To be able to manually input SSID, not from a scanned SSID lists
+#define MANUAL_SSID_INPUT_ALLOWED           true
+
+// From 2-15
+#define MAX_SSID_IN_LIST                  8
+  
+/////////////////////////////////////////////
+
 #include <ESPAsync_WiFiManager_Lite.h>
 
 #if ESP8266 
@@ -1357,7 +1435,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
-ESPAsync_WiFiManager_Lite v1.4.0
+ESPAsync_WiFiManager_Lite v1.5.0
 ESP_MultiResetDetector v1.1.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1432,7 +1510,7 @@ NNN
 
 
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
-ESPAsync_WiFiManager_Lite v1.4.0
+ESPAsync_WiFiManager_Lite v1.5.0
 ESP_MultiResetDetector v1.1.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1524,7 +1602,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP8266_NODEMCU
-ESPAsync_WiFiManager_Lite v1.4.0
+ESPAsync_WiFiManager_Lite v1.5.0
 ESP_MultiResetDetector v1.1.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1599,7 +1677,7 @@ NNN
 
 
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP8266_NODEMCU
-ESPAsync_WiFiManager_Lite v1.4.0
+ESPAsync_WiFiManager_Lite v1.5.0
 ESP_MultiResetDetector v1.1.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1690,7 +1768,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
-ESPAsync_WiFiManager_Lite v1.4.0
+ESPAsync_WiFiManager_Lite v1.5.0
 ESP_MultiResetDetector v1.1.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1803,7 +1881,7 @@ entry 0x4004c190
 
 
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
-ESPAsync_WiFiManager_Lite v1.4.0
+ESPAsync_WiFiManager_Lite v1.5.0
 ESP_MultiResetDetector v1.1.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1906,7 +1984,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
-ESPAsync_WiFiManager_Lite v1.4.0
+ESPAsync_WiFiManager_Lite v1.5.0
 ESP_MultiResetDetector v1.1.1
 LittleFS Flag read = 0xFFFC0003
 multiResetDetectorFlag = 0xFFFC0003
@@ -1949,7 +2027,7 @@ entry 0x4004c190
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
-ESPAsync_WiFiManager_Lite v1.4.0
+ESPAsync_WiFiManager_Lite v1.5.0
 ESP_MultiResetDetector v1.1.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1996,6 +2074,99 @@ TWTWTWT
 ```
 
 ---
+
+### 5. [ESPAsync_WiFi_MQTT](examples/ESPAsync_WiFi_MQTT) on ESP32_DEV to demo WiFi Scan
+
+This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAsync_WiFi_MQTT) example on **ESP32_DEV** with WiFi Scan for selection in Configuration Portal
+
+#### 5.1 MRD/DRD => Open Config Portal
+
+```
+Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
+ESPAsync_WiFiManager_Lite v1.5.0
+ESP_MultiResetDetector v1.1.1
+LittleFS Flag read = 0xFFFC0003
+multiResetDetectorFlag = 0xFFFC0003
+lowerBytes = 0x0003, upperBytes = 0x0003
+multiResetDetected, number of times = 3
+Saving config file...
+Saving config file OK
+[WML] Hdr=ESP_WM_LITE,SSID=HueNet1,PW=12345678
+[WML] SSID1=HueNet2,PW1=12345678
+[WML] BName=ESP32_DEV
+[WML] Hdr=ESP_WM_LITE,SSID=HueNet1,PW=12345678
+[WML] SSID1=HueNet2,PW1=12345678
+[WML] BName=ESP32_DEV
+[WML] WiFi networks found:
+[WML] 1: HueNet, -26dB
+[WML] 2: HueNet1, -28dB
+[WML] 3: HueNetTek, -31dB
+[WML] 4: dragino-1ed63c, -43dB
+[WML] 5: HueNet2, -56dB
+[WML] 6: bacau, -74dB
+[WML] 7: guest_24, -74dB
+[WML] 8: Rogers 786, -86dB
+[WML] 9: dlink-4F96, -90dB
+[WML] 10: Waterhome, -91dB
+[WML] 11: BELL246, -93dB
+[WML] 12: BELL627, -96dB
+[WML] 
+stConf:SSID=ESP_9ABF498,PW=MyESP_9ABF498
+[WML] IP=192.168.4.1,ch=5
+N
+Your stored Credentials :
+AIO_SERVER = io.adafruit.com
+AIO_SERVERPORT = 1883
+AIO_USERNAME = user_name
+AIO_KEY = aio_key
+AIO_PUB_TOPIC = /feeds/Temperature
+AIO_SUB_TOPIC = /feeds/LED_Control
+NNNN NNNNN NNNNN N
+```
+
+### 5.2 Config Data Saved => Connection to Adafruit MQTT
+
+```
+Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
+ESPAsync_WiFiManager_Lite v1.5.0
+ESP_MultiResetDetector v1.1.1
+LittleFS Flag read = 0xFFFE0001
+multiResetDetectorFlag = 0xFFFE0001
+lowerBytes = 0x0001, upperBytes = 0x0001
+No multiResetDetected, number of times = 1
+LittleFS Flag read = 0xFFFE0001
+Saving config file...
+Saving config file OK
+[WML] Hdr=ESP_WM_LITE,SSID=HueNet1,PW=12345678
+[WML] SSID1=HueNet2,PW1=12345678
+[WML] BName=ESP32_DEV
+[WML] Hdr=ESP_WM_LITE,SSID=HueNet1,PW=12345678
+[WML] SSID1=HueNet2,PW1=12345678
+[WML] BName=Async_ESP32_DEV
+[WML] WiFi connected after time: 1
+[WML] SSID=HueNet1,RSSI=-30
+[WML] Channel=2,IP=192.168.2.45
+Stop multiResetDetecting
+Saving config file...
+Saving config file OK
+
+Creating new WiFi client object OK
+Creating new MQTT object OK
+AIO_SERVER = io.adafruit.com, AIO_SERVERPORT = 1883
+AIO_USERNAME = user_name, AIO_KEY = aio_key
+Creating new MQTT_Pub_Topic, Temperature = user_name/feeds/Temperature
+Creating new Temperature object OK
+Temperature MQTT_Pub_Topic = user_name/feeds/Temperature
+Creating new AIO_SUB_TOPIC, LED_Control = user_name/feeds/LED_Control
+Creating new LED_Control object OK
+LED_Control AIO_SUB_TOPIC = user_name/feeds/LED_Control
+
+Connecting to WiFi MQTT (3 attempts)...
+WiFi MQTT connection successful!
+TWTWTWTW TWTWTWTWTWTW
+```
+
+---
 ---
 
 ### Debug
@@ -2031,6 +2202,11 @@ If you connect to the created configuration Access Point but the ConfigPortal do
 ---
 
 ## Releases
+
+### Major Release v1.5.0
+
+1. Enable scan of WiFi networks for selection in Configuration Portal. Check [PR for v1.3.0 - Enable scan of WiFi networks #10](https://github.com/khoih-prog/WiFiManager_NINA_Lite/pull/10). Now you can select optional **SCAN_WIFI_NETWORKS**, **MANUAL_SSID_INPUT_ALLOWED** to be able to manually input SSID, not only from a scanned SSID lists and **MAX_SSID_IN_LIST** (from 2-6 for ESP8266-AT or 2-15 for other)
+2. Minor enhancement to not display garbage when data is invalid
 
 ### Release v1.4.0
 
@@ -2097,6 +2273,7 @@ Submit issues to: [ESPAsync_WiFiManager_Lite issues](https://github.com/khoih-pr
 18. Configurable **Customs HTML Headers**, including Customs Style, Customs Head Elements, CORS Header
 19. Add support to **ESP32-S2 (ESP32-S2 Saola, AI-Thinker ESP-12K, etc.) using EEPROM, LittleFS and SPIFFS**
 20. Add support to **ESP32-C3 using EEPROM and SPIFFS**
+21. Enable **scan of WiFi networks** for selection in Configuration Portal
 
 ---
 ---
@@ -2104,6 +2281,15 @@ Submit issues to: [ESPAsync_WiFiManager_Lite issues](https://github.com/khoih-pr
 ### Contributions and Thanks
 
 Please help contribute to this project and add your name here.
+
+1. Thanks to [Michael H. "bizprof"](https://github.com/bizprof). With the impressive new feature :
+  - `Enable scan of WiFi networks for selection in Configuration Portal`. Check [PR for v1.3.0 - Enable scan of WiFi networks #10](https://github.com/khoih-prog/WiFiManager_NINA_Lite/pull/10) leading to v1.5.0
+  
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/bizprof"><img src="https://github.com/bizprof.png" width="100px;" alt="bizprof"/><br /><sub><b>⭐️⭐️ Michael H. "bizprof"</b></sub></a><br /></td>
+  </tr> 
+</table>
 
 
 ---

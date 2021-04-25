@@ -9,7 +9,7 @@
   Built by Khoi Hoang https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite
   Licensed under MIT license
   
-  Version: 1.4.0
+  Version: 1.5.0
    
   Version Modified By   Date        Comments
   ------- -----------  ----------   -----------
@@ -18,6 +18,7 @@
   1.2.0   K Hoang      22/02/2021  Add customs HTML header feature. Fix bug.
   1.3.0   K Hoang      12/04/2021  Fix invalid "blank" Config Data treated as Valid. Fix EEPROM_SIZE bug
   1.4.0   K Hoang      21/04/2021  Add support to new ESP32-C3 using SPIFFS or EEPROM
+  1.5.0   Michael H    24/04/2021  Enable scan of WiFi networks for selection in Configuration Portal
  *****************************************************************************************************************************/
 
 #pragma once
@@ -39,7 +40,7 @@
   #define USING_ESP32_C3        true
 #endif
 
-#define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION        "ESPAsync_WiFiManager_Lite v1.4.0"
+#define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION        "ESPAsync_WiFiManager_Lite v1.5.0"
 
 #ifdef ESP8266
 
@@ -142,6 +143,36 @@
 #endif
 
 #include <ESPAsync_WiFiManager_Lite_Debug.h>
+
+//////////////////////////////////////////////
+
+// New from v1.3.0
+// KH, Some minor simplification
+#if !defined(SCAN_WIFI_NETWORKS)
+  #define SCAN_WIFI_NETWORKS     true     //false
+#endif
+	
+#if SCAN_WIFI_NETWORKS
+  #if !defined(MANUAL_SSID_INPUT_ALLOWED)
+    #define MANUAL_SSID_INPUT_ALLOWED     true
+  #endif
+
+  #if !defined(MAX_SSID_IN_LIST)
+    #define MAX_SSID_IN_LIST     10
+  #elif (MAX_SSID_IN_LIST < 2)
+    #warning Parameter MAX_SSID_IN_LIST defined must be >= 2 - Reset to 10
+    #undef MAX_SSID_IN_LIST
+    #define MAX_SSID_IN_LIST      10
+  #elif (MAX_SSID_IN_LIST > 15)
+    #warning Parameter MAX_SSID_IN_LIST defined must be <= 15 - Reset to 10
+    #undef MAX_SSID_IN_LIST
+    #define MAX_SSID_IN_LIST      10
+  #endif
+#else
+  #warning SCAN_WIFI_NETWORKS disabled	
+#endif
+
+///////// NEW for DRD /////////////
 
 #if !defined(USING_MRD)
   #define USING_MRD       false
@@ -309,12 +340,16 @@ const char ESP_WM_LITE_HTML_HEAD_START[] /*PROGMEM*/ = "<!DOCTYPE html><html><he
 
 const char ESP_WM_LITE_HTML_HEAD_STYLE[] /*PROGMEM*/ = "<style>div,input{padding:5px;font-size:1em;}input{width:95%;}body{text-align: center;}button{background-color:#16A1E7;color:#fff;line-height:2.4rem;font-size:1.2rem;width:100%;}fieldset{border-radius:0.3rem;margin:0px;}</style>";
 
-const char ESP_WM_LITE_HTML_HEAD_END[]   /*PROGMEM*/ = "</head><div style=\"text-align:left;display:inline-block;min-width:260px;\">\
-<fieldset><div><label>*WiFi SSID</label><input value=\"[[id]]\"id=\"id\"><div></div></div>\
-<div><label>*PWD (8+ chars)</label><input value=\"[[pw]]\"id=\"pw\"><div></div></div>\
-<div><label>*WiFi SSID1</label><input value=\"[[id1]]\"id=\"id1\"><div></div></div>\
-<div><label>*PWD1 (8+ chars)</label><input value=\"[[pw1]]\"id=\"pw1\"><div></div></div></fieldset>\
-<fieldset><div><label>Board Name</label><input value=\"[[nm]]\"id=\"nm\"><div></div></div></fieldset>";
+const char ESP_WM_LITE_HTML_HEAD_END[]   /*PROGMEM*/ = "</head><div style='text-align:left;display:inline-block;min-width:260px;'>\
+<fieldset><div><label>*WiFi SSID</label><div>[[input_id]]</div></div>\
+<div><label>*PWD (8+ chars)</label><input value='[[pw]]' id='pw'><div></div></div>\
+<div><label>*WiFi SSID1</label><div>[[input_id1]]</div></div>\
+<div><label>*PWD1 (8+ chars)</label><input value='[[pw1]]' id='pw1'><div></div></div></fieldset>\
+<fieldset><div><label>Board Name</label><input value='[[nm]]' id='nm'><div></div></div></fieldset>";	// DO NOT CHANGE THIS STRING EVER!!!!
+
+const char ESP_WM_LITE_HTML_INPUT_ID[]   /*PROGMEM*/ = "<input value='[[id]]' id='id'>";
+const char ESP_WM_LITE__HTML_INPUT_ID1[]  /*PROGMEM*/ = "<input value='[[id1]]' id='id1'>";
+
 
 const char ESP_WM_LITE_FLDSET_START[]  /*PROGMEM*/ = "<fieldset>";
 const char ESP_WM_LITE_FLDSET_END[]    /*PROGMEM*/ = "</fieldset>";
@@ -330,6 +365,16 @@ udVal('nm',document.getElementById('nm').value);";
 const char ESP_WM_LITE_HTML_SCRIPT_ITEM[]  /*PROGMEM*/ = "udVal('{d}',document.getElementById('{d}').value);";
 const char ESP_WM_LITE_HTML_SCRIPT_END[]   /*PROGMEM*/ = "alert('Updated');}</script>";
 const char ESP_WM_LITE_HTML_END[]          /*PROGMEM*/ = "</html>";
+
+#if SCAN_WIFI_NETWORKS
+const char ESP_WM_LITE_SELECT_START[]      /*PROGMEM*/ = "<select id=";
+const char ESP_WM_LITE_SELECT_END[]        /*PROGMEM*/ = "</select>";
+const char ESP_WM_LITE_DATALIST_START[]    /*PROGMEM*/ = "<datalist id=";
+const char ESP_WM_LITE_DATALIST_END[]      /*PROGMEM*/ = "</datalist>";
+const char ESP_WM_LITE_OPTION_START[]      /*PROGMEM*/ = "<option>";
+const char ESP_WM_LITE_OPTION_END[]        /*PROGMEM*/ = "";			// "</option>"; is not required
+const char ESP_WM_LITE_NO_NETWORKS_FOUND[] /*PROGMEM*/ = "No suitable WiFi networks available!";
+#endif
 
 //////////////////////////////////////////
 
@@ -377,7 +422,16 @@ class ESPAsync_WiFiManager_Lite
     ~ESPAsync_WiFiManager_Lite()
     {
       if (server)
+      {
         delete server;
+
+#if SCAN_WIFI_NETWORKS
+        if (indices)
+        {
+          free(indices); //indices array no longer required so free memory
+        }
+#endif
+      }
     }
     
     //////////////////////////////////////////
@@ -1027,6 +1081,15 @@ class ESPAsync_WiFiManager_Lite
 #endif
        
     //////////////////////////////////////
+    // Add WiFi Scan from v1.5.0
+    
+#if SCAN_WIFI_NETWORKS
+  int WiFiNetworksFound = 0;		// Number of SSIDs found by WiFi scan, including low quality and duplicates
+  int *indices;					        // WiFi network data, filled by scan (SSID, BSSID)
+  String ListOfSSIDs = "";		  // List of SSIDs found by scan, in HTML <option> format
+#endif
+
+    //////////////////////////////////////
     
 #define RFC952_HOSTNAME_MAXLEN      24  
     
@@ -1122,6 +1185,9 @@ class ESPAsync_WiFiManager_Lite
       {
         // If SSID, PW ="blank" or NULL, set the flag
         ESP_WML_LOGERROR(F("Invalid Stored WiFi Config Data"));
+        
+        // Nullify the invalid data to avoid displaying garbage
+        memset(&ESP_WM_LITE_config, 0, sizeof(ESP_WM_LITE_config));
         
         hadConfigData = false;
         
@@ -2195,7 +2261,50 @@ class ESPAsync_WiFiManager_Lite
         root_html_template += _CustomsHeadElement;
   #endif          
       
-      root_html_template += String(ESP_WM_LITE_HTML_HEAD_END) + ESP_WM_LITE_FLDSET_START;
+#if SCAN_WIFI_NETWORKS
+      ESP_WML_LOGDEBUG1(WiFiNetworksFound, F(" SSIDs found, generating HTML now"));
+      // Replace HTML <input...> with <select...>, based on WiFi network scan in startConfigurationMode()
+
+      ListOfSSIDs = "";
+
+      for (int i = 0, list_items = 0; (i < WiFiNetworksFound) && (list_items < MAX_SSID_IN_LIST); i++)
+      {
+        if (indices[i] == -1) 
+          continue; 		// skip duplicates and those that are below the required quality
+          
+        ListOfSSIDs += ESP_WM_LITE_OPTION_START + String(WiFi.SSID(indices[i])) + ESP_WM_LITE_OPTION_END;	
+        list_items++;		// Count number of suitable, distinct SSIDs to be included in list
+      }
+
+      ESP_WML_LOGDEBUG(ListOfSSIDs);
+
+      if (ListOfSSIDs == "")		// No SSID found or none was good enough
+        ListOfSSIDs = ESP_WM_LITE_OPTION_START + String(ESP_WM_LITE_NO_NETWORKS_FOUND) + ESP_WM_LITE_OPTION_END;
+
+      pitem = String(ESP_WM_LITE_HTML_HEAD_END);
+
+#if MANUAL_SSID_INPUT_ALLOWED
+      pitem.replace("[[input_id]]",  "<input id='id' list='SSIDs'>"  + String(ESP_WM_LITE_DATALIST_START) + "'SSIDs'>" + ListOfSSIDs + ESP_WM_LITE_DATALIST_END);
+      ESP_WML_LOGDEBUG1(F("pitem:"), pitem);
+      pitem.replace("[[input_id1]]", "<input id='id1' list='SSIDs'>" + String(ESP_WM_LITE_DATALIST_START) + "'SSIDs'>" + ListOfSSIDs + ESP_WM_LITE_DATALIST_END);
+      
+      ESP_WML_LOGDEBUG1(F("pitem:"), pitem);
+
+#else
+      pitem.replace("[[input_id]]",  "<select id='id'>"  + ListOfSSIDs + ESP_WM_LITE_SELECT_END);
+      pitem.replace("[[input_id1]]", "<select id='id1'>" + ListOfSSIDs + ESP_WM_LITE_SELECT_END);
+#endif
+
+      root_html_template += pitem + ESP_WM_LITE_FLDSET_START;
+
+#else
+
+      pitem = String(ESP_WM_LITE_HTML_HEAD_END);
+      pitem.replace("[[input_id]]",  ESP_WM_LITE_HTML_INPUT_ID);
+      pitem.replace("[[input_id1]]", ESP_WM_LITE_HTML_INPUT_ID1);
+      root_html_template += pitem + ESP_WM_LITE_FLDSET_START;
+
+#endif    // SCAN_WIFI_NETWORKS
 
 #if USE_DYNAMIC_PARAMETERS      
       for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
@@ -2260,11 +2369,22 @@ class ESPAsync_WiFiManager_Lite
             result.replace("ESP_ASYNC_WM_LITE", ESP_WM_LITE_config.board_name);
           }
 
-          result.replace("[[id]]",     ESP_WM_LITE_config.WiFi_Creds[0].wifi_ssid);
-          result.replace("[[pw]]",     ESP_WM_LITE_config.WiFi_Creds[0].wifi_pw);
-          result.replace("[[id1]]",    ESP_WM_LITE_config.WiFi_Creds[1].wifi_ssid);
-          result.replace("[[pw1]]",    ESP_WM_LITE_config.WiFi_Creds[1].wifi_pw);
-          result.replace("[[nm]]",     ESP_WM_LITE_config.board_name);
+          if (hadConfigData)
+          {
+            result.replace("[[id]]",     ESP_WM_LITE_config.WiFi_Creds[0].wifi_ssid);
+            result.replace("[[pw]]",     ESP_WM_LITE_config.WiFi_Creds[0].wifi_pw);
+            result.replace("[[id1]]",    ESP_WM_LITE_config.WiFi_Creds[1].wifi_ssid);
+            result.replace("[[pw1]]",    ESP_WM_LITE_config.WiFi_Creds[1].wifi_pw);
+            result.replace("[[nm]]",     ESP_WM_LITE_config.board_name);
+          }
+          else
+          {
+            result.replace("[[id]]",  "");
+            result.replace("[[pw]]",  "");
+            result.replace("[[id1]]", "");
+            result.replace("[[pw1]]", "");
+            result.replace("[[nm]]",  "");
+          }
           
 #if USE_DYNAMIC_PARAMETERS          
           for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
@@ -2472,6 +2592,12 @@ class ESPAsync_WiFiManager_Lite
 
     void startConfigurationMode()
     {
+#if SCAN_WIFI_NETWORKS
+	    configTimeout = 0;  // To allow user input in CP
+	    
+	    WiFiNetworksFound = scanWifiNetworks(&indices);	
+#endif
+    
      // turn the LED_BUILTIN ON to tell us we are in configuration mode.
       digitalWrite(LED_BUILTIN, LED_ON);
 
@@ -2536,6 +2662,179 @@ class ESPAsync_WiFiManager_Lite
 
       configuration_mode = true;
     }
+    
+#if SCAN_WIFI_NETWORKS
+
+	  // Source code adapted from https://github.com/khoih-prog/ESP_WiFiManager/blob/master/src/ESP_WiFiManager-Impl.h
+
+    int           _paramsCount            = 0;
+    int           _minimumQuality         = -1;
+    bool          _removeDuplicateAPs     = true;
+	
+	  //////////////////////////////////////////
+    
+    void swap(int *thisOne, int *thatOne)
+    {
+       int tempo;
+
+       tempo    = *thatOne;
+       *thatOne = *thisOne;
+       *thisOne = tempo;
+    }
+
+    //////////////////////////////////////////
+	
+	  void setMinimumSignalQuality(int quality)
+	  {
+	    _minimumQuality = quality;
+	  }
+
+	  //////////////////////////////////////////
+
+	  //if this is true, remove duplicate Access Points - default true
+	  void setRemoveDuplicateAPs(bool removeDuplicates)
+	  {
+	    _removeDuplicateAPs = removeDuplicates;
+	  }
+
+	  //////////////////////////////////////////
+
+	  //Scan for WiFiNetworks in range and sort by signal strength
+	  //space for indices array allocated on the heap and should be freed when no longer required  
+	  int scanWifiNetworks(int **indicesptr)
+	  {
+	    ESP_WML_LOGDEBUG(F("Scanning Network"));
+
+	    int n = WiFi.scanNetworks();
+
+	    ESP_WML_LOGDEBUG1(F("scanWifiNetworks: Done, Scanned Networks n = "), n); 
+
+	    //KH, Terrible bug here. WiFi.scanNetworks() returns n < 0 => malloc( negative == very big ) => crash!!!
+	    //In .../esp32/libraries/WiFi/src/WiFiType.h
+	    //#define WIFI_SCAN_RUNNING   (-1)
+	    //#define WIFI_SCAN_FAILED    (-2)
+	    //if (n == 0)
+	    if (n <= 0)
+	    {
+		    ESP_WML_LOGDEBUG(F("No network found"));
+		    return (0);
+	    }
+	    else
+	    {
+		    // Allocate space off the heap for indices array.
+		    // This space should be freed when no longer required.
+		    int* indices = (int *)malloc(n * sizeof(int));
+
+		    if (indices == NULL)
+		    {
+		      ESP_WML_LOGDEBUG(F("ERROR: Out of memory"));
+		      *indicesptr = NULL;
+		      return (0);
+		    }
+
+		    *indicesptr = indices;
+	       
+		    //sort networks
+		    for (int i = 0; i < n; i++)
+		    {
+		      indices[i] = i;
+		    }
+
+		    ESP_WML_LOGDEBUG(F("Sorting"));
+
+		    // RSSI SORT
+		    // old sort
+		    for (int i = 0; i < n; i++)
+		    {
+		      for (int j = i + 1; j < n; j++)
+		      {
+			      if (WiFi.RSSI(indices[j]) > WiFi.RSSI(indices[i]))
+			      {
+                    //std::swap(indices[i], indices[j]);
+                    // Using locally defined swap()
+                    swap(&indices[i], &indices[j]);
+       			}
+		      }
+		    }
+
+		    ESP_WML_LOGDEBUG(F("Removing Dup"));
+
+		    // remove duplicates ( must be RSSI sorted )
+		    if (_removeDuplicateAPs)
+		    {
+		      String cssid;
+		      
+		      for (int i = 0; i < n; i++)
+		      {
+			      if (indices[i] == -1)
+			        continue;
+
+			      cssid = WiFi.SSID(indices[i]);
+			      
+			      for (int j = i + 1; j < n; j++)
+			      {
+			        if (cssid == WiFi.SSID(indices[j]))
+			        {
+				        ESP_WML_LOGDEBUG1("DUP AP:", WiFi.SSID(indices[j]));
+				        indices[j] = -1; // set dup aps to index -1
+			        }
+			      }
+		      }
+		    }
+
+		    for (int i = 0; i < n; i++)
+		    {
+		      if (indices[i] == -1)
+			      continue; // skip dups
+
+		      int quality = getRSSIasQuality(WiFi.RSSI(indices[i]));
+
+		      if (!(_minimumQuality == -1 || _minimumQuality < quality))
+		      {
+			      indices[i] = -1;
+			      ESP_WML_LOGDEBUG(F("Skipping low quality"));
+		      }
+		    }
+
+		    ESP_WML_LOGWARN(F("WiFi networks found:"));
+		    
+		    for (int i = 0; i < n; i++)
+		    {
+		      if (indices[i] == -1)
+			      continue; // skip dups
+		      else
+			      ESP_WML_LOGWARN5(i+1,": ",WiFi.SSID(indices[i]), ", ", WiFi.RSSI(i), "dB");
+		    }
+
+		    return (n);
+	    }
+	  }
+
+	  //////////////////////////////////////////
+
+	  int getRSSIasQuality(int RSSI)
+	  {
+	    int quality = 0;
+
+	    if (RSSI <= -100)
+	    {
+		    quality = 0;
+	    }
+	    else if (RSSI >= -50)
+	    {
+		    quality = 100;
+	    }
+	    else
+	    {
+		    quality = 2 * (RSSI + 100);
+	    }
+
+	    return quality;
+	  }
+
+  //////////////////////////////////////////
+
+#endif    
 };
 
 
