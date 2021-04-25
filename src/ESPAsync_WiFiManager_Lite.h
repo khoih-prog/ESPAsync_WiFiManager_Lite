@@ -348,7 +348,7 @@ const char ESP_WM_LITE_HTML_HEAD_END[]   /*PROGMEM*/ = "</head><div style='text-
 <fieldset><div><label>Board Name</label><input value='[[nm]]' id='nm'><div></div></div></fieldset>";	// DO NOT CHANGE THIS STRING EVER!!!!
 
 const char ESP_WM_LITE_HTML_INPUT_ID[]   /*PROGMEM*/ = "<input value='[[id]]' id='id'>";
-const char ESP_WM_LITE__HTML_INPUT_ID1[]  /*PROGMEM*/ = "<input value='[[id1]]' id='id1'>";
+const char ESP_WM_LITE_HTML_INPUT_ID1[]  /*PROGMEM*/ = "<input value='[[id1]]' id='id1'>";
 
 
 const char ESP_WM_LITE_FLDSET_START[]  /*PROGMEM*/ = "<fieldset>";
