@@ -26,7 +26,7 @@
 
 ## Changelog
 
-### Releases v1.5.1
+### Release v1.5.1
 
 1. Update `platform.ini` and `library.json` to use original `khoih-prog` instead of `khoih.prog` after PIO fix
 
