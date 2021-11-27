@@ -1999,6 +1999,7 @@ Submit issues to: [ESPAsync_WiFiManager_Lite issues](https://github.com/khoih-pr
 19. Add support to **ESP32-S2 (ESP32-S2 Saola, AI-Thinker ESP-12K, etc.) using EEPROM, LittleFS and SPIFFS**
 20. Add support to **ESP32-C3 using EEPROM and SPIFFS**
 21. Enable **scan of WiFi networks** for selection in Configuration Portal
+22. Ready for ESP32 core v2.0.0+
 
 ---
 ---
