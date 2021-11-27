@@ -12,6 +12,7 @@
 ## Table of Contents
 
 * [Changelog](#changelog)
+  * [Release v1.6.0](#release-v160)
   * [Release v1.5.1](#release-v151)
   * [Major Release v1.5.0](#major-release-v150)
   * [Release v1.4.0](#release-v140)
@@ -25,6 +26,11 @@
 
 
 ## Changelog
+
+### Release v1.6.0
+
+1. Auto detect ESP32 core and use either built-in LittleFS or [LITTLEFS](https://github.com/lorol/LITTLEFS) library. 
+2. Fix bug returning IP `255.255.255.255` in core v2.0.0+ when using `hostname`
 
 ### Release v1.5.1
 

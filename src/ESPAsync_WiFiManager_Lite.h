@@ -9,7 +9,7 @@
   Built by Khoi Hoang https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite
   Licensed under MIT license
   
-  Version: 1.5.1
+  Version: 1.6.0
    
   Version Modified By   Date        Comments
   ------- -----------  ----------   -----------
@@ -19,7 +19,8 @@
   1.3.0   K Hoang      12/04/2021  Fix invalid "blank" Config Data treated as Valid. Fix EEPROM_SIZE bug
   1.4.0   K Hoang      21/04/2021  Add support to new ESP32-C3 using SPIFFS or EEPROM
   1.5.0   Michael H    24/04/2021  Enable scan of WiFi networks for selection in Configuration Portal
-  1.5.1   K Hoang      10/10/2021  Update `platform.ini` and `library.json` 
+  1.5.1   K Hoang      10/10/2021  Update `platform.ini` and `library.json`
+  1.6.0   K Hoang      26/11/2021  Auto detect ESP32 core and use either built-in LittleFS or LITTLEFS library. Fix bug.
  *****************************************************************************************************************************/
 
 #pragma once
@@ -41,7 +42,7 @@
   #define USING_ESP32_C3        true
 #endif
 
-#define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION        "ESPAsync_WiFiManager_Lite v1.5.1"
+#define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION        "ESPAsync_WiFiManager_Lite v1.6.0"
 
 #ifdef ESP8266
 
@@ -98,14 +99,26 @@
     // Use LittleFS
     #include "FS.h"
 
-    // The library will be depreciated after being merged to future major Arduino esp32 core release 2.x
-    // At that time, just remove this library inclusion
-    #include <LITTLEFS.h>             // https://github.com/lorol/LITTLEFS
+    // Check cores/esp32/esp_arduino_version.h and cores/esp32/core_version.h
+    //#if ( ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(2, 0, 0) )  //(ESP_ARDUINO_VERSION_MAJOR >= 2)
+    #if ( defined(ESP_ARDUINO_VERSION_MAJOR) && (ESP_ARDUINO_VERSION_MAJOR >= 2) )
+      #warning Using ESP32 Core 1.0.6 or 2.0.0+ and LittleFS in ESP_WiFiManager_Lite.h
+      // The library has been merged into esp32 core from release 1.0.6
+      #include <LittleFS.h>
+      
+      FS* filesystem =      &LittleFS;
+      #define FileFS        LittleFS
+      #define FS_Name       "LittleFS"
+    #else
+      #warning Using ESP32 Core 1.0.5- and LittleFS in ESPAsync_WiFiManager_Lite.h. You must install LITTLEFS library
+      // The library has been merged into esp32 core from release 1.0.6
+      #include <LITTLEFS.h>             // https://github.com/lorol/LITTLEFS
+      
+      FS* filesystem =      &LITTLEFS;
+      #define FileFS        LITTLEFS
+      #define FS_Name       "LittleFS"
+    #endif
     
-    FS* filesystem =      &LITTLEFS;
-    #define FileFS        LITTLEFS
-    #define FS_Name       "LittleFS"
-    #warning Using LittleFS in ESPAsync_WiFiManager_Lite.h
   #elif USE_SPIFFS
     #include "FS.h"
     #include <SPIFFS.h>
@@ -750,13 +763,20 @@ class ESPAsync_WiFiManager_Lite
         WiFi.hostname(RFC952_hostname);
 #else
 
-      // Still have bug in ESP32_S2. If using WiFi.setHostname() => WiFi.localIP() always = 255.255.255.255
+
+  // Check cores/esp32/esp_arduino_version.h and cores/esp32/core_version.h
+  //#if ( ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(2, 0, 0) )  //(ESP_ARDUINO_VERSION_MAJOR >= 2)
+  #if ( defined(ESP_ARDUINO_VERSION_MAJOR) && (ESP_ARDUINO_VERSION_MAJOR >= 2) )
+      WiFi.setHostname(RFC952_hostname);
+  #else     
+      // Still have bug in ESP32_S2 for old core. If using WiFi.setHostname() => WiFi.localIP() always = 255.255.255.255
       if ( String(ARDUINO_BOARD) != "ESP32S2_DEV" )
       {
         // See https://github.com/espressif/arduino-esp32/issues/2537
         WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE);
         WiFi.setHostname(RFC952_hostname);
       } 
+   #endif
 #endif        
       }
     }
@@ -2198,6 +2218,77 @@ class ESPAsync_WiFiManager_Lite
 #endif
 
     //////////////////////////////////////////////
+    
+#if 1
+    uint8_t connectMultiWiFi()
+    {
+#if ESP32
+  // For ESP32, this better be 0 to shorten the connect time.
+  // For ESP32-S2/C3, must be > 500
+  #if ( USING_ESP32_S2 || USING_ESP32_C3 )
+    #define WIFI_MULTI_1ST_CONNECT_WAITING_MS           500L
+  #else
+    // For ESP32 core v1.0.6, must be >= 500
+    #define WIFI_MULTI_1ST_CONNECT_WAITING_MS           800L
+  #endif
+#else
+  // For ESP8266, this better be 2200 to enable connect the 1st time
+  #define WIFI_MULTI_1ST_CONNECT_WAITING_MS             2200L
+#endif
+
+#define WIFI_MULTI_CONNECT_WAITING_MS                   500L
+
+      uint8_t status;
+      
+      ESP_WML_LOGINFO(F("Connecting MultiWifi..."));
+
+      WiFi.mode(WIFI_STA);
+
+      setHostname();
+               
+      int i = 0;
+      status = wifiMulti.run();
+      delay(WIFI_MULTI_1ST_CONNECT_WAITING_MS);
+
+      while ( ( i++ < 20 ) && ( status != WL_CONNECTED ) )
+      {
+        //status = wifiMulti.run();
+        status = WiFi.status();
+
+        if ( status == WL_CONNECTED )
+          break;
+        else
+          delay(WIFI_MULTI_CONNECT_WAITING_MS);
+      }
+
+      if ( status == WL_CONNECTED )
+      {
+        ESP_WML_LOGWARN1(F("WiFi connected after time: "), i);
+        ESP_WML_LOGWARN3(F("SSID="), WiFi.SSID(), F(",RSSI="), WiFi.RSSI());
+        ESP_WML_LOGWARN3(F("Channel="), WiFi.channel(), F(",IP="), WiFi.localIP() );
+      }
+      else
+      {
+        ESP_WML_LOGERROR(F("WiFi not connected"));
+
+    #if USING_MRD
+        // To avoid unnecessary MRD
+        mrd->loop();
+    #else
+        // To avoid unnecessary DRD
+        drd->loop();
+    #endif
+      
+    #if ESP8266      
+        ESP.reset();
+    #else
+        ESP.restart();
+    #endif  
+      }
+
+      return status;
+    }
+#else    
 
     uint8_t connectMultiWiFi()
     {
@@ -2237,6 +2328,7 @@ class ESPAsync_WiFiManager_Lite
 
       return status;
     }
+#endif
 
     //////////////////////////////////////////////
     

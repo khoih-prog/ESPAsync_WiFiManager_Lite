@@ -9,7 +9,7 @@
   Built by Khoi Hoang https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite
   Licensed under MIT license
   
-  Version: 1.5.1
+  Version: 1.6.0
    
   Version Modified By   Date        Comments
   ------- -----------  ----------   -----------
@@ -19,7 +19,8 @@
   1.3.0   K Hoang      12/04/2021  Fix invalid "blank" Config Data treated as Valid. Fix EEPROM_SIZE bug
   1.4.0   K Hoang      21/04/2021  Add support to new ESP32-C3 using SPIFFS or EEPROM
   1.5.0   Michael H    24/04/2021  Enable scan of WiFi networks for selection in Configuration Portal
-  1.5.1   K Hoang      10/10/2021  Update `platform.ini` and `library.json` 
+  1.5.1   K Hoang      10/10/2021  Update `platform.ini` and `library.json`
+  1.6.0   K Hoang      26/11/2021  Auto detect ESP32 core and use either built-in LittleFS or LITTLEFS library. Fix bug.
  *****************************************************************************************************************************/
 
 #ifndef ESPAsync_WiFiManager_Lite_Debug_h
