@@ -33,7 +33,10 @@
   
   // RTC Memory Address for the DoubleResetDetector to use
   #define MRD_ADDRESS                   0
-  #warning Using MULTI_RESETDETECTOR
+
+  #if (_ESP_WM_LITE_LOGLEVEL_ > 3)
+    #warning Using MULTI_RESETDETECTOR
+  #endif
 #else
   #define DOUBLERESETDETECTOR_DEBUG     true
   
@@ -43,7 +46,10 @@
   
   // RTC Memory Address for the DoubleResetDetector to use
   #define DRD_ADDRESS                   0
-  #warning Using DOUBLE_RESETDETECTOR
+
+  #if (_ESP_WM_LITE_LOGLEVEL_ > 3)
+    #warning Using DOUBLE_RESETDETECTOR
+  #endif
 #endif
 
 /////////////////////////////////////////////
@@ -67,10 +73,6 @@
 
 /////////////////////////////////////////////
 
-// Permit input only one set of WiFi SSID/PWD. The other can be "NULL or "blank"
-// Default is false (if not defined) => must input 2 sets of SSID/PWD
-#define REQUIRE_ONE_SET_SSID_PW       false
-
 // Force some params
 #define TIMEOUT_RECONNECT_WIFI                    10000L
 
@@ -83,9 +85,32 @@
 #define CONFIG_TIMEOUT_RETRYTIMES_BEFORE_RESET    5
 
 // Config Timeout 120s (default 60s). Applicable only if Config Data is Valid
-#define CONFIG_TIMEOUT                      120000L
+#define CONFIG_TIMEOUT                            120000L
 
-#define USE_DYNAMIC_PARAMETERS              true
+/////////////////////////////////////////////
+
+// Permit input only one set of WiFi SSID/PWD. The other can be "NULL or "blank"
+// Default is false (if not defined) => must input 2 sets of SSID/PWD
+#define REQUIRE_ONE_SET_SSID_PW               true    //false
+
+// Max times to try WiFi per loop() iteration. To avoid blocking issue in loop()
+// Default 1 if not defined, and minimum 1.
+#define MAX_NUM_WIFI_RECON_TRIES_PER_LOOP     2
+
+// Default no interval between recon WiFi if lost
+// Max permitted interval will be 10mins
+// Uncomment to use. Be careful, WiFi reconnect will be delayed if using this method
+// Only use whenever urgent tasks in loop() can't be delayed. But if so, it's better you have to rewrite your code, e.g. using higher priority tasks.
+#define WIFI_RECON_INTERVAL                   30000
+
+/////////////////////////////////////////////
+
+// Permit reset hardware if no WiFi to permit user another chance to access Config Portal.
+#define RESET_IF_NO_WIFI              false
+
+/////////////////////////////////////////////
+
+#define USE_DYNAMIC_PARAMETERS        true
 
 /////////////////////////////////////////////
 

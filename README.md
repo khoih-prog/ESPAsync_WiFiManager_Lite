@@ -45,6 +45,9 @@
     * [12.1 Enable auto-scan of WiFi networks for selection in Configuration Portal](#121-enable-auto-scan-of-wifi-networks-for-selection-in-configuration-portal)
     * [12.2 Disable manually input SSIDs](#122-disable-manually-input-ssids)
     * [12.3 Select maximum number of SSIDs in the list](#123-select-maximum-number-of-ssids-in-the-list)
+  * [13. To avoid blocking in loop when WiFi is lost](#13-To-avoid-blocking-in-loop-when-wifi-is-lost)
+    * [13.1 Max times to try WiFi per loop](#131-max-times-to-try-wifi-per-loop)
+    * [13.2 Interval between reconnection WiFi if lost](#132-interval-between-reconnection-wifi-if-lost)
 * [Examples](#examples)
   * [ 1. ESPAsync_WiFi](examples/ESPAsync_WiFi)
   * [ 2. ESPAsync_WiFi_MQTT](examples/ESPAsync_WiFi_MQTT)
@@ -161,9 +164,9 @@ This [**ESPAsync_WiFiManager_Lite** library](https://github.com/khoih-prog/ESPAs
 
 ## Prerequisites
 
- 1. [`Arduino IDE 1.8.16+` for Arduino](https://www.arduino.cc/en/Main/Software)
+ 1. [`Arduino IDE 1.8.19+` for Arduino](https://www.arduino.cc/en/Main/Software)
  2. [`ESP8266 Core 3.0.2+`](https://github.com/esp8266/Arduino) for ESP8266-based boards. [![Latest release](https://img.shields.io/github/release/esp8266/Arduino.svg)](https://github.com/esp8266/Arduino/releases/latest/). To use ESP8266 core 2.7.1+ for LittleFS.
- 3. [`ESP32 Core 2.0.1+`](https://github.com/espressif/arduino-esp32) for ESP32-based boards. [![Latest release](https://img.shields.io/github/release/espressif/arduino-esp32.svg)](https://github.com/espressif/arduino-esp32/releases/latest/)
+ 3. [`ESP32 Core 2.0.2+`](https://github.com/espressif/arduino-esp32) for ESP32-based boards. [![Latest release](https://img.shields.io/github/release/espressif/arduino-esp32.svg)](https://github.com/espressif/arduino-esp32/releases/latest/)
  4. [`ESPAsyncWebServer v1.2.3+`](https://github.com/me-no-dev/ESPAsyncWebServer) for all ESP32/ESP8266-based boards.
  5. [`ESPAsyncTCP v1.2.2+`](https://github.com/me-no-dev/ESPAsyncTCP) for ESP8266-based boards.
  6. [`AsyncTCP v1.1.1+`](https://github.com/me-no-dev/AsyncTCP) for ESP32-based boards 
@@ -494,6 +497,35 @@ The maximum number of SSIDs in the list is seletable from 2 to 15. If invalid nu
 #define MAX_SSID_IN_LIST                    8
 ```
 
+#### 13. To avoid blocking in loop when WiFi is lost
+
+#### 13.1 Max times to try WiFi per loop
+
+To define max times to try WiFi per loop() iteration. To avoid blocking issue in loop()
+
+Default is 1 if not defined, and minimum is forced to be 1.
+
+To use, uncomment in `defines.h`. 
+
+Check [retries block the main loop #18](https://github.com/khoih-prog/WiFiManager_NINA_Lite/issues/18#issue-1094004380)
+
+```
+#define MAX_NUM_WIFI_RECON_TRIES_PER_LOOP     2
+```
+
+#### 13.2 Interval between reconnection WiFi if lost
+
+Default is no interval between reconnection WiFi times if lost WiFi. Max permitted interval will be 10mins.
+
+Uncomment to use. Be careful, WiFi reconnection will be delayed if using this method.
+
+Only use whenever urgent tasks in loop() can't be delayed. But if so, it's better you have to rewrite your code, e.g. using higher priority tasks.
+
+Check [retries block the main loop #18](https://github.com/khoih-prog/WiFiManager_NINA_Lite/issues/18#issuecomment-1006197561)
+
+```
+#define WIFI_RECON_INTERVAL                   30000     // 30s
+```
 
 ---
 ---
@@ -938,7 +970,10 @@ void loop()
   
   // RTC Memory Address for the DoubleResetDetector to use
   #define MRD_ADDRESS                   0
-  #warning Using MULTI_RESETDETECTOR
+
+  #if (_ESP_WM_LITE_LOGLEVEL_ > 3)
+    #warning Using MULTI_RESETDETECTOR
+  #endif
 #else
   #define DOUBLERESETDETECTOR_DEBUG     true
   
@@ -948,7 +983,10 @@ void loop()
   
   // RTC Memory Address for the DoubleResetDetector to use
   #define DRD_ADDRESS                   0
-  #warning Using DOUBLE_RESETDETECTOR
+
+  #if (_ESP_WM_LITE_LOGLEVEL_ > 3)
+    #warning Using DOUBLE_RESETDETECTOR
+  #endif
 #endif
 
 /////////////////////////////////////////////
@@ -972,10 +1010,6 @@ void loop()
 
 /////////////////////////////////////////////
 
-// Permit input only one set of WiFi SSID/PWD. The other can be "NULL or "blank"
-// Default is false (if not defined) => must input 2 sets of SSID/PWD
-#define REQUIRE_ONE_SET_SSID_PW       false
-
 // Force some params
 #define TIMEOUT_RECONNECT_WIFI                    10000L
 
@@ -988,9 +1022,32 @@ void loop()
 #define CONFIG_TIMEOUT_RETRYTIMES_BEFORE_RESET    5
 
 // Config Timeout 120s (default 60s). Applicable only if Config Data is Valid
-#define CONFIG_TIMEOUT                      120000L
+#define CONFIG_TIMEOUT                            120000L
 
-#define USE_DYNAMIC_PARAMETERS              true
+/////////////////////////////////////////////
+
+// Permit input only one set of WiFi SSID/PWD. The other can be "NULL or "blank"
+// Default is false (if not defined) => must input 2 sets of SSID/PWD
+#define REQUIRE_ONE_SET_SSID_PW               true    //false
+
+// Max times to try WiFi per loop() iteration. To avoid blocking issue in loop()
+// Default 1 if not defined, and minimum 1.
+#define MAX_NUM_WIFI_RECON_TRIES_PER_LOOP     2
+
+// Default no interval between recon WiFi if lost
+// Max permitted interval will be 10mins
+// Uncomment to use. Be careful, WiFi reconnect will be delayed if using this method
+// Only use whenever urgent tasks in loop() can't be delayed. But if so, it's better you have to rewrite your code, e.g. using higher priority tasks.
+#define WIFI_RECON_INTERVAL                   30000
+
+/////////////////////////////////////////////
+
+// Permit reset hardware if no WiFi to permit user another chance to access Config Portal.
+#define RESET_IF_NO_WIFI              false
+
+/////////////////////////////////////////////
+
+#define USE_DYNAMIC_PARAMETERS        true
 
 /////////////////////////////////////////////
 
@@ -1196,7 +1253,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
-ESPAsync_WiFiManager_Lite v1.6.0
+ESPAsync_WiFiManager_Lite v1.7.0
 ESP_MultiResetDetector v1.2.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1271,7 +1328,7 @@ NNN
 
 
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
-ESPAsync_WiFiManager_Lite v1.6.0
+ESPAsync_WiFiManager_Lite v1.7.0
 ESP_MultiResetDetector v1.2.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1363,7 +1420,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP8266_NODEMCU
-ESPAsync_WiFiManager_Lite v1.6.0
+ESPAsync_WiFiManager_Lite v1.7.0
 ESP_MultiResetDetector v1.2.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1438,7 +1495,7 @@ NNN
 
 
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP8266_NODEMCU
-ESPAsync_WiFiManager_Lite v1.6.0
+ESPAsync_WiFiManager_Lite v1.7.0
 ESP_MultiResetDetector v1.2.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1529,7 +1586,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
-ESPAsync_WiFiManager_Lite v1.6.0
+ESPAsync_WiFiManager_Lite v1.7.0
 ESP_MultiResetDetector v1.2.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1642,7 +1699,7 @@ entry 0x4004c190
 
 
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
-ESPAsync_WiFiManager_Lite v1.6.0
+ESPAsync_WiFiManager_Lite v1.7.0
 ESP_MultiResetDetector v1.2.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1745,7 +1802,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
-ESPAsync_WiFiManager_Lite v1.6.0
+ESPAsync_WiFiManager_Lite v1.7.0
 ESP_MultiResetDetector v1.2.1
 LittleFS Flag read = 0xFFFC0003
 multiResetDetectorFlag = 0xFFFC0003
@@ -1788,7 +1845,7 @@ entry 0x4004c190
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
-ESPAsync_WiFiManager_Lite v1.6.0
+ESPAsync_WiFiManager_Lite v1.7.0
 ESP_MultiResetDetector v1.2.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1844,7 +1901,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
-ESPAsync_WiFiManager_Lite v1.6.0
+ESPAsync_WiFiManager_Lite v1.7.0
 ESP_MultiResetDetector v1.2.1
 LittleFS Flag read = 0xFFFC0003
 multiResetDetectorFlag = 0xFFFC0003
@@ -1889,7 +1946,7 @@ NNNN NNNNN NNNNN N
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
-ESPAsync_WiFiManager_Lite v1.6.0
+ESPAsync_WiFiManager_Lite v1.7.0
 ESP_MultiResetDetector v1.2.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -2000,6 +2057,9 @@ Submit issues to: [ESPAsync_WiFiManager_Lite issues](https://github.com/khoih-pr
 20. Add support to **ESP32-C3 using EEPROM and SPIFFS**
 21. Enable **scan of WiFi networks** for selection in Configuration Portal
 22. Ready for ESP32 core v2.0.0+
+23. Fix ESP8266 bug not easy to connect to Config Portal for ESP8266 core v3.0.0+ 
+24. Fix the blocking issue in loop() with configurable `WIFI_RECON_INTERVAL`
+25. Optimize library code by using `reference-passing` instead of `value-passing`
 
 ---
 ---

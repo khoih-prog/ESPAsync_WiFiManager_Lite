@@ -12,6 +12,7 @@
 ## Table of Contents
 
 * [Changelog](#changelog)
+  * [Major Release v1.7.0](#major-release-v170)
   * [Release v1.6.0](#release-v160)
   * [Release v1.5.1](#release-v151)
   * [Major Release v1.5.0](#major-release-v150)
@@ -26,6 +27,14 @@
 
 
 ## Changelog
+
+### Major Release v1.7.0
+
+1. Fix ESP8266 bug not easy to connect to Config Portal for ESP8266 core v3.0.0+ 
+2. Fix the blocking issue in loop(). Check [retries block the main loop #18](https://github.com/khoih-prog/WiFiManager_NINA_Lite/issues/18)
+3. Configurable `WIFI_RECON_INTERVAL`. Check [retries block the main loop #18](https://github.com/khoih-prog/WiFiManager_NINA_Lite/issues/18#issuecomment-1006197561)
+4. Optimize library code by using `reference-passing` instead of `value-passing`
+5. Clean up
 
 ### Release v1.6.0
 
