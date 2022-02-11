@@ -29,7 +29,7 @@ Please ensure to specify the following:
 Arduino IDE version: 1.8.19
 ESP8266 Core Version 3.0.2
 OS: Ubuntu 20.04 LTS
-Linux xy-Inspiron-3593 5.4.0-92-generic #103-Ubuntu SMP Fri Nov 26 16:13:00 UTC 2021 x86_64 x86_64 x86_64 GNU/Linux
+Linux xy-Inspiron-3593 5.4.0-99-generic #112-Ubuntu SMP Thu Feb 3 13:50:55 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
 
 Context:
 The board couldn't autoreconnect to Local Blynk Server after router power recycling.
