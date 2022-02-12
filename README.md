@@ -86,6 +86,7 @@
     * [5.1 MRD/DRD => Open Config Portal](#51-mrddrd--open-config-portal)
     * [5.2 Config Data Saved => Connection to Adafruit MQTT](#52-config-data-saved--connection-to-adafruit-mqtt)
   * [6. ESPAsync_WiFi on ESP32S3_DEV](#6-ESPAsync_WiFi-on-ESP32S3_DEV) **New**
+  * [7. ESPAsync_WiFi on ESP32C3_DEV using LittleFS](#7-ESPAsync_WiFi-on-ESP32C3_DEV-using-LittleFS) **New**
 * [Debug](#debug)
 * [Troubleshooting](#troubleshooting)
 * [Issues](#issues)
@@ -160,7 +161,7 @@ This [**ESPAsync_WiFiManager_Lite** library](https://github.com/khoih-prog/ESPAs
 
  1. **ESP8266 and ESP32-based boards using EEPROM, SPIFFS or LittleFS**.
  2. **ESP32-S2 (ESP32-S2 Saola, AI-Thinker ESP-12K, etc.) using EEPROM, SPIFFS or LittleFS**.
- 3. **ESP32-C3 (ARDUINO_ESP32C3_DEV) using EEPROM or SPIFFS**.
+ 3. **ESP32-C3 (ARDUINO_ESP32C3_DEV) using EEPROM, SPIFFS or LittleFS**.
  4. **ESP32-S3 (ESP32S3_DEV, ESP32_S3_BOX, UM TINYS3, UM PROS3, UM FEATHERS3, etc.) using EEPROM, SPIFFS or LittleFS**.
 
 ---
@@ -996,13 +997,13 @@ void loop()
 /////////////////////////////////////////////
 
 // LittleFS has higher priority than SPIFFS
-#if ( ARDUINO_ESP32C3_DEV )
-  // Currently, ESP32-C3 only supporting SPIFFS and EEPROM. Will fix to support LittleFS
-  #define USE_LITTLEFS          false
-  #define USE_SPIFFS            true
-#else
+#if ( defined(ESP_ARDUINO_VERSION_MAJOR) && (ESP_ARDUINO_VERSION_MAJOR >= 2) )
   #define USE_LITTLEFS    true
   #define USE_SPIFFS      false
+#elif defined(ARDUINO_ESP32C3_DEV)
+  // For core v1.0.6-, ESP32-C3 only supporting SPIFFS and EEPROM. To use v2.0.0+ for LittleFS
+  #define USE_LITTLEFS          false
+  #define USE_SPIFFS            true
 #endif
 
 /////////////////////////////////////////////
@@ -1257,7 +1258,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
-ESPAsync_WiFiManager_Lite v1.8.0
+ESPAsync_WiFiManager_Lite v1.8.1
 ESP_MultiResetDetector v1.3.0
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1332,7 +1333,7 @@ NNN
 
 
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
-ESPAsync_WiFiManager_Lite v1.8.0
+ESPAsync_WiFiManager_Lite v1.8.1
 ESP_MultiResetDetector v1.3.0
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1424,7 +1425,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP8266_NODEMCU
-ESPAsync_WiFiManager_Lite v1.8.0
+ESPAsync_WiFiManager_Lite v1.8.1
 ESP_MultiResetDetector v1.3.0
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1499,7 +1500,7 @@ NNN
 
 
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP8266_NODEMCU
-ESPAsync_WiFiManager_Lite v1.8.0
+ESPAsync_WiFiManager_Lite v1.8.1
 ESP_MultiResetDetector v1.3.0
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1590,7 +1591,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
-ESPAsync_WiFiManager_Lite v1.8.0
+ESPAsync_WiFiManager_Lite v1.8.1
 ESP_MultiResetDetector v1.3.0
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1703,7 +1704,7 @@ entry 0x4004c190
 
 
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
-ESPAsync_WiFiManager_Lite v1.8.0
+ESPAsync_WiFiManager_Lite v1.8.1
 ESP_MultiResetDetector v1.3.0
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1806,7 +1807,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
-ESPAsync_WiFiManager_Lite v1.8.0
+ESPAsync_WiFiManager_Lite v1.8.1
 ESP_MultiResetDetector v1.3.0
 LittleFS Flag read = 0xFFFC0003
 multiResetDetectorFlag = 0xFFFC0003
@@ -1849,7 +1850,7 @@ entry 0x4004c190
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
-ESPAsync_WiFiManager_Lite v1.8.0
+ESPAsync_WiFiManager_Lite v1.8.1
 ESP_MultiResetDetector v1.3.0
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1905,7 +1906,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
-ESPAsync_WiFiManager_Lite v1.8.0
+ESPAsync_WiFiManager_Lite v1.8.1
 ESP_MultiResetDetector v1.3.0
 LittleFS Flag read = 0xFFFC0003
 multiResetDetectorFlag = 0xFFFC0003
@@ -1950,7 +1951,7 @@ NNNN NNNNN NNNNN N
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
-ESPAsync_WiFiManager_Lite v1.8.0
+ESPAsync_WiFiManager_Lite v1.8.1
 ESP_MultiResetDetector v1.3.0
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1997,7 +1998,7 @@ This is the terminal output when running [**ESPAsync_WiFi**](examples/ESPAsync_W
 
 ```
 Starting ESPAsync_WiFi using LittleFS on ESP32S3_DEV
-ESPAsync_WiFiManager_Lite v1.8.0
+ESPAsync_WiFiManager_Lite v1.8.1
 ESP_MultiResetDetector v1.2.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -2029,6 +2030,47 @@ Saving config file OK
 H
 ```
 
+---
+
+### 7. [ESPAsync_WiFi](examples/ESPAsync_WiFi) on ESP32C3_DEV using LittleFS
+
+
+This is the terminal output when running [**ESPAsync_WiFi**](examples/ESPAsync_WiFi) example on **ESP32C3_DEV** using LittleFS
+
+
+```
+Starting ESPAsync_WiFi using LittleFS on ESP32C3_DEV
+ESPAsync_WiFiManager_Lite v1.8.1
+ESP_MultiResetDetector v1.3.0
+LittleFS Flag read = 0xFFFE0001
+multiResetDetectorFlag = 0xFFFE0001
+lowerBytes = 0x0001, upperBytes = 0x0001
+No multiResetDetected, number of times = 1
+LittleFS Flag read = 0xFFFE0001
+Saving config file...
+Saving config file OK
+[WML] Hdr=ESP_WM_LITE,SSID=HueNet1,PW=password
+[WML] SSID1=HueNet2,PW1=password
+[WML] BName=ESP32_C3
+[WML] Hdr=ESP_WM_LITE,SSID=HueNet1,PW=password
+[WML] SSID1=HueNet2,PW1=password
+[WML] BName=ESP32_C3
+[WML] WiFi connected after time: 0
+[WML] SSID=HueNet1,RSSI=-21
+[WML] Channel=2,IP=192.168.2.85
+H
+Your stored Credentials :
+Blynk Server1 = account.duckdns.org
+Token1 = token1
+Blynk Server2 = account.ddns.net
+Token2 = token2
+Port = 8080
+MQTT Server = mqtt.duckdns.org
+Stop multiResetDetecting
+Saving config file...
+Saving config file OK
+HHH
+```
 
 
 ---
@@ -2108,6 +2150,9 @@ Submit issues to: [ESPAsync_WiFiManager_Lite issues](https://github.com/khoih-pr
 24. Fix the blocking issue in loop() with configurable `WIFI_RECON_INTERVAL`
 25. Optimize library code by using `reference-passing` instead of `value-passing`
 26. Add support to **ESP32-S3 (ESP32S3_DEV, ESP32_S3_BOX, UM TINYS3, UM PROS3, UM FEATHERS3, etc.) using EEPROM, SPIFFS or LittleFS**
+27. Add `LittleFS` support to **ESP32-C3**
+28. Use `ESP32-core's LittleFS` library instead of `Lorol's LITTLEFS` library for ESP32 core v2.0.0+
+
 
 ---
 ---

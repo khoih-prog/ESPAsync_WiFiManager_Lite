@@ -9,7 +9,7 @@
   Built by Khoi Hoang https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite
   Licensed under MIT license
   
-  Version: 1.8.0
+  Version: 1.8.1
    
   Version Modified By   Date        Comments
   ------- -----------  ----------   -----------
@@ -23,6 +23,7 @@
   1.6.0   K Hoang      26/11/2021  Auto detect ESP32 core and use either built-in LittleFS or LITTLEFS library. Fix bug.
   1.7.0   K Hoang      09/01/2022  Fix the blocking issue in loop() with configurable WIFI_RECON_INTERVAL
   1.8.0   K Hoang      10/02/2022  Add support to new ESP32-S3
+  1.8.1   K Hoang      11/02/2022  Add LittleFS support to ESP32-C3. Use core LittleFS instead of Lorol's LITTLEFS for v2.0.0+
  *****************************************************************************************************************************/
 
 #ifndef ESPAsync_WiFiManager_Lite_Debug_h

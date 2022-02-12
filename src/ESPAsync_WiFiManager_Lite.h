@@ -9,7 +9,7 @@
   Built by Khoi Hoang https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite
   Licensed under MIT license
   
-  Version: 1.8.0
+  Version: 1.8.1
    
   Version Modified By   Date        Comments
   ------- -----------  ----------   -----------
@@ -23,6 +23,7 @@
   1.6.0   K Hoang      26/11/2021  Auto detect ESP32 core and use either built-in LittleFS or LITTLEFS library. Fix bug.
   1.7.0   K Hoang      09/01/2022  Fix the blocking issue in loop() with configurable WIFI_RECON_INTERVAL
   1.8.0   K Hoang      10/02/2022  Add support to new ESP32-S3
+  1.8.1   K Hoang      11/02/2022  Add LittleFS support to ESP32-C3. Use core LittleFS instead of Lorol's LITTLEFS for v2.0.0+
  *****************************************************************************************************************************/
 
 #pragma once
@@ -38,7 +39,13 @@
   #warning Using ESP32_S2.
   #define USING_ESP32_S2        true
 #elif ( ARDUINO_ESP32C3_DEV )
-  #warning Using ESP32_C3. Only SPIFFS and EEPROM OK.
+  #if ( defined(ESP_ARDUINO_VERSION_MAJOR) && (ESP_ARDUINO_VERSION_MAJOR >= 2) )
+    #warning Using ESP32_C3 using core v2.0.0+. Either LittleFS, SPIFFS or EEPROM OK.
+  #else
+    #warning Using ESP32_C3 using core v1.0.6-. To follow library instructions to install esp32-c3 core. Only SPIFFS and EEPROM OK.
+  #endif
+  
+  #warning You have to select Flash size 2MB and Minimal APP (1.3MB + 700KB) for some boards
   #define USING_ESP32_C3        true
 #elif ( defined(ARDUINO_ESP32S3_DEV) || defined(ARDUINO_ESP32_S3_BOX) || defined(ARDUINO_TINYS3) || \
         defined(ARDUINO_PROS3) || defined(ARDUINO_FEATHERS3) )
@@ -47,13 +54,13 @@
 #endif
 
 #ifndef ESP_ASYNC_WIFI_MANAGER_LITE_VERSION
-  #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION             "ESPAsync_WiFiManager_Lite v1.8.0"
+  #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION             "ESPAsync_WiFiManager_Lite v1.8.1"
   
   #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION_MAJOR       1
   #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION_MINOR       8
-  #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION_PATCH       0
+  #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION_PATCH       1
 
-  #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION_INT         1008000
+  #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION_INT         1008001
 #endif
 
 #ifdef ESP8266
@@ -90,21 +97,28 @@
   #include <WiFiMulti.h>
   #include <ESPAsyncWebServer.h>
   
-  // To be sure no LittleFS for ESP32-C3
-  #if ( ARDUINO_ESP32C3_DEV )
-    // Currently, ESP32-C3 only supporting SPIFFS and EEPROM. Will fix to support LittleFS
+  // To be sure no LittleFS for ESP32-C3 for core v1.0.6-
+  #if ( defined(ESP_ARDUINO_VERSION_MAJOR) && (ESP_ARDUINO_VERSION_MAJOR >= 2) )
+    // For core v2.0.0+, ESP32-C3 can use LittleFS, SPIFFS or EEPROM
+    // LittleFS has higher priority than SPIFFS. 
+    // For core v2.0.0+, if not specified any, use better LittleFS
+    #if ! (defined(USE_LITTLEFS) || defined(USE_SPIFFS) )
+      #define USE_LITTLEFS      true
+      #define USE_SPIFFS        false
+    #endif
+  #elif defined(ARDUINO_ESP32C3_DEV)
+    // For core v1.0.6-, ESP32-C3 only supporting SPIFFS and EEPROM. To use v2.0.0+ for LittleFS
     #if USE_LITTLEFS
       #undef USE_LITTLEFS
       #define USE_LITTLEFS            false
       #undef USE_SPIFFS
       #define USE_SPIFFS              true
     #endif
-  #endif
-  
-  // LittleFS has higher priority than SPIFFS. 
-  // But if not specified any, use SPIFFS to not forcing user to install LITTLEFS library
-  #if ! (defined(USE_LITTLEFS) || defined(USE_SPIFFS) )
-    #define USE_SPIFFS      true
+  #else
+    // For core v1.0.6-, if not specified any, use SPIFFS to not forcing user to install LITTLEFS library
+    #if ! (defined(USE_LITTLEFS) || defined(USE_SPIFFS) )
+      #define USE_SPIFFS      true
+    #endif  
   #endif
 
   #if USE_LITTLEFS
@@ -114,17 +128,17 @@
     // Check cores/esp32/esp_arduino_version.h and cores/esp32/core_version.h
     //#if ( ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(2, 0, 0) )  //(ESP_ARDUINO_VERSION_MAJOR >= 2)
     #if ( defined(ESP_ARDUINO_VERSION_MAJOR) && (ESP_ARDUINO_VERSION_MAJOR >= 2) )
-      #warning Using ESP32 Core 1.0.6 or 2.0.0+ and LittleFS in ESP_WiFiManager_Lite.h
+      #warning Using ESP32 Core 1.0.6 or 2.0.0+
       // The library has been merged into esp32 core from release 1.0.6
-      #include <LittleFS.h>
+      #include <LittleFS.h>       // https://github.com/espressif/arduino-esp32/tree/master/libraries/LittleFS
       
       FS* filesystem =      &LittleFS;
       #define FileFS        LittleFS
       #define FS_Name       "LittleFS"
     #else
-      #warning Using ESP32 Core 1.0.5- and LittleFS in ESPAsync_WiFiManager_Lite.h. You must install LITTLEFS library
+      #warning Using ESP32 Core 1.0.5-. You must install LITTLEFS library
       // The library has been merged into esp32 core from release 1.0.6
-      #include <LITTLEFS.h>             // https://github.com/lorol/LITTLEFS
+      #include <LITTLEFS.h>       // https://github.com/lorol/LITTLEFS
       
       FS* filesystem =      &LITTLEFS;
       #define FileFS        LITTLEFS
