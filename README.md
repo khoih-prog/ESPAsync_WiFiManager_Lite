@@ -6,7 +6,8 @@
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](#Contributing)
 [![GitHub issues](https://img.shields.io/github/issues/khoih-prog/ESPAsync_WiFiManager_Lite.svg)](http://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/issues)
 
-<a href="https://www.buymeacoffee.com/khoihprog6" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 50px !important;width: 181px !important;" ></a>
+<a href="https://www.buymeacoffee.com/khoihprog6" title="Donate to my libraries using BuyMeACoffee"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Donate to my libraries using BuyMeACoffee" style="height: 50px !important;width: 181px !important;" ></a>
+<a href="https://www.buymeacoffee.com/khoihprog6" title="Donate to my libraries using BuyMeACoffee"><img src="https://img.shields.io/badge/buy%20me%20a%20coffee-donate-orange.svg?logo=buy-me-a-coffee&logoColor=FFDD00" style="height: 20px !important;width: 200px !important;" ></a>
 
 ---
 ---
@@ -50,6 +51,7 @@
   * [13. To avoid blocking in loop when WiFi is lost](#13-To-avoid-blocking-in-loop-when-wifi-is-lost)
     * [13.1 Max times to try WiFi per loop](#131-max-times-to-try-wifi-per-loop)
     * [13.2 Interval between reconnection WiFi if lost](#132-interval-between-reconnection-wifi-if-lost)
+  * [14. Not using Board_Name on Config_Portal](#14-Not-using-Board_Name-on-Config_Portal) 
 * [Examples](#examples)
   * [ 1. ESPAsync_WiFi](examples/ESPAsync_WiFi)
   * [ 2. ESPAsync_WiFi_MQTT](examples/ESPAsync_WiFi_MQTT)
@@ -308,65 +310,8 @@ ESPAsync_WiFiManager_Lite* ESPAsync_WiFiManager;
 
 - To add custom parameters, just add
 
-```
-#include "defines.h"
+https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/blob/2902e0bfbd5c61194a98d81da3a47e155c106138/examples/ESPAsync_WiFi/dynamicParams.h#L13-L74
 
-// USE_DYNAMIC_PARAMETERS defined in defined.h
-
-/////////////// Start dynamic Credentials ///////////////
-
-//Defined in <ESPAsync_WiFiManager_Lite.h>
-/**************************************
-  #define MAX_ID_LEN                5
-  #define MAX_DISPLAY_NAME_LEN      16
-
-  typedef struct
-  {
-  char id             [MAX_ID_LEN + 1];
-  char displayName    [MAX_DISPLAY_NAME_LEN + 1];
-  char *pdata;
-  uint8_t maxlen;
-  } MenuItem;
-**************************************/
-
-#if USE_DYNAMIC_PARAMETERS
-
-#define MAX_BLYNK_SERVER_LEN      34
-#define MAX_BLYNK_TOKEN_LEN       34
-
-char Blynk_Server1 [MAX_BLYNK_SERVER_LEN + 1]  = "account.duckdns.org";
-char Blynk_Token1  [MAX_BLYNK_TOKEN_LEN + 1]   = "token1";
-
-char Blynk_Server2 [MAX_BLYNK_SERVER_LEN + 1]  = "account.ddns.net";
-char Blynk_Token2  [MAX_BLYNK_TOKEN_LEN + 1]   = "token2";
-
-#define MAX_BLYNK_PORT_LEN        6
-char Blynk_Port   [MAX_BLYNK_PORT_LEN + 1]  = "8080";
-
-#define MAX_MQTT_SERVER_LEN      34
-char MQTT_Server  [MAX_MQTT_SERVER_LEN + 1]   = "mqtt.duckdns.org";
-
-MenuItem myMenuItems [] =
-{
-  { "sv1", "Blynk Server1", Blynk_Server1,  MAX_BLYNK_SERVER_LEN },
-  { "tk1", "Token1",        Blynk_Token1,   MAX_BLYNK_TOKEN_LEN },
-  { "sv2", "Blynk Server2", Blynk_Server2,  MAX_BLYNK_SERVER_LEN },
-  { "tk2", "Token2",        Blynk_Token2,   MAX_BLYNK_TOKEN_LEN },
-  { "prt", "Port",          Blynk_Port,     MAX_BLYNK_PORT_LEN },
-  { "mqt", "MQTT Server",   MQTT_Server,    MAX_MQTT_SERVER_LEN },
-};
-
-uint16_t NUM_MENU_ITEMS = sizeof(myMenuItems) / sizeof(MenuItem);  //MenuItemSize;
-
-#else
-
-MenuItem myMenuItems [] = {};
-
-uint16_t NUM_MENU_ITEMS = 0;
-
-#endif    //USE_DYNAMIC_PARAMETERS
-
-```
 
 #### 3. Not using custom parameters
 
@@ -531,6 +476,12 @@ Check [retries block the main loop #18](https://github.com/khoih-prog/WiFiManage
 ```
 #define WIFI_RECON_INTERVAL                   30000     // 30s
 ```
+
+#### 14. Not using Board_Name on Config_Portal
+
+Default is `true`. Just change to `false` to not using `Board_Name` on Config_Portal
+
+https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/blob/2902e0bfbd5c61194a98d81da3a47e155c106138/examples/ESPAsync_WiFi/defines.h#L125-L130
 
 ---
 ---
@@ -812,438 +763,29 @@ Please take a look at other examples, as well.
 
 #### 1. File [ESPAsync_WiFi.ino](examples/ESPAsync_WiFi/ESPAsync_WiFi.ino)
 
-```cpp
-#include "defines.h"
-#include "Credentials.h"
-#include "dynamicParams.h"
 
-void heartBeatPrint()
-{
-  static int num = 1;
+https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/blob/2902e0bfbd5c61194a98d81da3a47e155c106138/examples/ESPAsync_WiFi/ESPAsync_WiFi.ino#L13-L150
 
-  if (WiFi.status() == WL_CONNECTED)
-    Serial.print(F("H"));        // H means connected to WiFi
-  else
-    Serial.print(F("F"));        // F means not connected to WiFi
 
-  if (num == 80)
-  {
-    Serial.println();
-    num = 1;
-  }
-  else if (num++ % 10 == 0)
-  {
-    Serial.print(F(" "));
-  }
-}
-
-void check_status()
-{
-  static unsigned long checkstatus_timeout = 0;
-
-  //KH
-#define HEARTBEAT_INTERVAL    20000L
-  // Print hearbeat every HEARTBEAT_INTERVAL (20) seconds.
-  if ((millis() > checkstatus_timeout) || (checkstatus_timeout == 0))
-  {
-    heartBeatPrint();
-    checkstatus_timeout = millis() + HEARTBEAT_INTERVAL;
-  }
-}
-
-ESPAsync_WiFiManager_Lite* ESPAsync_WiFiManager;
-
-#if USING_CUSTOMS_STYLE
-const char NewCustomsStyle[] /*PROGMEM*/ = "<style>div,input{padding:5px;font-size:1em;}input{width:95%;}body{text-align: center;}\
-button{background-color:blue;color:white;line-height:2.4rem;font-size:1.2rem;width:100%;}fieldset{border-radius:0.3rem;margin:0px;}</style>";
-#endif
-
-void setup()
-{
-  // Debug console
-  Serial.begin(115200);
-  while (!Serial);
-
-  delay(200);
-
-  Serial.print(F("\nStarting ESPAsync_WiFi using ")); Serial.print(FS_Name);
-  Serial.print(F(" on ")); Serial.println(ARDUINO_BOARD);
-  Serial.println(ESP_ASYNC_WIFI_MANAGER_LITE_VERSION);
-
-#if USING_MRD  
-  Serial.println(ESP_MULTI_RESET_DETECTOR_VERSION);
-#else
-  Serial.println(ESP_DOUBLE_RESET_DETECTOR_VERSION);
-#endif
-
-  ESPAsync_WiFiManager = new ESPAsync_WiFiManager_Lite();
-
-  // Optional to change default AP IP(192.168.4.1) and channel(10)
-  //ESPAsync_WiFiManager->setConfigPortalIP(IPAddress(192, 168, 120, 1));
-  ESPAsync_WiFiManager->setConfigPortalChannel(0);
-
-#if USING_CUSTOMS_STYLE
-  ESPAsync_WiFiManager->setCustomsStyle(NewCustomsStyle);
-#endif
-
-#if USING_CUSTOMS_HEAD_ELEMENT
-  ESPAsync_WiFiManager->setCustomsHeadElement("<style>html{filter: invert(10%);}</style>");
-#endif
-
-#if USING_CORS_FEATURE  
-  ESPAsync_WiFiManager->setCORSHeader("Your Access-Control-Allow-Origin");
-#endif
-
-  // Set customized DHCP HostName
-  ESPAsync_WiFiManager->begin(HOST_NAME);
-  //Or use default Hostname "NRF52-WIFI-XXXXXX"
-  //ESPAsync_WiFiManager->begin();
-}
-
-#if USE_DYNAMIC_PARAMETERS
-void displayCredentials()
-{
-  Serial.println(F("\nYour stored Credentials :"));
-
-  for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
-  {
-    Serial.print(myMenuItems[i].displayName);
-    Serial.print(F(" = "));
-    Serial.println(myMenuItems[i].pdata);
-  }
-}
-
-void displayCredentialsInLoop()
-{
-  static bool displayedCredentials = false;
-
-  if (!displayedCredentials)
-  {
-    for (int i = 0; i < NUM_MENU_ITEMS; i++)
-    {
-      if (!strlen(myMenuItems[i].pdata))
-      {
-        break;
-      }
-
-      if ( i == (NUM_MENU_ITEMS - 1) )
-      {
-        displayedCredentials = true;
-        displayCredentials();
-      }
-    }
-  }
-}
-
-#endif
-
-void loop()
-{
-  ESPAsync_WiFiManager->run();
-  check_status();
-
-#if USE_DYNAMIC_PARAMETERS
-  displayCredentialsInLoop();
-#endif
-}
-```
 ---
 
 #### 2. File [defines.h](examples/ESPAsync_WiFi/defines.h)
 
-```cpp
-#ifndef defines_h
-#define defines_h
+https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/blob/2902e0bfbd5c61194a98d81da3a47e155c106138/examples/ESPAsync_WiFi/defines.h#L13-L146
 
-#if !( ESP8266 || ESP32)
-  #error This code is intended to run only on the ESP8266/ESP32 boards ! Please check your Tools->Board setting.
-#endif
-
-/* Comment this out to disable prints and save space */
-#define ESP_WM_LITE_DEBUG_OUTPUT      Serial
-
-#define _ESP_WM_LITE_LOGLEVEL_        2
-
-#define USING_MRD                     true
-
-#if USING_MRD
-  #define MULTIRESETDETECTOR_DEBUG      true
-  
-  // Number of seconds after reset during which a
-  // subseqent reset will be considered a double reset.
-  #define MRD_TIMEOUT                   10
-  
-  // RTC Memory Address for the DoubleResetDetector to use
-  #define MRD_ADDRESS                   0
-
-  #if (_ESP_WM_LITE_LOGLEVEL_ > 3)
-    #warning Using MULTI_RESETDETECTOR
-  #endif
-#else
-  #define DOUBLERESETDETECTOR_DEBUG     true
-  
-  // Number of seconds after reset during which a
-  // subseqent reset will be considered a double reset.
-  #define DRD_TIMEOUT                   10
-  
-  // RTC Memory Address for the DoubleResetDetector to use
-  #define DRD_ADDRESS                   0
-
-  #if (_ESP_WM_LITE_LOGLEVEL_ > 3)
-    #warning Using DOUBLE_RESETDETECTOR
-  #endif
-#endif
-
-/////////////////////////////////////////////
-
-// LittleFS has higher priority than SPIFFS
-#if ( defined(ESP_ARDUINO_VERSION_MAJOR) && (ESP_ARDUINO_VERSION_MAJOR >= 2) )
-  #define USE_LITTLEFS    true
-  #define USE_SPIFFS      false
-#elif defined(ARDUINO_ESP32C3_DEV)
-  // For core v1.0.6-, ESP32-C3 only supporting SPIFFS and EEPROM. To use v2.0.0+ for LittleFS
-  #define USE_LITTLEFS          false
-  #define USE_SPIFFS            true
-#endif
-
-/////////////////////////////////////////////
-
-// Add customs headers from v1.2.0
-#define USING_CUSTOMS_STYLE           true
-#define USING_CUSTOMS_HEAD_ELEMENT    true
-#define USING_CORS_FEATURE            true
-
-/////////////////////////////////////////////
-
-// Force some params
-#define TIMEOUT_RECONNECT_WIFI                    10000L
-
-// Permit running CONFIG_TIMEOUT_RETRYTIMES_BEFORE_RESET times before reset hardware
-// to permit user another chance to config. Only if Config Data is valid.
-// If Config Data is invalid, this has no effect as Config Portal will persist
-#define RESET_IF_CONFIG_TIMEOUT                   true
-
-// Permitted range of user-defined CONFIG_TIMEOUT_RETRYTIMES_BEFORE_RESET between 2-100
-#define CONFIG_TIMEOUT_RETRYTIMES_BEFORE_RESET    5
-
-// Config Timeout 120s (default 60s). Applicable only if Config Data is Valid
-#define CONFIG_TIMEOUT                            120000L
-
-/////////////////////////////////////////////
-
-// Permit input only one set of WiFi SSID/PWD. The other can be "NULL or "blank"
-// Default is false (if not defined) => must input 2 sets of SSID/PWD
-#define REQUIRE_ONE_SET_SSID_PW               true    //false
-
-// Max times to try WiFi per loop() iteration. To avoid blocking issue in loop()
-// Default 1 if not defined, and minimum 1.
-#define MAX_NUM_WIFI_RECON_TRIES_PER_LOOP     2
-
-// Default no interval between recon WiFi if lost
-// Max permitted interval will be 10mins
-// Uncomment to use. Be careful, WiFi reconnect will be delayed if using this method
-// Only use whenever urgent tasks in loop() can't be delayed. But if so, it's better you have to rewrite your code, e.g. using higher priority tasks.
-#define WIFI_RECON_INTERVAL                   30000
-
-/////////////////////////////////////////////
-
-// Permit reset hardware if no WiFi to permit user another chance to access Config Portal.
-#define RESET_IF_NO_WIFI              false
-
-/////////////////////////////////////////////
-
-#define USE_DYNAMIC_PARAMETERS        true
-
-/////////////////////////////////////////////
-
-#define SCAN_WIFI_NETWORKS                  true
-
-// To be able to manually input SSID, not from a scanned SSID lists
-#define MANUAL_SSID_INPUT_ALLOWED           true
-
-// From 2-15
-#define MAX_SSID_IN_LIST                  8
-  
-/////////////////////////////////////////////
-
-#include <ESPAsync_WiFiManager_Lite.h>
-
-#if ESP8266 
-  #define HOST_NAME   "ESP8266Async-Control"
-#else
-  #define HOST_NAME   "ESP32Async-Control"
-#endif
-
-#ifdef LED_BUILTIN
-  #define LED_PIN     LED_BUILTIN
-#else
-  #define LED_PIN     13
-#endif
-
-#endif      //defines_h
-```
 ---
 
 #### 3. File [Credentials.h](examples/ESPAsync_WiFi/Credentials.h)
 
-```cpp
-#ifndef Credentials_h
-#define Credentials_h
+https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/blob/2902e0bfbd5c61194a98d81da3a47e155c106138/examples/ESPAsync_WiFi/Credentials.h#L13-L100
 
-#include "defines.h"
-
-/// Start Default Config Data //////////////////
-
-/*
-#define SSID_MAX_LEN      32
-//From v1.0.3, WPA2 passwords can be up to 63 characters long.
-#define PASS_MAX_LEN      64
-
-typedef struct
-{
-  char wifi_ssid[SSID_MAX_LEN];
-  char wifi_pw  [PASS_MAX_LEN];
-}  WiFi_Credentials;
-
-#define NUM_WIFI_CREDENTIALS      2
-
-// Configurable items besides fixed Header, just add board_name 
-#define NUM_CONFIGURABLE_ITEMS    ( ( 2 * NUM_WIFI_CREDENTIALS ) + 1 )
-////////////////
-
-typedef struct Configuration
-{
-  char header         [16];
-  WiFi_Credentials  WiFi_Creds  [NUM_WIFI_CREDENTIALS];
-  char board_name     [24];
-  int  checkSum;
-} ESP_WM_LITE_Configuration;
-*/
-
-#define TO_LOAD_DEFAULT_CONFIG_DATA      false
-
-#if TO_LOAD_DEFAULT_CONFIG_DATA
-
-// This feature is primarily used in development to force a known set of values as Config Data
-// It will NOT force the Config Portal to activate. Use DRD or erase Config Data with ESPAsync_WiFiManager.clearConfigData()
-
-// Used mostly for development and debugging. FORCES default values to be loaded each run.
-// Config Portal data input will be ignored and overridden by DEFAULT_CONFIG_DATA
-//bool LOAD_DEFAULT_CONFIG_DATA = true;
-
-// Used mostly once debugged. Assumes good data already saved in device.
-// Config Portal data input will be override DEFAULT_CONFIG_DATA
-bool LOAD_DEFAULT_CONFIG_DATA = false;
-
-
-ESP_WM_LITE_Configuration defaultConfig =
-{
-  //char header[16], dummy, not used
-#if ESP8266 
-  "ESP8266_Async",
-#else
-  "ESP32_Async",
-#endif
-
-  // WiFi_Credentials  WiFi_Creds  [NUM_WIFI_CREDENTIALS];
-  // WiFi_Credentials.wifi_ssid and WiFi_Credentials.wifi_pw
-  "SSID1",  "password1",
-  "SSID2",  "password2",
-  //char board_name     [24];
-
-#if ESP8266 
-  "ESP8266_Async-Control",
-#else
-  "ESP32_Async-Control",
-#endif
-
-  // terminate the list
-  //int  checkSum, dummy, not used
-  0
-  /////////// End Default Config Data /////////////
-};
-
-#else
-
-bool LOAD_DEFAULT_CONFIG_DATA = false;
-
-ESP_WM_LITE_Configuration defaultConfig;
-
-#endif    // TO_LOAD_DEFAULT_CONFIG_DATA
-
-/////////// End Default Config Data /////////////
-
-
-#endif    //Credentials_h
-```
 ---
 
 #### 4. File [dynamicParams.h](examples/ESPAsync_WiFi/dynamicParams.h)
 
-```cpp
-#ifndef dynamicParams_h
-#define dynamicParams_h
 
-#include "defines.h"
+https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/blob/2902e0bfbd5c61194a98d81da3a47e155c106138/examples/ESPAsync_WiFi/dynamicParams.h#L13-L74
 
-// USE_DYNAMIC_PARAMETERS defined in defined.h
-
-/////////////// Start dynamic Credentials ///////////////
-
-//Defined in <ESPAsync_WiFiManager_Lite.h>
-/**************************************
-  #define MAX_ID_LEN                5
-  #define MAX_DISPLAY_NAME_LEN      16
-
-  typedef struct
-  {
-  char id             [MAX_ID_LEN + 1];
-  char displayName    [MAX_DISPLAY_NAME_LEN + 1];
-  char *pdata;
-  uint8_t maxlen;
-  } MenuItem;
-**************************************/
-
-#if USE_DYNAMIC_PARAMETERS
-
-#define MAX_BLYNK_SERVER_LEN      34
-#define MAX_BLYNK_TOKEN_LEN       34
-
-char Blynk_Server1 [MAX_BLYNK_SERVER_LEN + 1]  = "account.duckdns.org";
-char Blynk_Token1  [MAX_BLYNK_TOKEN_LEN + 1]   = "token1";
-
-char Blynk_Server2 [MAX_BLYNK_SERVER_LEN + 1]  = "account.ddns.net";
-char Blynk_Token2  [MAX_BLYNK_TOKEN_LEN + 1]   = "token2";
-
-#define MAX_BLYNK_PORT_LEN        6
-char Blynk_Port   [MAX_BLYNK_PORT_LEN + 1]  = "8080";
-
-#define MAX_MQTT_SERVER_LEN      34
-char MQTT_Server  [MAX_MQTT_SERVER_LEN + 1]   = "mqtt.duckdns.org";
-
-MenuItem myMenuItems [] =
-{
-  { "sv1", "Blynk Server1", Blynk_Server1,  MAX_BLYNK_SERVER_LEN },
-  { "tk1", "Token1",        Blynk_Token1,   MAX_BLYNK_TOKEN_LEN },
-  { "sv2", "Blynk Server2", Blynk_Server2,  MAX_BLYNK_SERVER_LEN },
-  { "tk2", "Token2",        Blynk_Token2,   MAX_BLYNK_TOKEN_LEN },
-  { "prt", "Port",          Blynk_Port,     MAX_BLYNK_PORT_LEN },
-  { "mqt", "MQTT Server",   MQTT_Server,    MAX_MQTT_SERVER_LEN },
-};
-
-uint16_t NUM_MENU_ITEMS = sizeof(myMenuItems) / sizeof(MenuItem);  //MenuItemSize;
-
-#else
-
-MenuItem myMenuItems [] = {};
-
-uint16_t NUM_MENU_ITEMS = 0;
-
-#endif    //USE_DYNAMIC_PARAMETERS
-
-
-#endif      //dynamicParams_h
-```
 ---
 ---
 
