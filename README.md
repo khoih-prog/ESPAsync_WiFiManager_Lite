@@ -800,7 +800,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
-ESPAsync_WiFiManager_Lite v1.8.1
+ESPAsync_WiFiManager_Lite v1.8.2
 ESP_MultiResetDetector v1.3.0
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -843,7 +843,7 @@ Saving config file OK
 [WML] OK
 [WML] SaveBkUpCPFile 
 [WML] OK
-N
+C
 Your stored Credentials :
 AIO_SERVER = blank
 AIO_SERVERPORT = blank
@@ -854,7 +854,7 @@ AIO_SUB_TOPIC = blank
 NStop multiResetDetecting
 Saving config file...
 Saving config file OK
-NNN 
+CCC
 ```
 
 #### 1.2. Got valid Credentials from Config Portal then connected to WiFi
@@ -875,7 +875,7 @@ NNN
 
 
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
-ESPAsync_WiFiManager_Lite v1.8.1
+ESPAsync_WiFiManager_Lite v1.8.2
 ESP_MultiResetDetector v1.3.0
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -967,7 +967,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP8266_NODEMCU
-ESPAsync_WiFiManager_Lite v1.8.1
+ESPAsync_WiFiManager_Lite v1.8.2
 ESP_MultiResetDetector v1.3.0
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1010,7 +1010,7 @@ Saving config file OK
 [WML] OK
 [WML] SaveBkUpCPFile 
 [WML] OK
-N
+C
 Your stored Credentials :
 AIO_SERVER = blank
 AIO_SERVERPORT = blank
@@ -1021,7 +1021,7 @@ AIO_SUB_TOPIC = blank
 NStop multiResetDetecting
 Saving config file...
 Saving config file OK
-NNN 
+CCC
 ```
 
 #### 2.2. Got valid Credentials from Config Portal then connected to WiFi
@@ -1042,7 +1042,7 @@ NNN
 
 
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP8266_NODEMCU
-ESPAsync_WiFiManager_Lite v1.8.1
+ESPAsync_WiFiManager_Lite v1.8.2
 ESP_MultiResetDetector v1.3.0
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1133,7 +1133,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
-ESPAsync_WiFiManager_Lite v1.8.1
+ESPAsync_WiFiManager_Lite v1.8.2
 ESP_MultiResetDetector v1.3.0
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1157,7 +1157,7 @@ Saving config file OK
 stConf:SSID=ESP_8A1DF7C,PW=MyESP_8A1DF7C
 [WML] IP=192.168.4.1,ch=1
 [WML] s:configTimeout = 0
-N
+C
 Your stored Credentials :
 AIO_SERVER = io.adafruit.com
 AIO_SERVERPORT = 1883
@@ -1168,7 +1168,7 @@ AIO_SUB_TOPIC = /feeds/LED_Control
 NStop multiResetDetecting
 Saving config file...
 Saving config file OK
-NNN N
+CCC C
 ```
 
 #### 3.2. Got valid Credentials from Config Portal then connected to WiFi
@@ -1246,7 +1246,7 @@ entry 0x4004c190
 
 
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
-ESPAsync_WiFiManager_Lite v1.8.1
+ESPAsync_WiFiManager_Lite v1.8.2
 ESP_MultiResetDetector v1.3.0
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1349,7 +1349,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
-ESPAsync_WiFiManager_Lite v1.8.1
+ESPAsync_WiFiManager_Lite v1.8.2
 ESP_MultiResetDetector v1.3.0
 LittleFS Flag read = 0xFFFC0003
 multiResetDetectorFlag = 0xFFFC0003
@@ -1366,7 +1366,7 @@ Saving config file OK
 [WML] 
 stConf:SSID=ESP_8A1DF7C,PW=MyESP_8A1DF7C
 [WML] IP=192.168.4.1,ch=1
-N
+C
 Your stored Credentials :
 AIO_SERVER = io.adafruit.com
 AIO_SERVERPORT = 1883
@@ -1374,7 +1374,7 @@ AIO_USERNAME = user_name
 AIO_KEY = aio_key
 AIO_PUB_TOPIC = /feeds/Temperature
 AIO_SUB_TOPIC = /feeds/LED_Control
-NNNN NNNN[WML] h:Updating LittleFS:/wm_config.dat
+CCCC CCCC[WML] h:Updating LittleFS:/wm_config.dat
 [WML] h:Rst
 ESP-ROM:esp32s2-rc4-20191025
 Build:Oct 25 2019
@@ -1392,7 +1392,7 @@ entry 0x4004c190
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
-ESPAsync_WiFiManager_Lite v1.8.1
+ESPAsync_WiFiManager_Lite v1.8.2
 ESP_MultiResetDetector v1.3.0
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1448,7 +1448,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
-ESPAsync_WiFiManager_Lite v1.8.1
+ESPAsync_WiFiManager_Lite v1.8.2
 ESP_MultiResetDetector v1.3.0
 LittleFS Flag read = 0xFFFC0003
 multiResetDetectorFlag = 0xFFFC0003
@@ -1478,7 +1478,7 @@ Saving config file OK
 [WML] 
 stConf:SSID=ESP_9ABF498,PW=MyESP_9ABF498
 [WML] IP=192.168.4.1,ch=5
-N
+C
 Your stored Credentials :
 AIO_SERVER = io.adafruit.com
 AIO_SERVERPORT = 1883
@@ -1486,14 +1486,14 @@ AIO_USERNAME = user_name
 AIO_KEY = aio_key
 AIO_PUB_TOPIC = /feeds/Temperature
 AIO_SUB_TOPIC = /feeds/LED_Control
-NNNN NNNNN NNNNN N
+CCCC CCCCC CCCCC C
 ```
 
 ### 5.2 Config Data Saved => Connection to Adafruit MQTT
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
-ESPAsync_WiFiManager_Lite v1.8.1
+ESPAsync_WiFiManager_Lite v1.8.2
 ESP_MultiResetDetector v1.3.0
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1540,7 +1540,7 @@ This is the terminal output when running [**ESPAsync_WiFi**](examples/ESPAsync_W
 
 ```
 Starting ESPAsync_WiFi using LittleFS on ESP32S3_DEV
-ESPAsync_WiFiManager_Lite v1.8.1
+ESPAsync_WiFiManager_Lite v1.8.2
 ESP_MultiResetDetector v1.2.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1582,7 +1582,7 @@ This is the terminal output when running [**ESPAsync_WiFi**](examples/ESPAsync_W
 
 ```
 Starting ESPAsync_WiFi using LittleFS on ESP32C3_DEV
-ESPAsync_WiFiManager_Lite v1.8.1
+ESPAsync_WiFiManager_Lite v1.8.2
 ESP_MultiResetDetector v1.3.0
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1694,7 +1694,9 @@ Submit issues to: [ESPAsync_WiFiManager_Lite issues](https://github.com/khoih-pr
 26. Add support to **ESP32-S3 (ESP32S3_DEV, ESP32_S3_BOX, UM TINYS3, UM PROS3, UM FEATHERS3, etc.) using EEPROM, SPIFFS or LittleFS**
 27. Add `LittleFS` support to **ESP32-C3**
 28. Use `ESP32-core's LittleFS` library instead of `Lorol's LITTLEFS` library for ESP32 core v2.0.0+
-
+29. Optimize code by passing by `reference` instead of `value`
+30. Optional `Board_Name` in Config Portal
+31. Add function `isConfigMode()` to signal system is in Config Portal mode
 
 ---
 ---
