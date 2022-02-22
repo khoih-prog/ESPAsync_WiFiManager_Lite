@@ -14,14 +14,21 @@
 #include "Credentials.h"
 #include "dynamicParams.h"
 
+ESPAsync_WiFiManager_Lite* ESPAsync_WiFiManager;
+
 void heartBeatPrint()
 {
   static int num = 1;
 
   if (WiFi.status() == WL_CONNECTED)
-    Serial.print(F("H"));        // H means connected to WiFi
+    Serial.print("H");        // H means connected to WiFi
   else
-    Serial.print(F("F"));        // F means not connected to WiFi
+  {
+    if (ESPAsync_WiFiManager->isConfigMode())
+      Serial.print("C");        // C means in Config Mode
+    else
+      Serial.print("F");        // F means not connected to WiFi  
+  }
 
   if (num == 80)
   {
@@ -47,8 +54,6 @@ void check_status()
     checkstatus_timeout = millis() + HEARTBEAT_INTERVAL;
   }
 }
-
-ESPAsync_WiFiManager_Lite* ESPAsync_WiFiManager;
 
 #if USING_CUSTOMS_STYLE
 const char NewCustomsStyle[] /*PROGMEM*/ = "<style>div,input{padding:5px;font-size:1em;}input{width:95%;}body{text-align: center;}\
