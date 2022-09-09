@@ -38,10 +38,10 @@
 2. Add ESP32 getChipID() and getChipOUI() functions
 3. Remove dependency on `LittleFS_esp32` library to prevent PIO error when using new ESP32 core v1.0.6+
 4. Remove unavailable items from depends field of `library.properties`, such as `ESP Async WebServer`,`ESP AsyncTCP` and `AsyncTCP`. Check 
-- https://github.com/me-no-dev/AsyncTCP/issues/147
-- https://github.com/me-no-dev/ESPAsyncTCP/issues/139
-- https://github.com/me-no-dev/ESPAsyncTCP/issues/158
-- https://github.com/me-no-dev/ESPAsyncTCP/issues/168
+- [**Arduino Library Registry** #147](https://github.com/me-no-dev/AsyncTCP/issues/147)
+- [**Arduino library manager** #139](https://github.com/me-no-dev/ESPAsyncTCP/issues/139)
+- [**Available via Arduino Library Manager?** #158](https://github.com/me-no-dev/ESPAsyncTCP/issues/158)
+- [**Add ESPAsyncTCP to the Arduino Library Manager** #168](https://github.com/me-no-dev/ESPAsyncTCP/issues/168)
 
 
 ### Release v1.8.2

@@ -124,10 +124,10 @@ getEfuseMac: 0x885208ABF498
 ##### Libraries to be installed manually by downloading zip
 
 Remove unavailable items from depends field of `library.properties`, such as `ESP Async WebServer`,`ESP AsyncTCP` and `AsyncTCP`. Check 
-- https://github.com/me-no-dev/AsyncTCP/issues/147
-- https://github.com/me-no-dev/ESPAsyncTCP/issues/139
-- https://github.com/me-no-dev/ESPAsyncTCP/issues/158
-- https://github.com/me-no-dev/ESPAsyncTCP/issues/168
+- [**Arduino Library Registry** #147](https://github.com/me-no-dev/AsyncTCP/issues/147)
+- [**Arduino library manager** #139](https://github.com/me-no-dev/ESPAsyncTCP/issues/139)
+- [**Available via Arduino Library Manager?** #158](https://github.com/me-no-dev/ESPAsyncTCP/issues/158)
+- [**Add ESPAsyncTCP to the Arduino Library Manager** #168](https://github.com/me-no-dev/ESPAsyncTCP/issues/168)
 
 ---
 ---
