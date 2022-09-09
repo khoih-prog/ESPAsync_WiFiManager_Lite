@@ -31,6 +31,7 @@ getFullConfigData KEYWORD2
 localIP KEYWORD2
 clearConfigData KEYWORD2
 isConfigDataValid KEYWORD2
+isConfigMode  KEYWORD2
 resetFunc KEYWORD2
 resetAndEnterConfigPortal KEYWORD2
 resetAndEnterConfigPortalPersistent KEYWORD2
@@ -41,6 +42,14 @@ setCustomsHeadElement   KEYWORD2
 getCustomsHeadElement   KEYWORD2
 setCORSHeader   KEYWORD2
 getCORSHeader   KEYWORD2
+
+#######################################
+
+getChipID	KEYWORD2
+getChipOUI	KEYWORD2
+
+ESP_getChipId	KEYWORD2
+ESP_getChipOUI	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)

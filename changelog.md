@@ -12,6 +12,7 @@
 ## Table of Contents
 
 * [Changelog](#changelog)
+  * [Release v1.9.0](#release-v190)
   * [Release v1.8.2](#release-v182)
   * [Release v1.8.1](#release-v181)
   * [Release v1.8.0](#release-v180)
@@ -30,6 +31,18 @@
 
 
 ## Changelog
+
+### Release v1.9.0
+
+1. Fix ESP32 chipID. Check [Help for storing variables in memory (non-volatile) #87](https://github.com/khoih-prog/ESP_WiFiManager/discussions/87#discussioncomment-3593028)
+2. Add ESP32 getChipID() and getChipOUI() functions
+3. Remove dependency on `LittleFS_esp32` library to prevent PIO error when using new ESP32 core v1.0.6+
+4. Remove unavailable items from depends field of `library.properties`, such as `ESP Async WebServer`,`ESP AsyncTCP` and `AsyncTCP`. Check 
+- https://github.com/me-no-dev/AsyncTCP/issues/147
+- https://github.com/me-no-dev/ESPAsyncTCP/issues/139
+- https://github.com/me-no-dev/ESPAsyncTCP/issues/158
+- https://github.com/me-no-dev/ESPAsyncTCP/issues/168
+
 
 ### Release v1.8.2
 

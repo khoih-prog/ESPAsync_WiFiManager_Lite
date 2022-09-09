@@ -14,6 +14,8 @@
 
 ## Table of Contents
 
+* [Important Change from v1.9.0](#Important-Change-from-v190)
+  * [For v1.9.0 and up](#For-v190-and-up)
 * [Why do we need this ESPAsync_WiFiManager_Lite library](#why-do-we-need-this-espasync_wifimanager_lite-library)
   * [Features](#features)
   * [Why Async is better](#why-async-is-better)
@@ -102,6 +104,34 @@
 ---
 ---
 
+### Important Change from v1.9.0
+
+#### For v1.9.0 and up
+
+##### Fix ESP32 chipID
+
+ESP32 `chipID` is now correct and unique. The previous releases' 32-bit wrong `chipID` is mainly the 24-bit `Organizational Unique Identifier` (OUI) plus 8 bits from the correct chipID. That's why `ESP_getChipId()` function can return duplicated values if the boards are from the same batch.
+
+For example
+
+```
+Chip_ID_64 : 0x98F4AB085288
+chipOUI    : 0x98F4AB
+chipId     : 0x85288
+getEfuseMac: 0x885208ABF498
+```
+
+##### Libraries to be installed manually by downloading zip
+
+Remove unavailable items from depends field of `library.properties`, such as `ESP Async WebServer`,`ESP AsyncTCP` and `AsyncTCP`. Check 
+- https://github.com/me-no-dev/AsyncTCP/issues/147
+- https://github.com/me-no-dev/ESPAsyncTCP/issues/139
+- https://github.com/me-no-dev/ESPAsyncTCP/issues/158
+- https://github.com/me-no-dev/ESPAsyncTCP/issues/168
+
+---
+---
+
 ### Why do we need this [ESPAsync_WiFiManager_Lite library](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite)
 
 #### Features
@@ -173,13 +203,13 @@ This [**ESPAsync_WiFiManager_Lite** library](https://github.com/khoih-prog/ESPAs
 
  1. [`Arduino IDE 1.8.19+` for Arduino](https://github.com/arduino/Arduino). [![GitHub release](https://img.shields.io/github/release/arduino/Arduino.svg)](https://github.com/arduino/Arduino/releases/latest)
  2. [`ESP8266 Core 3.0.2+`](https://github.com/esp8266/Arduino) for ESP8266-based boards. [![Latest release](https://img.shields.io/github/release/esp8266/Arduino.svg)](https://github.com/esp8266/Arduino/releases/latest/). To use ESP8266 core 2.7.1+ for LittleFS.
- 3. [`ESP32 Core 2.0.2+`](https://github.com/espressif/arduino-esp32) for ESP32-based boards. [![Latest release](https://img.shields.io/github/release/espressif/arduino-esp32.svg)](https://github.com/espressif/arduino-esp32/releases/latest/)
- 4. [`ESPAsyncWebServer v1.2.3+`](https://github.com/me-no-dev/ESPAsyncWebServer) for all ESP32/ESP8266-based boards.
- 5. [`ESPAsyncTCP v1.2.2+`](https://github.com/me-no-dev/ESPAsyncTCP) for ESP8266-based boards.
- 6. [`AsyncTCP v1.1.1+`](https://github.com/me-no-dev/AsyncTCP) for ESP32-based boards 
- 7. [`ESP_DoubleResetDetector v1.3.0+`](https://github.com/khoih-prog/ESP_DoubleResetDetector) if using DRD feature. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/ESP_DoubleResetDetector.svg?)](https://www.ardu-badge.com/ESP_DoubleResetDetector).
- 8. [`ESP_MultiResetDetector v1.3.0+`](https://github.com/khoih-prog/ESP_MultiResetDetector) if using MRD feature. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/ESP_MultiResetDetector.svg?)](https://www.ardu-badge.com/ESP_MultiResetDetector).
- 9. [`LittleFS_esp32 v1.0.6+`](https://github.com/lorol/LITTLEFS) for ESP32-based boards using LittleFS with ESP32 core v1.0.5-. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/LittleFS_esp32.svg?)](https://www.ardu-badge.com/LittleFS_esp32). **Notice**: This [`LittleFS_esp32 library`](https://github.com/lorol/LITTLEFS) has been integrated to Arduino [ESP32 core v1.0.6+](https://github.com/espressif/arduino-esp32/tree/master/libraries/LITTLEFS) and you don't need to install it if using ESP32 core v1.0.6+
+ 3. [`ESP32 Core 2.0.4+`](https://github.com/espressif/arduino-esp32) for ESP32-based boards. [![Latest release](https://img.shields.io/github/release/espressif/arduino-esp32.svg)](https://github.com/espressif/arduino-esp32/releases/latest/)
+ 4. [`ESPAsyncWebServer v1.2.3+`](https://github.com/me-no-dev/ESPAsyncWebServer) for all ESP32/ESP8266-based boards. **To install manually, not via Arduino IDE Library Manager**
+ 5. [`ESPAsyncTCP v1.2.2+`](https://github.com/me-no-dev/ESPAsyncTCP) for ESP8266-based boards. **To install manually, not via Arduino IDE Library Manager**
+ 6. [`AsyncTCP v1.1.1+`](https://github.com/me-no-dev/AsyncTCP) for ESP32-based boards. **To install manually, not via Arduino IDE Library Manager**
+ 7. [`ESP_DoubleResetDetector v1.3.1+`](https://github.com/khoih-prog/ESP_DoubleResetDetector) if using DRD feature. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/ESP_DoubleResetDetector.svg?)](https://www.ardu-badge.com/ESP_DoubleResetDetector).
+ 8. [`ESP_MultiResetDetector v1.3.1+`](https://github.com/khoih-prog/ESP_MultiResetDetector) if using MRD feature. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/ESP_MultiResetDetector.svg?)](https://www.ardu-badge.com/ESP_MultiResetDetector).
+ 9. [`LittleFS_esp32 v1.0.6+`](https://github.com/lorol/LITTLEFS) for ESP32-based boards using LittleFS with ESP32 core **v1.0.5-**. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/LittleFS_esp32.svg?)](https://www.ardu-badge.com/LittleFS_esp32). **Notice**: This [`LittleFS_esp32 library`](https://github.com/lorol/LITTLEFS) has been integrated to Arduino [ESP32 core v1.0.6+](https://github.com/espressif/arduino-esp32/tree/master/libraries/LITTLEFS) and **you don't need to install it if using ESP32 core v1.0.6+**
 
 ---
 
@@ -800,8 +830,8 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
-ESPAsync_WiFiManager_Lite v1.8.2
-ESP_MultiResetDetector v1.3.0
+ESPAsync_WiFiManager_Lite v1.9.0
+ESP_MultiResetDetector v1.3.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
 lowerBytes = 0x0001, upperBytes = 0x0001
@@ -875,8 +905,8 @@ CCC
 
 
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
-ESPAsync_WiFiManager_Lite v1.8.2
-ESP_MultiResetDetector v1.3.0
+ESPAsync_WiFiManager_Lite v1.9.0
+ESP_MultiResetDetector v1.3.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
 lowerBytes = 0x0001, upperBytes = 0x0001
@@ -967,8 +997,8 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP8266_NODEMCU
-ESPAsync_WiFiManager_Lite v1.8.2
-ESP_MultiResetDetector v1.3.0
+ESPAsync_WiFiManager_Lite v1.9.0
+ESP_MultiResetDetector v1.3.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
 lowerBytes = 0x0001, upperBytes = 0x0001
@@ -1042,8 +1072,8 @@ CCC
 
 
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP8266_NODEMCU
-ESPAsync_WiFiManager_Lite v1.8.2
-ESP_MultiResetDetector v1.3.0
+ESPAsync_WiFiManager_Lite v1.9.0
+ESP_MultiResetDetector v1.3.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
 lowerBytes = 0x0001, upperBytes = 0x0001
@@ -1133,8 +1163,8 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
-ESPAsync_WiFiManager_Lite v1.8.2
-ESP_MultiResetDetector v1.3.0
+ESPAsync_WiFiManager_Lite v1.9.0
+ESP_MultiResetDetector v1.3.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
 lowerBytes = 0x0001, upperBytes = 0x0001
@@ -1246,8 +1276,8 @@ entry 0x4004c190
 
 
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
-ESPAsync_WiFiManager_Lite v1.8.2
-ESP_MultiResetDetector v1.3.0
+ESPAsync_WiFiManager_Lite v1.9.0
+ESP_MultiResetDetector v1.3.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
 lowerBytes = 0x0001, upperBytes = 0x0001
@@ -1349,8 +1379,8 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
-ESPAsync_WiFiManager_Lite v1.8.2
-ESP_MultiResetDetector v1.3.0
+ESPAsync_WiFiManager_Lite v1.9.0
+ESP_MultiResetDetector v1.3.1
 LittleFS Flag read = 0xFFFC0003
 multiResetDetectorFlag = 0xFFFC0003
 lowerBytes = 0x0003, upperBytes = 0x0003
@@ -1392,8 +1422,8 @@ entry 0x4004c190
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
-ESPAsync_WiFiManager_Lite v1.8.2
-ESP_MultiResetDetector v1.3.0
+ESPAsync_WiFiManager_Lite v1.9.0
+ESP_MultiResetDetector v1.3.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
 lowerBytes = 0x0001, upperBytes = 0x0001
@@ -1448,8 +1478,8 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
-ESPAsync_WiFiManager_Lite v1.8.2
-ESP_MultiResetDetector v1.3.0
+ESPAsync_WiFiManager_Lite v1.9.0
+ESP_MultiResetDetector v1.3.1
 LittleFS Flag read = 0xFFFC0003
 multiResetDetectorFlag = 0xFFFC0003
 lowerBytes = 0x0003, upperBytes = 0x0003
@@ -1493,8 +1523,8 @@ CCCC CCCCC CCCCC C
 
 ```
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
-ESPAsync_WiFiManager_Lite v1.8.2
-ESP_MultiResetDetector v1.3.0
+ESPAsync_WiFiManager_Lite v1.9.0
+ESP_MultiResetDetector v1.3.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
 lowerBytes = 0x0001, upperBytes = 0x0001
@@ -1540,8 +1570,8 @@ This is the terminal output when running [**ESPAsync_WiFi**](examples/ESPAsync_W
 
 ```
 Starting ESPAsync_WiFi using LittleFS on ESP32S3_DEV
-ESPAsync_WiFiManager_Lite v1.8.2
-ESP_MultiResetDetector v1.2.1
+ESPAsync_WiFiManager_Lite v1.9.0
+ESP_MultiResetDetector v1.3.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
 lowerBytes = 0x0001, upperBytes = 0x0001
@@ -1582,8 +1612,8 @@ This is the terminal output when running [**ESPAsync_WiFi**](examples/ESPAsync_W
 
 ```
 Starting ESPAsync_WiFi using LittleFS on ESP32C3_DEV
-ESPAsync_WiFiManager_Lite v1.8.2
-ESP_MultiResetDetector v1.3.0
+ESPAsync_WiFiManager_Lite v1.9.0
+ESP_MultiResetDetector v1.3.1
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
 lowerBytes = 0x0001, upperBytes = 0x0001
@@ -1697,6 +1727,10 @@ Submit issues to: [ESPAsync_WiFiManager_Lite issues](https://github.com/khoih-pr
 29. Optimize code by passing by `reference` instead of `value`
 30. Optional `Board_Name` in Config Portal
 31. Add function `isConfigMode()` to signal system is in Config Portal mode
+32. Remove dependency on `LittleFS_esp32` library to prevent PIO error when using new ESP32 core v1.0.6+
+33. Remove unavailable items from depends field of `library.properties`, such as `ESP Async WebServer`,`ESP AsyncTCP` and `AsyncTCP`
+34. Fix ESP32 `chipID`
+35. Add ESP32 `getChipID()` and `getChipOUI()` functions
 
 ---
 ---
