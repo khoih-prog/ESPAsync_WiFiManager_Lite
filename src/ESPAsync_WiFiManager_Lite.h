@@ -9,7 +9,7 @@
   Built by Khoi Hoang https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite
   Licensed under MIT license
   
-  Version: 1.8.2
+  Version: 1.9.0
    
   Version Modified By   Date        Comments
   ------- -----------  ----------   -----------
@@ -25,6 +25,7 @@
   1.8.0   K Hoang      10/02/2022  Add support to new ESP32-S3
   1.8.1   K Hoang      11/02/2022  Add LittleFS support to ESP32-C3. Use core LittleFS instead of Lorol's LITTLEFS for v2.0.0+
   1.8.2   K Hoang      21/02/2022  Optional Board_Name in Menu. Optimize code by using passing by reference
+  1.9.0   K Hoang      09/09/2022  Fix ESP32 chipID and add getChipOUI()
  *****************************************************************************************************************************/
 
 #pragma once
@@ -55,13 +56,13 @@
 #endif
 
 #ifndef ESP_ASYNC_WIFI_MANAGER_LITE_VERSION
-  #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION             "ESPAsync_WiFiManager_Lite v1.8.2"
+  #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION             "ESPAsync_WiFiManager_Lite v1.9.0"
   
   #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION_MAJOR       1
-  #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION_MINOR       8
-  #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION_PATCH       2
+  #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION_MINOR       9
+  #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION_PATCH       0
 
-  #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION_INT         1008002
+  #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION_INT         1009000
 #endif
 
 #ifdef ESP8266
@@ -178,10 +179,26 @@
   }
   
   #define ESP_getChipId()   (ESP.getChipId())
+  
 #else		//ESP32
+
   #include <esp_wifi.h>
-  #define ESP_getChipId()   ((uint32_t)ESP.getEfuseMac())
+  
+  uint32_t getChipID();
+  uint32_t getChipOUI();
+   
+  #if defined(ESP_getChipId)
+    #undef ESP_getChipId
+  #endif
+  
+  #if defined(ESP_getChipOUI)
+    #undef ESP_getChipOUI
+  #endif
+  
+  #define ESP_getChipId()  	getChipID()
+  #define ESP_getChipOUI() 	getChipOUI()
 #endif
+
 
 #include <ESPAsync_WiFiManager_Lite_Debug.h>
 
@@ -461,6 +478,38 @@ const char WM_HTTP_NO_CACHE[]        PROGMEM = "no-cache";
 const char WM_HTTP_EXPIRES[]         PROGMEM = "Expires";
 const char WM_HTTP_CORS[]            PROGMEM = "Access-Control-Allow-Origin";
 const char WM_HTTP_CORS_ALLOW_ALL[]  PROGMEM = "*";
+
+//////////////////////////////////////////
+
+#if (ESP32)
+
+uint32_t getChipID()
+{
+  uint64_t chipId64 = 0;
+
+  for (int i = 0; i < 6; i++)
+  {
+    chipId64 |= ( ( (uint64_t) ESP.getEfuseMac() >> (40 - (i * 8)) ) & 0xff ) << (i * 8);
+  }
+  
+  return (uint32_t) (chipId64 & 0xFFFFFF);
+}
+
+//////////////////////////////////////////
+
+uint32_t getChipOUI()
+{
+  uint64_t chipId64 = 0;
+
+  for (int i = 0; i < 6; i++)
+  {
+    chipId64 |= ( ( (uint64_t) ESP.getEfuseMac() >> (40 - (i * 8)) ) & 0xff ) << (i * 8);
+  }
+  
+  return (uint32_t) (chipId64 >> 24);
+}
+
+#endif
 
 //////////////////////////////////////////
 
