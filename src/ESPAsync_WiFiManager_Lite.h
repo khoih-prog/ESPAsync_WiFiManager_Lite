@@ -598,6 +598,10 @@ class ESPAsync_WiFiManager_Lite
     
     //////////////////////////////////////////
 
+#if !defined(USE_LED_BUILTIN)
+  #define USE_LED_BUILTIN     true      // use builtin LED to show configuration mode
+#endif
+
 #if ESP8266
 
   // For ESP8266
@@ -633,10 +637,12 @@ class ESPAsync_WiFiManager_Lite
     {
 #define TIMEOUT_CONNECT_WIFI			30000
 
+#if USE_LED_BUILTIN
       //Turn OFF
       pinMode(LED_BUILTIN, OUTPUT);
       digitalWrite(LED_BUILTIN, LED_OFF);
-      
+#endif
+
 #if USING_MRD
       //// New MRD ////
       mrd = new MultiResetDetector(MRD_TIMEOUT, MRD_ADDRESS);  
@@ -891,9 +897,10 @@ class ESPAsync_WiFiManager_Lite
                
               if (connectMultiWiFi() == WL_CONNECTED)
               {
+#if USE_LED_BUILTIN
                 // turn the LED_BUILTIN OFF to tell us we exit configuration mode.
                 digitalWrite(LED_BUILTIN, LED_OFF);
-                
+#endif
                 ESP_WML_LOGINFO(F("run: WiFi reconnected"));
               }
             }
@@ -902,9 +909,10 @@ class ESPAsync_WiFiManager_Lite
             
             if (connectMultiWiFi() == WL_CONNECTED)
             {
+#if USE_LED_BUILTIN
               // turn the LED_BUILTIN OFF to tell us we exit configuration mode.
               digitalWrite(LED_BUILTIN, LED_OFF);
-
+#endif
               ESP_WML_LOGINFO(F("run: WiFi reconnected"));
             }
 #endif            
@@ -918,8 +926,10 @@ class ESPAsync_WiFiManager_Lite
       {
         configuration_mode = false;
         ESP_WML_LOGINFO(F("run: got WiFi back"));
+#if USE_LED_BUILTIN
         // turn the LED_BUILTIN OFF to tell us we exit configuration mode.
         digitalWrite(LED_BUILTIN, LED_OFF);
+#endif
       }
     }
         
@@ -2852,10 +2862,11 @@ class ESPAsync_WiFiManager_Lite
 	    
 	    WiFiNetworksFound = scanWifiNetworks(&indices);	
 #endif
-    
+
+#if USE_LED_BUILTIN
      // turn the LED_BUILTIN ON to tell us we are in configuration mode.
       digitalWrite(LED_BUILTIN, LED_ON);
-
+#endif
       if ( (portal_ssid == "") || portal_pass == "" )
       {
         String chipID = String(ESP_getChipId(), HEX);
