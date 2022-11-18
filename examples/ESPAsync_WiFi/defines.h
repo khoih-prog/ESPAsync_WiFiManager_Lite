@@ -22,6 +22,9 @@
 
 #define _ESP_WM_LITE_LOGLEVEL_        2
 
+// use builtin LED to show configuration mode
+#define USE_LED_BUILTIN               true
+
 #define USING_MRD                     true
 
 #if USING_MRD
