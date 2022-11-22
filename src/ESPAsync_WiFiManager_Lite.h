@@ -1230,8 +1230,305 @@ class ESPAsync_WiFiManager_Lite
       return _CORS_Header;
     }
 #endif
-          
+
     //////////////////////////////////////
+
+#if USE_DYNAMIC_PARAMETERS
+
+#if ( USE_LITTLEFS || USE_SPIFFS )
+
+  #define  DYNAMIC_DATA_FILENAME            ("/wm_dynamic.dat")
+  #define  DYNAMIC_DATA_FILENAME_BACKUP     ("/wm_dynamic.bak")
+
+    //////////////////////////////////////
+
+    bool loadDynamicData(bool forceLoad = false)
+    {
+      if (hadDynamicData && !forceLoad) {
+        return true;
+      }
+
+      int checkSum = 0;
+      int readCheckSum;
+      totalDataSize = sizeof(ESP_WM_LITE_config) + sizeof(readCheckSum);
+
+  #if ESP8266
+      // SPIFFS and LittleFS do auto-format if not yet
+      if (!FileFS.begin())
+  #else
+      // Format SPIFFS if not yet
+      if (!FileFS.begin(true))
+  #endif
+      {
+        ESP_WML_LOGERROR(F("SPIFFS/LittleFS failed!"));
+        return false;
+      }
+
+      File file = FileFS.open(DYNAMIC_DATA_FILENAME, "r");
+      if (file) {
+        ESP_WML_LOGINFO(F("open ") + String(DYNAMIC_DATA_FILENAME) + F(" success"));
+      } else {
+        ESP_WML_LOGERROR(F("open ") + String(DYNAMIC_DATA_FILENAME) + F(" failed"));
+
+        // Trying open redundant config file
+        file = FileFS.open(DYNAMIC_DATA_FILENAME_BACKUP, "r");
+        if (file) {
+          ESP_WML_LOGINFO(F("open ") + String(DYNAMIC_DATA_FILENAME_BACKUP) + F(" success"));
+        } else {
+          ESP_WML_LOGERROR(F("open ") + String(DYNAMIC_DATA_FILENAME_BACKUP) + F(" failed"));
+          return false;
+        }
+      }
+     
+      for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
+      {       
+        char* _pointer = myMenuItems[i].pdata;
+        totalDataSize += myMenuItems[i].maxlen;
+
+        // Actual size of pdata is [maxlen + 1]
+        memset(myMenuItems[i].pdata, 0, myMenuItems[i].maxlen + 1);
+        
+        file.readBytes(_pointer, myMenuItems[i].maxlen);
+ 
+        ESP_WML_LOGDEBUG3(F("CrR:pdata="), myMenuItems[i].pdata, F(",len="), myMenuItems[i].maxlen);       
+               
+        for (uint16_t j = 0; j < myMenuItems[i].maxlen; j++,_pointer++)
+        {         
+          checkSum += *_pointer;  
+        }       
+      }
+
+      file.readBytes((char *) &readCheckSum, sizeof(readCheckSum));
+      
+      ESP_WML_LOGINFO(F("OK"));
+      file.close();
+      
+      ESP_WML_LOGINFO3(F("CrCCsum=0x"), String(checkSum, HEX), F(",CrRCsum=0x"), String(readCheckSum, HEX));
+      
+      if ( checkSum != readCheckSum)
+      {
+        return false;
+      }
+      
+      hadDynamicData = true;
+      return true;    
+    }
+
+    //////////////////////////////////////////////
+
+    void saveDynamicData()
+    {
+      int checkSum = 0;
+
+  #if ESP8266
+      // SPIFFS and LittleFS do auto-format if not yet
+      if (!FileFS.begin())
+  #else
+      // Format SPIFFS if not yet
+      if (!FileFS.begin(true))
+  #endif
+      {
+        ESP_WML_LOGERROR(F("SPIFFS/LittleFS failed!"));
+        return;
+      }
+
+      File file = FileFS.open(DYNAMIC_DATA_FILENAME, "w");
+      if (file) {
+        ESP_WML_LOGINFO(F("open ") + String(DYNAMIC_DATA_FILENAME) + F(" success"));
+      } else {
+        ESP_WML_LOGERROR(F("open ") + String(DYNAMIC_DATA_FILENAME) + F(" failed"));
+      }
+
+      for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
+      {       
+        char* _pointer = myMenuItems[i].pdata;
+   
+        ESP_WML_LOGDEBUG3(F("CW1:pdata="), myMenuItems[i].pdata, F(",len="), myMenuItems[i].maxlen);
+        
+        if (file)
+        {
+          file.write((uint8_t*) _pointer, myMenuItems[i].maxlen);         
+        }
+        else
+        {
+          ESP_WML_LOGINFO(F("failed"));
+        }        
+                     
+        for (uint16_t j = 0; j < myMenuItems[i].maxlen; j++,_pointer++)
+        {         
+          checkSum += *_pointer;     
+         }
+      }
+      
+      if (file)
+      {
+        file.write((uint8_t*) &checkSum, sizeof(checkSum));     
+        file.close();
+        ESP_WML_LOGINFO(F("OK"));    
+      }
+      else
+      {
+        ESP_WML_LOGINFO(F("failed"));
+      }   
+           
+      ESP_WML_LOGINFO1(F("CrWCSum=0x"), String(checkSum, HEX));
+      
+      // Trying open redundant Auth file
+      file = FileFS.open(DYNAMIC_DATA_FILENAME_BACKUP, "w");
+      if (file) {
+        ESP_WML_LOGINFO(F("open ") + String(DYNAMIC_DATA_FILENAME_BACKUP) + F(" success"));
+      } else {
+        ESP_WML_LOGERROR(F("open ") + String(DYNAMIC_DATA_FILENAME_BACKUP) + F(" failed"));
+      }
+
+      for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
+      {       
+        char* _pointer = myMenuItems[i].pdata;
+  
+        ESP_WML_LOGDEBUG3(F("CW2:pdata="), myMenuItems[i].pdata, F(",len="), myMenuItems[i].maxlen);
+        
+        if (file)
+        {
+          file.write((uint8_t*) _pointer, myMenuItems[i].maxlen);         
+        }
+        else
+        {
+          ESP_WML_LOGINFO(F("failed"));
+        }        
+                     
+        for (uint16_t j = 0; j < myMenuItems[i].maxlen; j++,_pointer++)
+        {         
+          checkSum += *_pointer;     
+         }
+      }
+      
+      if (file)
+      {
+        file.write((uint8_t*) &checkSum, sizeof(checkSum));     
+        file.close();
+        ESP_WML_LOGINFO(F("OK"));    
+      }
+      else
+      {
+        ESP_WML_LOGINFO(F("failed"));
+      }   
+    }
+
+    //////////////////////////////////////////////
+
+#else // USE_LITTLEFS || USE_SPIFFS
+
+  #ifndef EEPROM_SIZE
+    #define EEPROM_SIZE     2048
+  #else
+    #if (EEPROM_SIZE > 2048)
+      #warning EEPROM_SIZE must be <= 2048. Reset to 2048
+      #undef EEPROM_SIZE
+      #define EEPROM_SIZE     2048
+    #elif (EEPROM_SIZE < 2048)
+      #warning Preset EEPROM_SIZE <= 2048. Reset to 2048
+      #undef EEPROM_SIZE
+      #define EEPROM_SIZE     2048
+    #endif
+    // FLAG_DATA_SIZE is 4, to store DRD/MRD flag
+    #if (EEPROM_SIZE < FLAG_DATA_SIZE + CONFIG_DATA_SIZE)
+      #warning EEPROM_SIZE must be > CONFIG_DATA_SIZE. Reset to 512
+      #undef EEPROM_SIZE
+      #define EEPROM_SIZE     2048
+    #endif
+  #endif
+
+  #ifndef EEPROM_START
+    #define EEPROM_START     0      //define 256 in DRD/MRD
+  #else
+    #if (EEPROM_START + FLAG_DATA_SIZE + CONFIG_DATA_SIZE + FORCED_CONFIG_PORTAL_FLAG_DATA_SIZE > EEPROM_SIZE)
+      #error EPROM_START + FLAG_DATA_SIZE + CONFIG_DATA_SIZE + FORCED_CONFIG_PORTAL_FLAG_DATA_SIZE > EEPROM_SIZE. Please adjust.
+    #endif
+  #endif
+
+  // Stating positon to store ESP_WM_LITE_config
+  #define CONFIG_EEPROM_START    (EEPROM_START + FLAG_DATA_SIZE)
+
+    //////////////////////////////////////////////
+
+    bool loadDynamicData(bool forceLoad = false)
+    {
+      if (hadDynamicData && !forceLoad) {
+        return true;
+      }
+
+      int readCheckSum;
+      int checkSum = 0;
+      uint16_t offset = CONFIG_EEPROM_START + sizeof(ESP_WM_LITE_config) + FORCED_CONFIG_PORTAL_FLAG_DATA_SIZE;
+           
+      totalDataSize = sizeof(ESP_WM_LITE_config) + sizeof(readCheckSum);
+
+      EEPROM.begin(EEPROM_SIZE);
+      ESP_WML_LOGINFO1(F("EEPROM size:"), EEPROM_SIZE);
+
+      for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
+      {       
+        char* _pointer = myMenuItems[i].pdata;
+        totalDataSize += myMenuItems[i].maxlen;
+        
+        // Actual size of pdata is [maxlen + 1]
+        memset(myMenuItems[i].pdata, 0, myMenuItems[i].maxlen + 1);
+               
+        for (uint16_t j = 0; j < myMenuItems[i].maxlen; j++,_pointer++,offset++)
+        {
+          *_pointer = EEPROM.read(offset);
+          
+          checkSum += *_pointer;  
+        }
+         
+        ESP_WML_LOGDEBUG3(F("CR:pdata="), myMenuItems[i].pdata, F(",len="), myMenuItems[i].maxlen);         
+      }
+      
+      EEPROM.get(offset, readCheckSum);
+      
+      ESP_WML_LOGINFO3(F("CrCCsum=0x"), String(checkSum, HEX), F(",CrRCsum=0x"), String(readCheckSum, HEX));
+      
+      if ( checkSum != readCheckSum)
+      {
+        return false;
+      }
+
+      hadDynamicData = true;
+      return true;
+    }
+
+    //////////////////////////////////////////////
+
+    void saveDynamicData()
+    {
+      int checkSum = 0;
+      uint16_t offset = CONFIG_EEPROM_START + sizeof(ESP_WM_LITE_config) + FORCED_CONFIG_PORTAL_FLAG_DATA_SIZE;
+                
+      for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
+      {       
+        char* _pointer = myMenuItems[i].pdata;
+           
+        ESP_WML_LOGDEBUG3(F("CW:pdata="), myMenuItems[i].pdata, F(",len="), myMenuItems[i].maxlen);
+                            
+        for (uint16_t j = 0; j < myMenuItems[i].maxlen; j++,_pointer++,offset++)
+        {
+          EEPROM.write(offset, *_pointer);
+          
+          checkSum += *_pointer;     
+         }
+      }
+      
+      EEPROM.put(offset, checkSum);
+      EEPROM.commit();
+      
+      ESP_WML_LOGINFO1(F("CrWCSum=0x"), String(checkSum, HEX));
+    }
+
+    //////////////////////////////////////////////
+
+#endif // USE_LITTLEFS || USE_SPIFFS
+
+#endif // USE_DYNAMIC_PARAMETERS
 
 
   private:
@@ -1250,6 +1547,7 @@ class ESPAsync_WiFiManager_Lite
 
     unsigned long configTimeout;
     bool hadConfigData = false;
+    bool hadDynamicData = false;
     
     bool isForcedConfigPortal   = false;
     bool persForcedConfigPortal = false;
@@ -1286,7 +1584,7 @@ class ESPAsync_WiFiManager_Lite
 #endif
     
 #if USING_CORS_FEATURE    
-    const char* _CORS_Header        = WM_HTTP_CORS_ALLOW_ALL;   //"*";
+    const char* _CORS_Header        = WM_HTTP_CORS_ALLOW_ALL;   // "*";
 #endif
        
     //////////////////////////////////////
@@ -1415,9 +1713,6 @@ class ESPAsync_WiFiManager_Lite
 #define  CONFIG_FILENAME                  ("/wm_config.dat")
 #define  CONFIG_FILENAME_BACKUP           ("/wm_config.bak")
 
-#define  CREDENTIALS_FILENAME             ("/wm_cred.dat")
-#define  CREDENTIALS_FILENAME_BACKUP      ("/wm_cred.bak")
-
 #define  CONFIG_PORTAL_FILENAME           ("/wm_cp.dat")
 #define  CONFIG_PORTAL_FILENAME_BACKUP    ("/wm_cp.bak")
 
@@ -1527,7 +1822,7 @@ class ESPAsync_WiFiManager_Lite
         return false;
       }
     }
-    
+
     //////////////////////////////////////////////
 
 #if USE_DYNAMIC_PARAMETERS
@@ -1538,7 +1833,7 @@ class ESPAsync_WiFiManager_Lite
       int readCheckSum;
       char* readBuffer;
            
-      File file = FileFS.open(CREDENTIALS_FILENAME, "r");
+      File file = FileFS.open(DYNAMIC_DATA_FILENAME, "r");
       ESP_WML_LOGINFO(F("LoadCredFile "));
 
       if (!file)
@@ -1546,7 +1841,7 @@ class ESPAsync_WiFiManager_Lite
         ESP_WML_LOGINFO(F("failed"));
 
         // Trying open redundant config file
-        file = FileFS.open(CREDENTIALS_FILENAME_BACKUP, "r");
+        file = FileFS.open(DYNAMIC_DATA_FILENAME_BACKUP, "r");
         ESP_WML_LOGINFO(F("LoadBkUpCredFile "));
 
         if (!file)
@@ -1619,163 +1914,8 @@ class ESPAsync_WiFiManager_Lite
       return false;    
     }
     
-    //////////////////////////////////////////////
-
-    bool loadDynamicData()
-    {
-      int checkSum = 0;
-      int readCheckSum;
-      totalDataSize = sizeof(ESP_WM_LITE_config) + sizeof(readCheckSum);
-      
-      File file = FileFS.open(CREDENTIALS_FILENAME, "r");
-      ESP_WML_LOGINFO(F("LoadCredFile "));
-
-      if (!file)
-      {
-        ESP_WML_LOGINFO(F("failed"));
-
-        // Trying open redundant config file
-        file = FileFS.open(CREDENTIALS_FILENAME_BACKUP, "r");
-        ESP_WML_LOGINFO(F("LoadBkUpCredFile "));
-
-        if (!file)
-        {
-          ESP_WML_LOGINFO(F("failed"));
-          return false;
-        }
-      }
-     
-      for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
-      {       
-        char* _pointer = myMenuItems[i].pdata;
-        totalDataSize += myMenuItems[i].maxlen;
-
-        // Actual size of pdata is [maxlen + 1]
-        memset(myMenuItems[i].pdata, 0, myMenuItems[i].maxlen + 1);
-        
-        file.readBytes(_pointer, myMenuItems[i].maxlen);
- 
-        ESP_WML_LOGDEBUG3(F("CrR:pdata="), myMenuItems[i].pdata, F(",len="), myMenuItems[i].maxlen);       
-               
-        for (uint16_t j = 0; j < myMenuItems[i].maxlen; j++,_pointer++)
-        {         
-          checkSum += *_pointer;  
-        }       
-      }
-
-      file.readBytes((char *) &readCheckSum, sizeof(readCheckSum));
-      
-      ESP_WML_LOGINFO(F("OK"));
-      file.close();
-      
-      ESP_WML_LOGINFO3(F("CrCCsum=0x"), String(checkSum, HEX), F(",CrRCsum=0x"), String(readCheckSum, HEX));
-      
-      if ( checkSum != readCheckSum)
-      {
-        return false;
-      }
-      
-      return true;    
-    }
-
-    //////////////////////////////////////////////
-    
-    void saveDynamicData()
-    {
-      int checkSum = 0;
-    
-      File file = FileFS.open(CREDENTIALS_FILENAME, "w");
-      ESP_WML_LOGINFO(F("SaveCredFile "));
-
-      for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
-      {       
-        char* _pointer = myMenuItems[i].pdata;
-   
-        ESP_WML_LOGDEBUG3(F("CW1:pdata="), myMenuItems[i].pdata, F(",len="), myMenuItems[i].maxlen);
-        
-        if (file)
-        {
-          file.write((uint8_t*) _pointer, myMenuItems[i].maxlen);         
-        }
-        else
-        {
-          ESP_WML_LOGINFO(F("failed"));
-        }        
-                     
-        for (uint16_t j = 0; j < myMenuItems[i].maxlen; j++,_pointer++)
-        {         
-          checkSum += *_pointer;     
-         }
-      }
-      
-      if (file)
-      {
-        file.write((uint8_t*) &checkSum, sizeof(checkSum));     
-        file.close();
-        ESP_WML_LOGINFO(F("OK"));    
-      }
-      else
-      {
-        ESP_WML_LOGINFO(F("failed"));
-      }   
-           
-      ESP_WML_LOGINFO1(F("CrWCSum=0x"), String(checkSum, HEX));
-      
-      // Trying open redundant Auth file
-      file = FileFS.open(CREDENTIALS_FILENAME_BACKUP, "w");
-      ESP_WML_LOGINFO(F("SaveBkUpCredFile "));
-
-      for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
-      {       
-        char* _pointer = myMenuItems[i].pdata;
-  
-        ESP_WML_LOGDEBUG3(F("CW2:pdata="), myMenuItems[i].pdata, F(",len="), myMenuItems[i].maxlen);
-        
-        if (file)
-        {
-          file.write((uint8_t*) _pointer, myMenuItems[i].maxlen);         
-        }
-        else
-        {
-          ESP_WML_LOGINFO(F("failed"));
-        }        
-                     
-        for (uint16_t j = 0; j < myMenuItems[i].maxlen; j++,_pointer++)
-        {         
-          checkSum += *_pointer;     
-         }
-      }
-      
-      if (file)
-      {
-        file.write((uint8_t*) &checkSum, sizeof(checkSum));     
-        file.close();
-        ESP_WML_LOGINFO(F("OK"));    
-      }
-      else
-      {
-        ESP_WML_LOGINFO(F("failed"));
-      }   
-    }
 #endif
 
-    //////////////////////////////////////////////
-    
-    void NULLTerminateConfig()
-    {
-      //#define HEADER_MAX_LEN      16
-      //#define SERVER_MAX_LEN      32
-      //#define TOKEN_MAX_LEN       36
-      
-      // NULL Terminating to be sure
-      ESP_WM_LITE_config.header[HEADER_MAX_LEN - 1] = 0;
-      ESP_WM_LITE_config.WiFi_Creds[0].wifi_ssid[SSID_MAX_LEN - 1] = 0;
-      ESP_WM_LITE_config.WiFi_Creds[0].wifi_pw  [PASS_MAX_LEN - 1] = 0;
-      ESP_WM_LITE_config.WiFi_Creds[1].wifi_ssid[SSID_MAX_LEN - 1] = 0;
-      ESP_WM_LITE_config.WiFi_Creds[1].wifi_pw  [PASS_MAX_LEN - 1] = 0;
-      ESP_WM_LITE_config.board_name[BOARD_NAME_MAX_LEN - 1]  = 0;
-    }
-    
     //////////////////////////////////////////////
 
     bool loadConfigData()
@@ -1918,8 +2058,8 @@ class ESPAsync_WiFiManager_Lite
         return true; 
       }
 #if USE_DYNAMIC_PARAMETERS      
-      else if ( ( FileFS.exists(CONFIG_FILENAME)      || FileFS.exists(CONFIG_FILENAME_BACKUP) ) &&
-                ( FileFS.exists(CREDENTIALS_FILENAME) || FileFS.exists(CREDENTIALS_FILENAME_BACKUP) ) )
+      else if ( ( FileFS.exists(CONFIG_FILENAME)       || FileFS.exists(CONFIG_FILENAME_BACKUP) ) &&
+                ( FileFS.exists(DYNAMIC_DATA_FILENAME) || FileFS.exists(DYNAMIC_DATA_FILENAME_BACKUP) ) )
 #else
       else if ( FileFS.exists(CONFIG_FILENAME) || FileFS.exists(CONFIG_FILENAME_BACKUP) )
 #endif   
@@ -2024,39 +2164,6 @@ class ESPAsync_WiFiManager_Lite
 
 #else
 
-  #ifndef EEPROM_SIZE
-    #define EEPROM_SIZE     2048
-  #else
-    #if (EEPROM_SIZE > 2048)
-      #warning EEPROM_SIZE must be <= 2048. Reset to 2048
-      #undef EEPROM_SIZE
-      #define EEPROM_SIZE     2048
-    #elif (EEPROM_SIZE < 2048)
-      #warning Preset EEPROM_SIZE <= 2048. Reset to 2048
-      #undef EEPROM_SIZE
-      #define EEPROM_SIZE     2048
-    #endif
-    // FLAG_DATA_SIZE is 4, to store DRD/MRD flag
-    #if (EEPROM_SIZE < FLAG_DATA_SIZE + CONFIG_DATA_SIZE)
-      #warning EEPROM_SIZE must be > CONFIG_DATA_SIZE. Reset to 512
-      #undef EEPROM_SIZE
-      #define EEPROM_SIZE     2048
-    #endif
-  #endif
-
-  #ifndef EEPROM_START
-    #define EEPROM_START     0      //define 256 in DRD/MRD
-  #else
-    #if (EEPROM_START + FLAG_DATA_SIZE + CONFIG_DATA_SIZE + FORCED_CONFIG_PORTAL_FLAG_DATA_SIZE > EEPROM_SIZE)
-      #error EPROM_START + FLAG_DATA_SIZE + CONFIG_DATA_SIZE + FORCED_CONFIG_PORTAL_FLAG_DATA_SIZE > EEPROM_SIZE. Please adjust.
-    #endif
-  #endif
-
-// Stating positon to store ESP_WM_LITE_config
-#define CONFIG_EEPROM_START    (EEPROM_START + FLAG_DATA_SIZE)
-
-    //////////////////////////////////////////////
-    
     void setForcedCP(const bool& isPersistent)
     {
       uint32_t readForcedConfigPortalFlag = isPersistent? FORCED_PERS_CONFIG_PORTAL_FLAG_DATA : FORCED_CONFIG_PORTAL_FLAG_DATA;
@@ -2066,6 +2173,7 @@ class ESPAsync_WiFiManager_Lite
       EEPROM.put(CONFIG_EEPROM_START + CONFIG_DATA_SIZE, readForcedConfigPortalFlag);
       EEPROM.commit();
     }
+
     //////////////////////////////////////////////
     
     void clearForcedCP()
@@ -2168,72 +2276,6 @@ class ESPAsync_WiFiManager_Lite
       return true;    
     }
 
-    //////////////////////////////////////////////
-    
-    bool EEPROM_getDynamicData()
-    {
-      int readCheckSum;
-      int checkSum = 0;
-      uint16_t offset = CONFIG_EEPROM_START + sizeof(ESP_WM_LITE_config) + FORCED_CONFIG_PORTAL_FLAG_DATA_SIZE;
-           
-      totalDataSize = sizeof(ESP_WM_LITE_config) + sizeof(readCheckSum);
-      
-      for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
-      {       
-        char* _pointer = myMenuItems[i].pdata;
-        totalDataSize += myMenuItems[i].maxlen;
-        
-        // Actual size of pdata is [maxlen + 1]
-        memset(myMenuItems[i].pdata, 0, myMenuItems[i].maxlen + 1);
-               
-        for (uint16_t j = 0; j < myMenuItems[i].maxlen; j++,_pointer++,offset++)
-        {
-          *_pointer = EEPROM.read(offset);
-          
-          checkSum += *_pointer;  
-        }
-         
-        ESP_WML_LOGDEBUG3(F("CR:pdata="), myMenuItems[i].pdata, F(",len="), myMenuItems[i].maxlen);         
-      }
-      
-      EEPROM.get(offset, readCheckSum);
-      
-      ESP_WML_LOGINFO3(F("CrCCsum=0x"), String(checkSum, HEX), F(",CrRCsum=0x"), String(readCheckSum, HEX));
-      
-      if ( checkSum != readCheckSum)
-      {
-        return false;
-      }
-      
-      return true;
-    }
-    
-    //////////////////////////////////////////////
-
-    void EEPROM_putDynamicData()
-    {
-      int checkSum = 0;
-      uint16_t offset = CONFIG_EEPROM_START + sizeof(ESP_WM_LITE_config) + FORCED_CONFIG_PORTAL_FLAG_DATA_SIZE;
-                
-      for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
-      {       
-        char* _pointer = myMenuItems[i].pdata;
-           
-        ESP_WML_LOGDEBUG3(F("CW:pdata="), myMenuItems[i].pdata, F(",len="), myMenuItems[i].maxlen);
-                            
-        for (uint16_t j = 0; j < myMenuItems[i].maxlen; j++,_pointer++,offset++)
-        {
-          EEPROM.write(offset, *_pointer);
-          
-          checkSum += *_pointer;     
-         }
-      }
-      
-      EEPROM.put(offset, checkSum);
-      //EEPROM.commit();
-      
-      ESP_WML_LOGINFO1(F("CrWCSum=0x"), String(checkSum, HEX));
-    }
 #endif
 
     //////////////////////////////////////////////
@@ -2260,7 +2302,7 @@ class ESPAsync_WiFiManager_Lite
       EEPROM.put(CONFIG_EEPROM_START, ESP_WM_LITE_config);
       
 #if USE_DYNAMIC_PARAMETERS         
-      EEPROM_putDynamicData();
+      saveDynamicData();
 #endif
       
       EEPROM.commit();
@@ -2291,7 +2333,7 @@ class ESPAsync_WiFiManager_Lite
       hadConfigData = false; 
       
       EEPROM.begin(EEPROM_SIZE);
-      ESP_WML_LOGINFO1(F("EEPROMsz:"), EEPROM_SIZE);
+      ESP_WML_LOGINFO1(F("EEPROM size:"), EEPROM_SIZE);
       
       if (LOAD_DEFAULT_CONFIG_DATA)
       {
@@ -2330,7 +2372,7 @@ class ESPAsync_WiFiManager_Lite
 #if USE_DYNAMIC_PARAMETERS
                  
         // Load dynamic data from EEPROM
-        dynamicDataValid = EEPROM_getDynamicData();
+        dynamicDataValid = loadDynamicData();
         
         if (dynamicDataValid)
         {  
