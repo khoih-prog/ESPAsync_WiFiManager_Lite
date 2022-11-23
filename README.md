@@ -1,4 +1,4 @@
-## ESPAsync_WiFiManager_Lite (Light Weight Credentials / WiFiManager for ESP32/ESP8266)
+## ESPAsync_WiFiManager_Lite Library (Light Weight Credentials / WiFiManager for ESP32/ESP8266)
 
 [![arduino-library-badge](https://www.ardu-badge.com/badge/ESPAsync_WiFiManager_Lite.svg?)](https://www.ardu-badge.com/ESPAsync_WiFiManager_Lite)
 [![GitHub release](https://img.shields.io/github/release/khoih-prog/ESPAsync_WiFiManager_Lite.svg)](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/releases)
@@ -6,8 +6,11 @@
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](#Contributing)
 [![GitHub issues](https://img.shields.io/github/issues/khoih-prog/ESPAsync_WiFiManager_Lite.svg)](http://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/issues)
 
+
 <a href="https://www.buymeacoffee.com/khoihprog6" title="Donate to my libraries using BuyMeACoffee"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Donate to my libraries using BuyMeACoffee" style="height: 50px !important;width: 181px !important;" ></a>
 <a href="https://www.buymeacoffee.com/khoihprog6" title="Donate to my libraries using BuyMeACoffee"><img src="https://img.shields.io/badge/buy%20me%20a%20coffee-donate-orange.svg?logo=buy-me-a-coffee&logoColor=FFDD00" style="height: 20px !important;width: 200px !important;" ></a>
+<a href="https://profile-counter.glitch.me/khoih-prog/count.svg" title="Total khoih-prog Visitor count"><img src="https://profile-counter.glitch.me/khoih-prog/count.svg" style="height: 30px;width: 200px;"></a>
+<a href="https://profile-counter.glitch.me/khoih-prog-ESPAsync_WiFiManager_Lite/count.svg" title="ESPAsync_WiFiManager_Lite Visitor count"><img src="https://profile-counter.glitch.me/khoih-prog-ESPAsync_WiFiManager_Lite/count.svg" style="height: 30px;width: 200px;"></a>
 
 ---
 ---
@@ -123,7 +126,9 @@ getEfuseMac: 0x885208ABF498
 
 ##### Libraries to be installed manually by downloading zip
 
-Remove unavailable items from depends field of `library.properties`, such as `ESP Async WebServer`,`ESP AsyncTCP` and `AsyncTCP`. Check 
+Remove unavailable items from depends field of `library.properties`, such as `ESP Async WebServer`,`ESP AsyncTCP` and `AsyncTCP`.
+
+Check 
 - [**Arduino Library Registry** #147](https://github.com/me-no-dev/AsyncTCP/issues/147)
 - [**Arduino library manager** #139](https://github.com/me-no-dev/ESPAsyncTCP/issues/139)
 - [**Available via Arduino Library Manager?** #158](https://github.com/me-no-dev/ESPAsyncTCP/issues/158)
@@ -203,12 +208,12 @@ This [**ESPAsync_WiFiManager_Lite** library](https://github.com/khoih-prog/ESPAs
 
  1. [`Arduino IDE 1.8.19+` for Arduino](https://github.com/arduino/Arduino). [![GitHub release](https://img.shields.io/github/release/arduino/Arduino.svg)](https://github.com/arduino/Arduino/releases/latest)
  2. [`ESP8266 Core 3.0.2+`](https://github.com/esp8266/Arduino) for ESP8266-based boards. [![Latest release](https://img.shields.io/github/release/esp8266/Arduino.svg)](https://github.com/esp8266/Arduino/releases/latest/). To use ESP8266 core 2.7.1+ for LittleFS.
- 3. [`ESP32 Core 2.0.4+`](https://github.com/espressif/arduino-esp32) for ESP32-based boards. [![Latest release](https://img.shields.io/github/release/espressif/arduino-esp32.svg)](https://github.com/espressif/arduino-esp32/releases/latest/)
+ 3. [`ESP32 Core 2.0.5+`](https://github.com/espressif/arduino-esp32) for ESP32-based boards. [![Latest release](https://img.shields.io/github/release/espressif/arduino-esp32.svg)](https://github.com/espressif/arduino-esp32/releases/latest/)
  4. [`ESPAsyncWebServer v1.2.3+`](https://github.com/me-no-dev/ESPAsyncWebServer) for all ESP32/ESP8266-based boards. **To install manually, not via Arduino IDE Library Manager**
  5. [`ESPAsyncTCP v1.2.2+`](https://github.com/me-no-dev/ESPAsyncTCP) for ESP8266-based boards. **To install manually, not via Arduino IDE Library Manager**
  6. [`AsyncTCP v1.1.1+`](https://github.com/me-no-dev/AsyncTCP) for ESP32-based boards. **To install manually, not via Arduino IDE Library Manager**
- 7. [`ESP_DoubleResetDetector v1.3.1+`](https://github.com/khoih-prog/ESP_DoubleResetDetector) if using DRD feature. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/ESP_DoubleResetDetector.svg?)](https://www.ardu-badge.com/ESP_DoubleResetDetector).
- 8. [`ESP_MultiResetDetector v1.3.1+`](https://github.com/khoih-prog/ESP_MultiResetDetector) if using MRD feature. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/ESP_MultiResetDetector.svg?)](https://www.ardu-badge.com/ESP_MultiResetDetector).
+ 7. [`ESP_DoubleResetDetector v1.3.2+`](https://github.com/khoih-prog/ESP_DoubleResetDetector) if using DRD feature. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/ESP_DoubleResetDetector.svg?)](https://www.ardu-badge.com/ESP_DoubleResetDetector).
+ 8. [`ESP_MultiResetDetector v1.3.2+`](https://github.com/khoih-prog/ESP_MultiResetDetector) if using MRD feature. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/ESP_MultiResetDetector.svg?)](https://www.ardu-badge.com/ESP_MultiResetDetector).
  9. [`LittleFS_esp32 v1.0.6+`](https://github.com/lorol/LITTLEFS) for ESP32-based boards using LittleFS with ESP32 core **v1.0.5-**. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/LittleFS_esp32.svg?)](https://www.ardu-badge.com/LittleFS_esp32). **Notice**: This [`LittleFS_esp32 library`](https://github.com/lorol/LITTLEFS) has been integrated to Arduino [ESP32 core v1.0.6+](https://github.com/espressif/arduino-esp32/tree/master/libraries/LITTLEFS) and **you don't need to install it if using ESP32 core v1.0.6+**
 
 ---
@@ -249,13 +254,13 @@ In Platform IO, to fix the error when using [`LittleFS_esp32 v1.0`](https://gith
 
 from
 
-```
+```cpp
 //#define CONFIG_LITTLEFS_FOR_IDF_3_2   /* For old IDF - like in release 1.0.4 */
 ```
 
 to
 
-```
+```cpp
 #define CONFIG_LITTLEFS_FOR_IDF_3_2   /* For old IDF - like in release 1.0.4 */
 ```
 
@@ -347,7 +352,7 @@ https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/blob/2902e0bfbd5c61194a9
 
 - If you don't need to add dynamic parameters, use the following in sketch
 
-```
+```cpp
 #define USE_DYNAMIC_PARAMETERS      false
 ```
 
@@ -386,21 +391,21 @@ ESPAsync_WiFiManager->setConfigPortalIP(IPAddress(xxx,xxx,xxx,xxx));
 
 - To set custom DHCP HostName :
  
-```
+```cpp
 // Set customized DHCP HostName
 ESPAsync_WiFiManager->begin("SAMD_ABCDEF");
 ```
  
 or just use the default Hostname, for example "ESP_XXXXXX" for SAMD
 
-```
+```cpp
 // Or use default Hostname "ESP_XXXXXX"
 ESPAsync_WiFiManager->begin();
 ```
 
 #### 8. To use custom HTML Style
 
-```
+```cpp
 const char NewCustomsStyle[] /*PROGMEM*/ = "<style>div,input{padding:5px;font-size:1em;}input{width:95%;}body{text-align: center;}\
 button{background-color:blue;color:white;line-height:2.4rem;font-size:1.2rem;width:100%;}fieldset{border-radius:0.3rem;margin:0px;}</style>";
 
@@ -412,13 +417,13 @@ ESPAsync_WiFiManager->setCustomsStyle(NewCustomsStyle);
 #### 9. To use custom Head Elements
 
 
-```
+```cpp
 ESPAsync_WiFiManager->setCustomsHeadElement("<style>html{filter: invert(10%);}</style>");
 ```
 
 #### 10. To use CORS Header
 
-```
+```cpp
 ESPAsync_WiFiManager->setCORSHeader("Your Access-Control-Allow-Origin");
 ```
 
@@ -432,16 +437,17 @@ Once Credentials / WiFi network information is saved in the host non-volatile me
 
 #### 11.1 If you need to use and input only one set of WiFi SSID/PWD
 
-```
+```cpp
 // Permit input only one set of WiFi SSID/PWD. The other can be "NULL or "blank"
 // Default is false (if not defined) => must input 2 sets of SSID/PWD
 #define REQUIRE_ONE_SET_SSID_PW       true
 ```
+
 But it's always advisable to use and input both sets for reliability.
  
 #### 11.2 If you need to use both sets of WiFi SSID/PWD
 
-```
+```cpp
 // Permit input only one set of WiFi SSID/PWD. The other can be "NULL or "blank"
 // Default is false (if not defined) => must input 2 sets of SSID/PWD
 #define REQUIRE_ONE_SET_SSID_PW       false
@@ -452,7 +458,7 @@ But it's always advisable to use and input both sets for reliability.
 #### 12.1 Enable auto-scan of WiFi networks for selection in Configuration Portal
 
 
-```
+```cpp
 #define SCAN_WIFI_NETWORKS                  true
 ```
 
@@ -460,7 +466,7 @@ The manual input of SSIDs is default enabled, so that users can input arbitrary 
 
 #### 12.2 Disable manually input SSIDs
 
-```
+```cpp
 // To disable manually input SSID, only from a scanned SSID lists
 #define MANUAL_SSID_INPUT_ALLOWED           false
 ```
@@ -472,7 +478,7 @@ This is for normal use-cases in which users can only select an SSID from a scann
 The maximum number of SSIDs in the list is seletable from 2 to 15. If invalid number of SSIDs is selected, the default number of 10 will be used.
 
 
-```
+```cpp
 // From 2-15
 #define MAX_SSID_IN_LIST                    8
 ```
@@ -489,7 +495,7 @@ To use, uncomment in `defines.h`.
 
 Check [retries block the main loop #18](https://github.com/khoih-prog/WiFiManager_NINA_Lite/issues/18#issue-1094004380)
 
-```
+```cpp
 #define MAX_NUM_WIFI_RECON_TRIES_PER_LOOP     2
 ```
 
@@ -503,7 +509,7 @@ Only use whenever urgent tasks in loop() can't be delayed. But if so, it's bette
 
 Check [retries block the main loop #18](https://github.com/khoih-prog/WiFiManager_NINA_Lite/issues/18#issuecomment-1006197561)
 
-```
+```cpp
 #define WIFI_RECON_INTERVAL                   30000     // 30s
 ```
 
@@ -531,7 +537,7 @@ In `Configuration Portal Mode`, it starts an AP called `ESP_WXXXXXX`. Connect to
 After you connected, please, go to http://192.168.4.1 or newly configured AP IP, you'll see this `Main` page:
 
 <p align="center">
-    <img src="https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/blob/main/pics/Main.png">
+    <img src="https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/raw/main/pics/Main.png">
 </p>
 
 Enter your credentials, 
@@ -541,27 +547,27 @@ Enter your credentials,
 Enter your credentials, 
 
 <p align="center">
-    <img src="https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/blob/main/pics/Input.png">
+    <img src="https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/raw/main/pics/Input.png">
 </p>
 
 or
 
 <p align="center">
-    <img src="https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/blob/main/pics/MQTT.png">
+    <img src="https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/raw/main/pics/MQTT.png">
 </p>
 
 ### 2. With SCAN_WIFI_NETWORKS
 
 
 <p align="center">
-    <img src="https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/blob/main/pics/Input_With_Scan.png">
+    <img src="https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/raw/main/pics/Input_With_Scan.png">
 </p>
 
 
 then click `Save`. 
 
 <p align="center">
-    <img src="https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/blob/main/pics/Save.png">
+    <img src="https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/raw/main/pics/Save.png">
 </p>
 
 The WiFi Credentials will be saved and the board connect to the selected WiFi AP.
@@ -584,7 +590,7 @@ See this example and modify as necessary
 
 #### 1. To always load [Default Credentials](examples/ESPAsync_WiFi_MQTT/Credentials.h) and override Config Portal data
 
-```
+```cpp
 // Used mostly for development and debugging. FORCES default values to be loaded each run.
 // Config Portal data input will be ignored and overridden by DEFAULT_CONFIG_DATA
 bool LOAD_DEFAULT_CONFIG_DATA = true;
@@ -594,7 +600,7 @@ bool LOAD_DEFAULT_CONFIG_DATA = true;
 
 Config Portal data input will be override DEFAULT_CONFIG_DATA
 
-```
+```cpp
 // Used mostly once debugged. Assumes good data already saved in device.
 // Config Portal data input will be override DEFAULT_CONFIG_DATA
 bool LOAD_DEFAULT_CONFIG_DATA = false;
@@ -691,7 +697,7 @@ Example of [Default dynamicParams](examples/ESPAsync_WiFi_MQTT/dynamicParams.h)
 
 - To add custom parameters, just modify the example below
 
-```
+```cpp
 #include "defines.h"
 
 // USE_DYNAMIC_PARAMETERS defined in defined.h
@@ -752,15 +758,16 @@ uint16_t NUM_MENU_ITEMS = 0;
 #endif    //USE_DYNAMIC_PARAMETERS
 
 ```
+
 - If you don't need to add dynamic parameters, use the following in sketch
 
-```
+```cpp
 #define USE_DYNAMIC_PARAMETERS     false
 ```
 
 or
 
-```
+```cpp
 /////////////// Start dynamic Credentials ///////////////
 
 MenuItem myMenuItems [] = {};
@@ -769,6 +776,7 @@ uint16_t NUM_MENU_ITEMS = 0;
 /////// // End dynamic Credentials ///////////
 
 ```
+
 ---
 
 ### Important Notes for using Dynamic Parameters' ids
@@ -828,7 +836,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 #### 1.1. No Config Data => Open Config Portal
 
-```
+```cpp
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
 ESPAsync_WiFiManager_Lite v1.9.0
 ESP_MultiResetDetector v1.3.1
@@ -889,7 +897,7 @@ CCC
 
 #### 1.2. Got valid Credentials from Config Portal then connected to WiFi
 
-```
+```cpp
 [WML] h:UpdLittleFS
 [WML] SaveCfgFile 
 [WML] WCSum=0xda0
@@ -976,7 +984,7 @@ TWTWTWTW TWTWTWTWTW TWTWTWTWTW T
 
 #### 1.3. Lost a WiFi and autoconnect to another WiFi AP
 
-```
+```cpp
 [WML] WiFi connected after time: 1
 [WML] SSID=HueNet2,RSSI=-51
 [WML] Channel=4,IP=192.168.2.82
@@ -995,7 +1003,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 #### 2.1. No Config Data => Open Config Portal
 
-```
+```cpp
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP8266_NODEMCU
 ESPAsync_WiFiManager_Lite v1.9.0
 ESP_MultiResetDetector v1.3.1
@@ -1056,7 +1064,7 @@ CCC
 
 #### 2.2. Got valid Credentials from Config Portal then connected to WiFi
 
-```
+```cpp
 [WML] h:UpdLittleFS
 [WML] SaveCfgFile 
 [WML] WCSum=0xda0
@@ -1143,7 +1151,7 @@ TWTWTWTW TWTWTWTWTW TWTWTWTWTW T
 
 #### 2.3. Lost a WiFi and autoconnect to another WiFi AP
 
-```
+```cpp
 [WML] run: WiFi lost. Reconnect WiFi
 [WML] Connecting MultiWifi...
 [WML] WiFi connected after time: 1
@@ -1161,7 +1169,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 #### 3.1. No Config Data => Open Config Portal
 
-```
+```cpp
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
 ESPAsync_WiFiManager_Lite v1.9.0
 ESP_MultiResetDetector v1.3.1
@@ -1203,7 +1211,7 @@ CCC C
 
 #### 3.2. Got valid Credentials from Config Portal then connected to WiFi
 
-```
+```cpp
 [WML] h: Init menuItemUpdated
 [WML] h:repl id
 [WML] h:items updated =1
@@ -1357,7 +1365,7 @@ TWTWTWTW TWTWTW
 
 #### 3.3. Lost a WiFi and autoconnect to another WiFi AP
 
-```
+```cpp
 [WML] run: WiFi lost. Reconnect WiFi
 [WML] Connecting MultiWifi...
 [WML] WiFi connected after time: 1
@@ -1377,7 +1385,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 #### 4.1. MultiResetDetected => Open Config Portal
 
-```
+```cpp
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
 ESPAsync_WiFiManager_Lite v1.9.0
 ESP_MultiResetDetector v1.3.1
@@ -1420,7 +1428,7 @@ entry 0x4004c190
 
 #### 4.2. Got valid Credentials from Config Portal then connected to WiFi
 
-```
+```cpp
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
 ESPAsync_WiFiManager_Lite v1.9.0
 ESP_MultiResetDetector v1.3.1
@@ -1476,7 +1484,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 #### 5.1 MRD/DRD => Open Config Portal
 
-```
+```cpp
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
 ESPAsync_WiFiManager_Lite v1.9.0
 ESP_MultiResetDetector v1.3.1
@@ -1521,7 +1529,7 @@ CCCC CCCCC CCCCC C
 
 ### 5.2 Config Data Saved => Connection to Adafruit MQTT
 
-```
+```cpp
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
 ESPAsync_WiFiManager_Lite v1.9.0
 ESP_MultiResetDetector v1.3.1
@@ -1568,7 +1576,7 @@ TWTWTWTW TWTWTWTWTWTW
 
 This is the terminal output when running [**ESPAsync_WiFi**](examples/ESPAsync_WiFi) example on **ESP32S3_DEV**
 
-```
+```cpp
 Starting ESPAsync_WiFi using LittleFS on ESP32S3_DEV
 ESPAsync_WiFiManager_Lite v1.9.0
 ESP_MultiResetDetector v1.3.1
@@ -1610,7 +1618,7 @@ H
 This is the terminal output when running [**ESPAsync_WiFi**](examples/ESPAsync_WiFi) example on **ESP32C3_DEV** using LittleFS
 
 
-```
+```cpp
 Starting ESPAsync_WiFi using LittleFS on ESP32C3_DEV
 ESPAsync_WiFiManager_Lite v1.9.0
 ESP_MultiResetDetector v1.3.1
@@ -1770,6 +1778,6 @@ If you want to contribute to this project:
 
 ### Copyright
 
-Copyright 2021- Khoi Hoang
+Copyright (c) 2021- Khoi Hoang
 
 

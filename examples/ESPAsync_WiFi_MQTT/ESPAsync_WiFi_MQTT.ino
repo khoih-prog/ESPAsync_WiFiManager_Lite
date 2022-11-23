@@ -2,8 +2,8 @@
   ESPAsync_WiFi_MQTT.ino
   For ESP8266 / ESP32 boards
 
-  ESPAsync_WiFiManager_Lite (https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite) is a library 
-  for the ESP32/ESP8266 boards to enable store Credentials in EEPROM/SPIFFS/LittleFS for easy 
+  ESPAsync_WiFiManager_Lite (https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite) is a library
+  for the ESP32/ESP8266 boards to enable store Credentials in EEPROM/SPIFFS/LittleFS for easy
   configuration/reconfiguration and autoconnect/autoreconnect of WiFi and other services without Hardcoding.
 
   Built by Khoi Hoang https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite
@@ -12,11 +12,11 @@
 
 /****************************************************************************************************************************
   You have to modify file ./libraries/Adafruit_MQTT_Library/Adafruit_MQTT.cpp  as follows to avoid dtostrf error
-   
+
   //#if defined(ARDUINO_SAMD_ZERO) || defined(ARDUINO_SAMD_MKR1000) ||             \
   //    defined(ARDUINO_ARCH_SAMD)
   #if !( ESP32 || ESP8266 || defined(CORE_TEENSY) || defined(STM32F1) || defined(STM32F2) || defined(STM32F3) || defined(STM32F4) || defined(STM32F7) )
-  static char *dtostrf(double val, signed char width, unsigned char prec, char *sout) 
+  static char *dtostrf(double val, signed char width, unsigned char prec, char *sout)
   {
     char fmt[20];
     sprintf(fmt, "%%%d.%df", width, prec);
@@ -58,7 +58,7 @@ void heartBeatPrint()
     if (ESPAsync_WiFiManager->isConfigMode())
       Serial.print("C");        // C means in Config Mode
     else
-      Serial.print("F");        // F means not connected to WiFi  
+      Serial.print("F");        // F means not connected to WiFi
   }
 
   if (num == 40)
@@ -119,6 +119,7 @@ void check_status()
 
   //KH
 #define HEARTBEAT_INTERVAL    5000L
+
   // Print WiFi hearbeat, Publish MQTT Topic every HEARTBEAT_INTERVAL (5) seconds.
   if ((millis() > checkstatus_timeout) || (checkstatus_timeout == 0))
   {
@@ -182,8 +183,14 @@ void createNewInstances()
     if (mqtt)
     {
       Serial.println(F("Creating new MQTT object OK"));
-      Serial.print(F("AIO_SERVER = ")); Serial.print(AIO_SERVER); Serial.print(F(", AIO_SERVERPORT = ")); Serial.println(AIO_SERVERPORT);
-      Serial.print(F("AIO_USERNAME = ")); Serial.print(AIO_USERNAME); Serial.print(F(", AIO_KEY = ")); Serial.println(AIO_KEY);
+      Serial.print(F("AIO_SERVER = "));
+      Serial.print(AIO_SERVER);
+      Serial.print(F(", AIO_SERVERPORT = "));
+      Serial.println(AIO_SERVERPORT);
+      Serial.print(F("AIO_USERNAME = "));
+      Serial.print(AIO_USERNAME);
+      Serial.print(F(", AIO_KEY = "));
+      Serial.println(AIO_KEY);
     }
     else
       Serial.println(F("Creating new MQTT object failed"));
@@ -199,12 +206,14 @@ void createNewInstances()
 #endif
 
     Temperature = new Adafruit_MQTT_Publish(mqtt, completePubTopic.c_str());
-    Serial.print(F("Creating new MQTT_Pub_Topic, Temperature = ")); Serial.println(completePubTopic);
+    Serial.print(F("Creating new MQTT_Pub_Topic, Temperature = "));
+    Serial.println(completePubTopic);
 
     if (Temperature)
     {
       Serial.println(F("Creating new Temperature object OK"));
-      Serial.print(F("Temperature MQTT_Pub_Topic = ")); Serial.println(completePubTopic);
+      Serial.print(F("Temperature MQTT_Pub_Topic = "));
+      Serial.println(completePubTopic);
     }
     else
       Serial.println(F("Creating new Temperature object failed"));
@@ -221,12 +230,14 @@ void createNewInstances()
 
     LED_Control = new Adafruit_MQTT_Subscribe(mqtt, completeSubTopic.c_str());
 
-    Serial.print(F("Creating new AIO_SUB_TOPIC, LED_Control = ")); Serial.println(completeSubTopic);
+    Serial.print(F("Creating new AIO_SUB_TOPIC, LED_Control = "));
+    Serial.println(completeSubTopic);
 
     if (LED_Control)
     {
       Serial.println(F("Creating new LED_Control object OK"));
-      Serial.print(F("LED_Control AIO_SUB_TOPIC = ")); Serial.println(completeSubTopic);
+      Serial.print(F("LED_Control AIO_SUB_TOPIC = "));
+      Serial.println(completeSubTopic);
 
       mqtt->subscribe(LED_Control);
     }
@@ -279,25 +290,29 @@ void MQTT_connect()
 }
 
 #if USING_CUSTOMS_STYLE
-const char NewCustomsStyle[] /*PROGMEM*/ = "<style>div,input{padding:5px;font-size:1em;}input{width:95%;}body{text-align: center;}\
-button{background-color:blue;color:white;line-height:2.4rem;font-size:1.2rem;width:100%;}fieldset{border-radius:0.3rem;margin:0px;}</style>";
+  const char NewCustomsStyle[] /*PROGMEM*/ =
+  "<style>div,input{padding:5px;font-size:1em;}input{width:95%;}body{text-align: center;}\
+  button{background-color:blue;color:white;line-height:2.4rem;font-size:1.2rem;width:100%;}fieldset{border-radius:0.3rem;margin:0px;}</style>";
 #endif
 
 void setup()
 {
   // Debug console
   Serial.begin(115200);
+
   while (!Serial);
 
   pinMode(LED_PIN, OUTPUT);
 
   delay(200);
 
-  Serial.print(F("\nStarting ESPAsync_WiFi_MQTT using ")); Serial.print(FS_Name);
-  Serial.print(F(" on ")); Serial.println(ARDUINO_BOARD);
+  Serial.print(F("\nStarting ESPAsync_WiFi_MQTT using "));
+  Serial.print(FS_Name);
+  Serial.print(F(" on "));
+  Serial.println(ARDUINO_BOARD);
   Serial.println(ESP_ASYNC_WIFI_MANAGER_LITE_VERSION);
 
-#if USING_MRD  
+#if USING_MRD
   Serial.println(ESP_MULTI_RESET_DETECTOR_VERSION);
 #else
   Serial.println(ESP_DOUBLE_RESET_DETECTOR_VERSION);
@@ -317,7 +332,7 @@ void setup()
   ESPAsync_WiFiManager->setCustomsHeadElement("<style>html{filter: invert(10%);}</style>");
 #endif
 
-#if USING_CORS_FEATURE  
+#if USING_CORS_FEATURE
   ESPAsync_WiFiManager->setCORSHeader("Your Access-Control-Allow-Origin");
 #endif
 
