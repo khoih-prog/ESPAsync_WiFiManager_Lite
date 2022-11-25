@@ -1555,6 +1555,7 @@ class ESPAsync_WiFiManager_Lite
 
     unsigned long configTimeout;
     bool hadConfigData = false;
+    bool hadDynamicData = false;
 
     bool isForcedConfigPortal   = false;
     bool persForcedConfigPortal = false;
