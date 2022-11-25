@@ -2,15 +2,15 @@
   ESPAsync_WiFiManager_Lite_Debug.h
   For ESP8266 / ESP32 boards
 
-  ESPAsync_WiFiManager_Lite (https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite) is a library 
-  for the ESP32/ESP8266 boards to enable store Credentials in EEPROM/SPIFFS/LittleFS for easy 
+  ESPAsync_WiFiManager_Lite (https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite) is a library
+  for the ESP32/ESP8266 boards to enable store Credentials in EEPROM/SPIFFS/LittleFS for easy
   configuration/reconfiguration and autoconnect/autoreconnect of WiFi and other services without Hardcoding.
 
   Built by Khoi Hoang https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite
   Licensed under MIT license
-  
+
   Version: 1.9.0
-   
+
   Version Modified By   Date        Comments
   ------- -----------  ----------   -----------
   1.0.0   K Hoang      09/02/2021  Initial coding for ESP32/ESP8266

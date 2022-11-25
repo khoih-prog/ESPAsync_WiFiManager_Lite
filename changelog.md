@@ -1,10 +1,16 @@
-## ESPAsync_WiFiManager_Lite (Light Weight Credentials / WiFiManager for ESP32/ESP8266)
+## ESPAsync_WiFiManager_Lite Library (Light Weight Credentials / WiFiManager for ESP32/ESP8266)
 
 [![arduino-library-badge](https://www.ardu-badge.com/badge/ESPAsync_WiFiManager_Lite.svg?)](https://www.ardu-badge.com/ESPAsync_WiFiManager_Lite)
 [![GitHub release](https://img.shields.io/github/release/khoih-prog/ESPAsync_WiFiManager_Lite.svg)](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/releases)
 [![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/blob/main/LICENSE)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](#Contributing)
 [![GitHub issues](https://img.shields.io/github/issues/khoih-prog/ESPAsync_WiFiManager_Lite.svg)](http://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/issues)
+
+
+<a href="https://www.buymeacoffee.com/khoihprog6" title="Donate to my libraries using BuyMeACoffee"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Donate to my libraries using BuyMeACoffee" style="height: 50px !important;width: 181px !important;" ></a>
+<a href="https://www.buymeacoffee.com/khoihprog6" title="Donate to my libraries using BuyMeACoffee"><img src="https://img.shields.io/badge/buy%20me%20a%20coffee-donate-orange.svg?logo=buy-me-a-coffee&logoColor=FFDD00" style="height: 20px !important;width: 200px !important;" ></a>
+<a href="https://profile-counter.glitch.me/khoih-prog/count.svg" title="Total khoih-prog Visitor count"><img src="https://profile-counter.glitch.me/khoih-prog/count.svg" style="height: 30px;width: 200px;"></a>
+<a href="https://profile-counter.glitch.me/khoih-prog-ESPAsync_WiFiManager_Lite/count.svg" title="ESPAsync_WiFiManager_Lite Visitor count"><img src="https://profile-counter.glitch.me/khoih-prog-ESPAsync_WiFiManager_Lite/count.svg" style="height: 30px;width: 200px;"></a>
 
 ---
 ---

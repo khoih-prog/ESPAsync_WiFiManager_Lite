@@ -2,12 +2,12 @@
   defines.h
   For ESP8266 / ESP32 boards
 
-  ESPAsync_WiFiManager_Lite (https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite) is a library 
-  for the ESP32/ESP8266 boards to enable store Credentials in EEPROM/SPIFFS/LittleFS for easy 
+  ESPAsync_WiFiManager_Lite (https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite) is a library
+  for the ESP32/ESP8266 boards to enable store Credentials in EEPROM/SPIFFS/LittleFS for easy
   configuration/reconfiguration and autoconnect/autoreconnect of WiFi and other services without Hardcoding.
 
   Built by Khoi Hoang https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite
-  Licensed under MIT license      
+  Licensed under MIT license
  *****************************************************************************************************************************/
 
 #ifndef defines_h
@@ -22,18 +22,15 @@
 
 #define _ESP_WM_LITE_LOGLEVEL_        2
 
-// use builtin LED to show configuration mode
-#define USE_LED_BUILTIN               true
-
 #define USING_MRD                     true
 
 #if USING_MRD
   #define MULTIRESETDETECTOR_DEBUG      true
-  
+
   // Number of seconds after reset during which a
   // subseqent reset will be considered a double reset.
   #define MRD_TIMEOUT                   10
-  
+
   // RTC Memory Address for the DoubleResetDetector to use
   #define MRD_ADDRESS                   0
 
@@ -42,11 +39,11 @@
   #endif
 #else
   #define DOUBLERESETDETECTOR_DEBUG     true
-  
+
   // Number of seconds after reset during which a
   // subseqent reset will be considered a double reset.
   #define DRD_TIMEOUT                   10
-  
+
   // RTC Memory Address for the DoubleResetDetector to use
   #define DRD_ADDRESS                   0
 
@@ -124,7 +121,7 @@
 
 // From 2-15
 #define MAX_SSID_IN_LIST                  8
-  
+
 /////////////////////////////////////////////
 
 // Optional, to use Board Name in Menu
@@ -134,7 +131,7 @@
 
 #include <ESPAsync_WiFiManager_Lite.h>
 
-#if ESP8266 
+#if ESP8266
   #define HOST_NAME   "ESP8266Async-Control"
 #else
   #define HOST_NAME   "ESP32Async-Control"
