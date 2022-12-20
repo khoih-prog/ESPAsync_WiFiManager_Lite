@@ -164,6 +164,7 @@
 #endif
 
 #define HTTP_PORT     80
+#define DNS_PORT      53
 
 #include <DNSServer.h>
 #include <memory>
@@ -828,6 +829,11 @@ class ESPAsync_WiFiManager_Lite
       //// New DRD ////
 #endif
 
+      if ( configuration_mode && dnsServer)
+      {
+        dnsServer->processNextRequest();
+      }
+
       if ( !configuration_mode && (curMillis > checkstatus_timeout) )
       {
         if (WiFi.status() == WL_CONNECTED)
@@ -936,6 +942,16 @@ class ESPAsync_WiFiManager_Lite
         ESP_WML_LOGINFO(F("run: got WiFi back"));
         // turn the LED_BUILTIN OFF to tell us we exit configuration mode.
         digitalWrite(LED_BUILTIN, LED_OFF);
+        if (dnsServer) {
+          dnsServer->stop(); 
+          delete dnsServer;
+          dnsServer = nullptr;
+        }
+        if (server) {
+          server->end();
+          delete server;
+          server = nullptr;
+        }
       }
     }
 
@@ -1248,6 +1264,7 @@ class ESPAsync_WiFiManager_Lite
     String ipAddress = "0.0.0.0";
 
     AsyncWebServer *server = NULL;
+    DNSServer *dnsServer = nullptr;
 
     //KH, for ESP32
 #ifdef ESP8266
@@ -2967,10 +2984,21 @@ class ESPAsync_WiFiManager_Lite
         server = new AsyncWebServer(HTTP_PORT);
       }
 
+      if (!dnsServer)
+      {
+        dnsServer = new DNSServer();
+      }
+
       //See https://stackoverflow.com/questions/39803135/c-unresolved-overloaded-function-type?rq=1
       if (server)
       {
-        server->on("/", HTTP_GET, [this](AsyncWebServerRequest * request)
+        // CaptivePortal
+        // if DNSServer is started with "*" for domain name, it will reply with provided IP to all DNS requests
+        dnsServer->start(DNS_PORT, "*", portal_apIP);
+        //server->addHandler(new CaptiveRequestHandler()).setFilter(ON_AP_FILTER); //only when requested from AP
+        // replay to all requests with same HTML
+        //server->on("/", HTTP_GET, [this](AsyncWebServerRequest * request)
+        server->onNotFound([this](AsyncWebServerRequest *request)
         {
           handleRequest(request);
         });
