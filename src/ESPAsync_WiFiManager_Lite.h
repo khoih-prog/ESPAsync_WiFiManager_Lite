@@ -829,7 +829,7 @@ class ESPAsync_WiFiManager_Lite
       //// New DRD ////
 #endif
 
-      if ( configuration_mode && dnsServer)
+      if ( configuration_mode && dnsServer )
       {
         dnsServer->processNextRequest();
       }
@@ -942,6 +942,7 @@ class ESPAsync_WiFiManager_Lite
         ESP_WML_LOGINFO(F("run: got WiFi back"));
         // turn the LED_BUILTIN OFF to tell us we exit configuration mode.
         digitalWrite(LED_BUILTIN, LED_OFF);
+
         if (dnsServer) {
           dnsServer->stop(); 
           delete dnsServer;
