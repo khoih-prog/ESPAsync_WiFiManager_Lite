@@ -952,7 +952,7 @@ class ESPAsync_WiFiManager_Lite
 #if USE_LED_BUILTIN
         // turn the LED_BUILTIN OFF to tell us we exit configuration mode.
         digitalWrite(LED_BUILTIN, LED_OFF);
-  #endif
+#endif
 
         if (dnsServer) {
           dnsServer->stop(); 
@@ -2990,9 +2990,6 @@ class ESPAsync_WiFiManager_Lite
 
       delay(100); // ref: https://github.com/espressif/arduino-esp32/issues/985#issuecomment-359157428
 
-      // Move up for ESP8266
-      //WiFi.softAPConfig(portal_apIP, portal_apIP, IPAddress(255, 255, 255, 0));
-
       if (!server)
       {
         server = new AsyncWebServer(HTTP_PORT);
@@ -3004,14 +3001,12 @@ class ESPAsync_WiFiManager_Lite
       }
 
       //See https://stackoverflow.com/questions/39803135/c-unresolved-overloaded-function-type?rq=1
-      if (server)
+      if (server && dnsServer)
       {
         // CaptivePortal
         // if DNSServer is started with "*" for domain name, it will reply with provided IP to all DNS requests
         dnsServer->start(DNS_PORT, "*", portal_apIP);
-        //server->addHandler(new CaptiveRequestHandler()).setFilter(ON_AP_FILTER); //only when requested from AP
         // replay to all requests with same HTML
-        //server->on("/", HTTP_GET, [this](AsyncWebServerRequest * request)
         server->onNotFound([this](AsyncWebServerRequest *request)
         {
           handleRequest(request);
