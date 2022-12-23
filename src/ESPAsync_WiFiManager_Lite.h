@@ -545,6 +545,11 @@ class ESPAsync_WiFiManager_Lite
 
     ~ESPAsync_WiFiManager_Lite()
     {
+      if (dnsServer)
+      {
+        delete dnsServer;
+      }
+
       if (server)
       {
         delete server;
