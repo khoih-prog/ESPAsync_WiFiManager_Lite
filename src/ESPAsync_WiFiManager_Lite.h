@@ -813,7 +813,7 @@ class ESPAsync_WiFiManager_Lite
 
 #if USING_MRD
       //// New MRD ////
-      // Call the mulyi reset detector loop method every so often,
+      // Call the multi reset detector loop method every so often,
       // so that it can recognise when the timeout expires.
       // You can also call mrd.stop() when you wish to no longer
       // consider the next reset as a multi reset.
@@ -938,6 +938,7 @@ class ESPAsync_WiFiManager_Lite
       }
       else if (configuration_mode)
       {
+        // WiFi is connected and we are in configuration_mode
         configuration_mode = false;
         ESP_WML_LOGINFO(F("run: got WiFi back"));
         // turn the LED_BUILTIN OFF to tell us we exit configuration mode.
