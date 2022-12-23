@@ -949,6 +949,7 @@ class ESPAsync_WiFiManager_Lite
         // WiFi is connected and we are in configuration_mode
         configuration_mode = false;
         ESP_WML_LOGINFO(F("run: got WiFi back"));
+
 #if USE_LED_BUILTIN
         // turn the LED_BUILTIN OFF to tell us we exit configuration mode.
         digitalWrite(LED_BUILTIN, LED_OFF);
@@ -958,7 +959,8 @@ class ESPAsync_WiFiManager_Lite
           dnsServer->stop(); 
           delete dnsServer;
           dnsServer = nullptr;
-      }
+        }
+
         if (server) {
           server->end();
           delete server;
