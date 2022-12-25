@@ -166,7 +166,7 @@
 #define HTTP_PORT     80
 #define DNS_PORT      53
 
-#include <DNSServer.h>
+#include <ESPAsyncDNSServer.h>
 #include <memory>
 #undef min
 #undef max
@@ -840,11 +840,6 @@ class ESPAsync_WiFiManager_Lite
       //// New DRD ////
 #endif
 
-      if ( configuration_mode && dnsServer )
-      {
-        dnsServer->processNextRequest();
-      }
-
       if ( !configuration_mode && (curMillis > checkstatus_timeout) )
       {
         if (WiFi.status() == WL_CONNECTED)
@@ -1283,7 +1278,7 @@ class ESPAsync_WiFiManager_Lite
     String ipAddress = "0.0.0.0";
 
     AsyncWebServer *server = NULL;
-    DNSServer *dnsServer = nullptr;
+    AsyncDNSServer *dnsServer = nullptr;
 
     //KH, for ESP32
 #ifdef ESP8266
@@ -3004,7 +2999,7 @@ class ESPAsync_WiFiManager_Lite
 
       if (!dnsServer)
       {
-        dnsServer = new DNSServer();
+        dnsServer = new AsyncDNSServer();
       }
 
       //See https://stackoverflow.com/questions/39803135/c-unresolved-overloaded-function-type?rq=1
