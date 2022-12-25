@@ -1277,7 +1277,7 @@ class ESPAsync_WiFiManager_Lite
   private:
     String ipAddress = "0.0.0.0";
 
-    AsyncWebServer *server = NULL;
+    AsyncWebServer *server = nullptr;
     AsyncDNSServer *dnsServer = nullptr;
 
     //KH, for ESP32
