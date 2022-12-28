@@ -164,8 +164,9 @@
 #endif
 
 #define HTTP_PORT     80
+#define DNS_PORT      53
 
-#include <DNSServer.h>
+#include <ESPAsyncDNSServer.h>
 #include <memory>
 #undef min
 #undef max
@@ -544,6 +545,11 @@ class ESPAsync_WiFiManager_Lite
 
     ~ESPAsync_WiFiManager_Lite()
     {
+      if (dnsServer)
+      {
+        delete dnsServer;
+      }
+
       if (server)
       {
         delete server;
@@ -818,7 +824,7 @@ class ESPAsync_WiFiManager_Lite
 
 #if USING_MRD
       //// New MRD ////
-      // Call the mulyi reset detector loop method every so often,
+      // Call the multi reset detector loop method every so often,
       // so that it can recognise when the timeout expires.
       // You can also call mrd.stop() when you wish to no longer
       // consider the next reset as a multi reset.
@@ -940,12 +946,26 @@ class ESPAsync_WiFiManager_Lite
       }
       else if (configuration_mode)
       {
+        // WiFi is connected and we are in configuration_mode
         configuration_mode = false;
         ESP_WML_LOGINFO(F("run: got WiFi back"));
+
 #if USE_LED_BUILTIN
         // turn the LED_BUILTIN OFF to tell us we exit configuration mode.
         digitalWrite(LED_BUILTIN, LED_OFF);
 #endif
+
+        if (dnsServer) {
+          dnsServer->stop(); 
+          delete dnsServer;
+          dnsServer = nullptr;
+        }
+
+        if (server) {
+          server->end();
+          delete server;
+          server = nullptr;
+        }
       }
     }
 
@@ -1255,7 +1275,8 @@ class ESPAsync_WiFiManager_Lite
   private:
     String ipAddress = "0.0.0.0";
 
-    AsyncWebServer *server = NULL;
+    AsyncWebServer *server = nullptr;
+    AsyncDNSServer *dnsServer = nullptr;
 
     //KH, for ESP32
 #ifdef ESP8266
@@ -2964,18 +2985,24 @@ class ESPAsync_WiFiManager_Lite
 
       delay(100); // ref: https://github.com/espressif/arduino-esp32/issues/985#issuecomment-359157428
 
-      // Move up for ESP8266
-      //WiFi.softAPConfig(portal_apIP, portal_apIP, IPAddress(255, 255, 255, 0));
-
       if (!server)
       {
         server = new AsyncWebServer(HTTP_PORT);
       }
 
-      //See https://stackoverflow.com/questions/39803135/c-unresolved-overloaded-function-type?rq=1
-      if (server)
+      if (!dnsServer)
       {
-        server->on("/", HTTP_GET, [this](AsyncWebServerRequest * request)
+        dnsServer = new AsyncDNSServer();
+      }
+
+      //See https://stackoverflow.com/questions/39803135/c-unresolved-overloaded-function-type?rq=1
+      if (server && dnsServer)
+      {
+        // CaptivePortal
+        // if DNSServer is started with "*" for domain name, it will reply with provided IP to all DNS requests
+        dnsServer->start(DNS_PORT, "*", portal_apIP);
+        // replay to all requests with same HTML
+        server->onNotFound([this](AsyncWebServerRequest *request)
         {
           handleRequest(request);
         });

@@ -43,6 +43,18 @@
       "platforms": ["espressif8266", "espressif32"]
     },
     {
+      "owner": "me-no-dev",
+      "name": "ESPAsyncUDP",
+      "version": "0.0.0-alpha+sha.697c75a025",
+      "platforms": ["espressif8266"]
+    },
+    {
+      "owner": "devyte",
+      "name": "ESPAsyncDNSServer",
+      "version": "^1.0.0",
+      "platforms": ["espressif8266", "espressif32"]
+    },
+    {
       "owner": "khoih-prog",
       "name": "ESP_DoubleResetDetector",
       "version": "^1.3.2",
