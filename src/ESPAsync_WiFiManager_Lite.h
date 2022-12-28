@@ -9,7 +9,7 @@
   Built by Khoi Hoang https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite
   Licensed under MIT license
 
-  Version: 1.9.0
+  Version: 1.9.1
 
   Version Modified By   Date        Comments
   ------- -----------  ----------   -----------
@@ -26,6 +26,7 @@
   1.8.1   K Hoang      11/02/2022  Add LittleFS support to ESP32-C3. Use core LittleFS instead of Lorol's LITTLEFS for v2.0.0+
   1.8.2   K Hoang      21/02/2022  Optional Board_Name in Menu. Optimize code by using passing by reference
   1.9.0   K Hoang      09/09/2022  Fix ESP32 chipID and add getChipOUI()
+  1.9.1   K Hoang      28/12/2022  Add Captive Portal using AsyncDNSServer
  *****************************************************************************************************************************/
 
 #pragma once
@@ -33,37 +34,43 @@
 #ifndef ESPAsync_WiFiManager_Lite_h
 #define ESPAsync_WiFiManager_Lite_h
 
+///////////////////////////////////////////
+
 #if !( defined(ESP8266) ||  defined(ESP32) )
-#error This code is intended to run on the ESP8266 or ESP32 platform! Please check your Tools->Board setting.
+  #error This code is intended to run on the ESP8266 or ESP32 platform! Please check your Tools->Board setting.
 #elif ( ARDUINO_ESP32S2_DEV || ARDUINO_FEATHERS2 || ARDUINO_ESP32S2_THING_PLUS || ARDUINO_MICROS2 || \
         ARDUINO_METRO_ESP32S2 || ARDUINO_MAGTAG29_ESP32S2 || ARDUINO_FUNHOUSE_ESP32S2 || \
         ARDUINO_ADAFRUIT_FEATHER_ESP32S2_NOPSRAM )
-#warning Using ESP32_S2.
-#define USING_ESP32_S2        true
+  #warning Using ESP32_S2.
+  #define USING_ESP32_S2        true
 #elif ( ARDUINO_ESP32C3_DEV )
-#if ( defined(ESP_ARDUINO_VERSION_MAJOR) && (ESP_ARDUINO_VERSION_MAJOR >= 2) )
-  #warning Using ESP32_C3 using core v2.0.0+. Either LittleFS, SPIFFS or EEPROM OK.
-#else
-  #warning Using ESP32_C3 using core v1.0.6-. To follow library instructions to install esp32-c3 core. Only SPIFFS and EEPROM OK.
-#endif
+  #if ( defined(ESP_ARDUINO_VERSION_MAJOR) && (ESP_ARDUINO_VERSION_MAJOR >= 2) )
+    #warning Using ESP32_C3 using core v2.0.0+. Either LittleFS, SPIFFS or EEPROM OK.
+  #else
+    #warning Using ESP32_C3 using core v1.0.6-. To follow library instructions to install esp32-c3 core. Only SPIFFS and EEPROM OK.
+  #endif
 
-#warning You have to select Flash size 2MB and Minimal APP (1.3MB + 700KB) for some boards
-#define USING_ESP32_C3        true
+  #warning You have to select Flash size 2MB and Minimal APP (1.3MB + 700KB) for some boards
+  #define USING_ESP32_C3        true
 #elif ( defined(ARDUINO_ESP32S3_DEV) || defined(ARDUINO_ESP32_S3_BOX) || defined(ARDUINO_TINYS3) || \
         defined(ARDUINO_PROS3) || defined(ARDUINO_FEATHERS3) )
-#warning Using ESP32_S3. To install esp32-s3-support branch if using core v2.0.2-.
-#define USING_ESP32_S3        true
+  #warning Using ESP32_S3. To install esp32-s3-support branch if using core v2.0.2-.
+  #define USING_ESP32_S3        true
 #endif
 
+///////////////////////////////////////////
+
 #ifndef ESP_ASYNC_WIFI_MANAGER_LITE_VERSION
-  #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION             "ESPAsync_WiFiManager_Lite v1.9.0"
+  #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION             "ESPAsync_WiFiManager_Lite v1.9.1"
 
   #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION_MAJOR       1
   #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION_MINOR       9
-  #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION_PATCH       0
+  #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION_PATCH       1
 
-  #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION_INT         1009000
+  #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION_INT         1009001
 #endif
+
+///////////////////////////////////////////
 
 #ifdef ESP8266
 
@@ -163,8 +170,12 @@
 
 #endif
 
+///////////////////////////////////////////
+
 #define HTTP_PORT     80
 #define DNS_PORT      53
+
+///////////////////////////////////////////
 
 #include <ESPAsyncDNSServer.h>
 #include <memory>
@@ -174,30 +185,30 @@
 
 //KH, for ESP32
 #ifdef ESP8266
-extern "C"
-{
-#include "user_interface.h"
-}
+  extern "C"
+  {
+    #include "user_interface.h"
+  }
 
-#define ESP_getChipId()   (ESP.getChipId())
+  #define ESP_getChipId()   (ESP.getChipId())
 
 #else   //ESP32
 
-#include <esp_wifi.h>
+  #include <esp_wifi.h>
 
-uint32_t getChipID();
-uint32_t getChipOUI();
+  uint32_t getChipID();
+  uint32_t getChipOUI();
 
-#if defined(ESP_getChipId)
-  #undef ESP_getChipId
-#endif
+  #if defined(ESP_getChipId)
+    #undef ESP_getChipId
+  #endif
 
-#if defined(ESP_getChipOUI)
-  #undef ESP_getChipOUI
-#endif
+  #if defined(ESP_getChipOUI)
+    #undef ESP_getChipOUI
+  #endif
 
-#define ESP_getChipId()   getChipID()
-#define ESP_getChipOUI()  getChipOUI()
+  #define ESP_getChipId()   getChipID()
+  #define ESP_getChipOUI()  getChipOUI()
 #endif
 
 
@@ -336,10 +347,13 @@ uint32_t getChipOUI();
 
 #endif
 
+///////////////////////////////////////////
 
 //NEW
 #define MAX_ID_LEN                5
 #define MAX_DISPLAY_NAME_LEN      16
+
+///////////////////////////////////////////
 
 typedef struct
 {
@@ -348,7 +362,8 @@ typedef struct
   char *pdata;
   uint8_t maxlen;
 } MenuItem;
-//
+
+///////////////////////////////////////////
 
 #if USE_DYNAMIC_PARAMETERS
   #if (_ESP_WM_LITE_LOGLEVEL_ > 3)
@@ -364,6 +379,7 @@ typedef struct
   #endif
 #endif
 
+///////////////////////////////////////////
 
 #define SSID_MAX_LEN      32
 // WPA2 passwords can be up to 63 characters long.
@@ -385,7 +401,7 @@ typedef struct
   #define NUM_CONFIGURABLE_ITEMS    ( ( 2 * NUM_WIFI_CREDENTIALS ))
 #endif
 
-////////////////
+///////////////////////////////////////////
 
 #define HEADER_MAX_LEN            16
 #define BOARD_NAME_MAX_LEN        24
@@ -401,9 +417,12 @@ typedef struct Configuration
 // Currently CONFIG_DATA_SIZE  =   236  = (16 + 96 * 2 + 4 + 24)
 uint16_t CONFIG_DATA_SIZE = sizeof(ESP_WM_LITE_Configuration);
 
-///New from v1.0.4
+///////////////////////////////////////////
+
 extern bool LOAD_DEFAULT_CONFIG_DATA;
 extern ESP_WM_LITE_Configuration defaultConfig;
+
+///////////////////////////////////////////
 
 // -- HTML page fragments
 
@@ -419,14 +438,14 @@ const char ESP_WM_LITE_HTML_HEAD_STYLE[] /*PROGMEM*/ =
   <div><label>*PWD (8+ chars)</label><input value='[[pw]]' id='pw'><div></div></div>\
   <div><label>*WiFi SSID1</label><div>[[input_id1]]</div></div>\
   <div><label>*PWD1 (8+ chars)</label><input value='[[pw1]]' id='pw1'><div></div></div></fieldset>\
-  <fieldset><div><label>Board Name</label><input value='[[nm]]' id='nm'><div></div></div></fieldset>";	// DO NOT CHANGE THIS STRING EVER!!!!
+  <fieldset><div><label>Board Name</label><input value='[[nm]]' id='nm'><div></div></div></fieldset>";  // DO NOT CHANGE THIS STRING EVER!!!!
 #else
   const char ESP_WM_LITE_HTML_HEAD_END[]   /*PROGMEM*/ =
   "</head><div style='text-align:left;display:inline-block;min-width:260px;'>\
   <fieldset><div><label>*WiFi SSID</label><div>[[input_id]]</div></div>\
   <div><label>*PWD (8+ chars)</label><input value='[[pw]]' id='pw'><div></div></div>\
   <div><label>*WiFi SSID1</label><div>[[input_id1]]</div></div>\
-  <div><label>*PWD1 (8+ chars)</label><input value='[[pw1]]' id='pw1'><div></div></div></fieldset>";	// DO NOT CHANGE THIS STRING EVER!!!!
+  <div><label>*PWD1 (8+ chars)</label><input value='[[pw1]]' id='pw1'><div></div></div></fieldset>";  // DO NOT CHANGE THIS STRING EVER!!!!
 #endif
 
 const char ESP_WM_LITE_HTML_INPUT_ID[]   /*PROGMEM*/ = "<input value='[[id]]' id='id'>";
@@ -471,7 +490,7 @@ const char ESP_WM_LITE_HTML_END[]          /*PROGMEM*/ = "</html>";
 //////////////////////////////////////////
 
 //KH Add repeatedly used const
-//KH, from v1.2.0
+
 const char WM_HTTP_HEAD_CL[]         PROGMEM = "Content-Length";
 const char WM_HTTP_HEAD_TEXT_HTML[]  PROGMEM = "text/html";
 const char WM_HTTP_HEAD_TEXT_PLAIN[] PROGMEM = "text/plain";
@@ -618,29 +637,30 @@ class ESPAsync_WiFiManager_Lite
 
 #if ESP8266
 
-    // For ESP8266
-#ifndef LED_BUILTIN
-#define LED_BUILTIN       2         // Pin D2 mapped to pin GPIO2/ADC12 of ESP32, control on-board LED
-#endif
+  // For ESP8266
+  #ifndef LED_BUILTIN
+    define LED_BUILTIN       2         // Pin D2 mapped to pin GPIO2/ADC12 of ESP32, control on-board LED
+  #endif
 
-#define LED_ON      LOW
-#define LED_OFF     HIGH
+  #define LED_ON      LOW
+  #define LED_OFF     HIGH
 
 #else
 
-    // For ESP32
-#ifndef LED_BUILTIN
-#define LED_BUILTIN       2         // Pin D2 mapped to pin GPIO2/ADC12 of ESP32, control on-board LED
+  // For ESP32
+  #ifndef LED_BUILTIN
+    #define LED_BUILTIN       2         // Pin D2 mapped to pin GPIO2/ADC12 of ESP32, control on-board LED
+  #endif
+
+  #define LED_OFF     LOW
+  #define LED_ON      HIGH
+
 #endif
 
-#define LED_OFF     LOW
-#define LED_ON      HIGH
+///////////////////////////////////////////
 
-#endif
-
-    // New from v1.3.0
 #if !defined(REQUIRE_ONE_SET_SSID_PW)
-#define REQUIRE_ONE_SET_SSID_PW     false
+  #define REQUIRE_ONE_SET_SSID_PW     false
 #endif
 
 #define PASSWORD_MIN_LEN        8
@@ -761,50 +781,52 @@ class ESPAsync_WiFiManager_Lite
     //////////////////////////////////////////
 
 #ifndef TIMEOUT_RECONNECT_WIFI
-#define TIMEOUT_RECONNECT_WIFI   10000L
+  #define TIMEOUT_RECONNECT_WIFI   10000L
 #else
     // Force range of user-defined TIMEOUT_RECONNECT_WIFI between 10-60s
-#if (TIMEOUT_RECONNECT_WIFI < 10000L)
-#warning TIMEOUT_RECONNECT_WIFI too low. Reseting to 10000
-#undef TIMEOUT_RECONNECT_WIFI
-#define TIMEOUT_RECONNECT_WIFI   10000L
-#elif (TIMEOUT_RECONNECT_WIFI > 60000L)
-#warning TIMEOUT_RECONNECT_WIFI too high. Reseting to 60000
-#undef TIMEOUT_RECONNECT_WIFI
-#define TIMEOUT_RECONNECT_WIFI   60000L
-#endif
+  #if (TIMEOUT_RECONNECT_WIFI < 10000L)
+    #warning TIMEOUT_RECONNECT_WIFI too low. Reseting to 10000
+    #undef TIMEOUT_RECONNECT_WIFI
+    #define TIMEOUT_RECONNECT_WIFI   10000L
+  #elif (TIMEOUT_RECONNECT_WIFI > 60000L)
+    #warning TIMEOUT_RECONNECT_WIFI too high. Reseting to 60000
+    #undef TIMEOUT_RECONNECT_WIFI
+    #define TIMEOUT_RECONNECT_WIFI   60000L
+  #endif
 #endif
 
 #ifndef RESET_IF_CONFIG_TIMEOUT
-#define RESET_IF_CONFIG_TIMEOUT   true
+  #define RESET_IF_CONFIG_TIMEOUT   true
 #endif
 
 #ifndef CONFIG_TIMEOUT_RETRYTIMES_BEFORE_RESET
-#define CONFIG_TIMEOUT_RETRYTIMES_BEFORE_RESET          10
+  #define CONFIG_TIMEOUT_RETRYTIMES_BEFORE_RESET          10
 #else
-    // Force range of user-defined TIMES_BEFORE_RESET between 2-100
-#if (CONFIG_TIMEOUT_RETRYTIMES_BEFORE_RESET < 2)
-#warning CONFIG_TIMEOUT_RETRYTIMES_BEFORE_RESET too low. Reseting to 2
-#undef CONFIG_TIMEOUT_RETRYTIMES_BEFORE_RESET
-#define CONFIG_TIMEOUT_RETRYTIMES_BEFORE_RESET   2
-#elif (CONFIG_TIMEOUT_RETRYTIMES_BEFORE_RESET > 100)
-#warning CONFIG_TIMEOUT_RETRYTIMES_BEFORE_RESET too high. Reseting to 100
-#undef CONFIG_TIMEOUT_RETRYTIMES_BEFORE_RESET
-#define CONFIG_TIMEOUT_RETRYTIMES_BEFORE_RESET   100
-#endif
+  // Force range of user-defined TIMES_BEFORE_RESET between 2-100
+  #if (CONFIG_TIMEOUT_RETRYTIMES_BEFORE_RESET < 2)
+    #warning CONFIG_TIMEOUT_RETRYTIMES_BEFORE_RESET too low. Reseting to 2
+    #undef CONFIG_TIMEOUT_RETRYTIMES_BEFORE_RESET
+    #define CONFIG_TIMEOUT_RETRYTIMES_BEFORE_RESET   2
+  #elif (CONFIG_TIMEOUT_RETRYTIMES_BEFORE_RESET > 100)
+    #warning CONFIG_TIMEOUT_RETRYTIMES_BEFORE_RESET too high. Reseting to 100
+    #undef CONFIG_TIMEOUT_RETRYTIMES_BEFORE_RESET
+    #define CONFIG_TIMEOUT_RETRYTIMES_BEFORE_RESET   100
+  #endif
 #endif
 
     //////////////////////////////////////////
 
 #if !defined(WIFI_RECON_INTERVAL)
-#define WIFI_RECON_INTERVAL       0         // default 0s between reconnecting WiFi
+  #define WIFI_RECON_INTERVAL       0         // default 0s between reconnecting WiFi
 #else
-#if (WIFI_RECON_INTERVAL < 0)
-#define WIFI_RECON_INTERVAL     0
-#elif  (WIFI_RECON_INTERVAL > 600000)
-#define WIFI_RECON_INTERVAL     600000    // Max 10min
+  #if (WIFI_RECON_INTERVAL < 0)
+    #define WIFI_RECON_INTERVAL     0
+  #elif  (WIFI_RECON_INTERVAL > 600000)
+    #define WIFI_RECON_INTERVAL     600000    // Max 10min
+  #endif
 #endif
-#endif
+
+    //////////////////////////////////////////
 
     void run()
     {
@@ -955,13 +977,15 @@ class ESPAsync_WiFiManager_Lite
         digitalWrite(LED_BUILTIN, LED_OFF);
 #endif
 
-        if (dnsServer) {
-          dnsServer->stop(); 
+        if (dnsServer)
+        {
+          dnsServer->stop();
           delete dnsServer;
           dnsServer = nullptr;
         }
 
-        if (server) {
+        if (server)
+        {
           server->end();
           delete server;
           server = nullptr;
@@ -1458,15 +1482,15 @@ class ESPAsync_WiFiManager_Lite
 
 #if ( USE_LITTLEFS || USE_SPIFFS )
 
-    // Use LittleFS/InternalFS for nRF52
-#define  CONFIG_FILENAME                  ("/wm_config.dat")
-#define  CONFIG_FILENAME_BACKUP           ("/wm_config.bak")
+  // Use LittleFS/InternalFS for nRF52
+  #define  CONFIG_FILENAME                  ("/wm_config.dat")
+  #define  CONFIG_FILENAME_BACKUP           ("/wm_config.bak")
 
-#define  CREDENTIALS_FILENAME             ("/wm_cred.dat")
-#define  CREDENTIALS_FILENAME_BACKUP      ("/wm_cred.bak")
+  #define  CREDENTIALS_FILENAME             ("/wm_cred.dat")
+  #define  CREDENTIALS_FILENAME_BACKUP      ("/wm_cred.bak")
 
-#define  CONFIG_PORTAL_FILENAME           ("/wm_cp.dat")
-#define  CONFIG_PORTAL_FILENAME_BACKUP    ("/wm_cp.bak")
+  #define  CONFIG_PORTAL_FILENAME           ("/wm_cp.dat")
+  #define  CONFIG_PORTAL_FILENAME_BACKUP    ("/wm_cp.bak")
 
     //////////////////////////////////////////////
 
@@ -2080,38 +2104,38 @@ class ESPAsync_WiFiManager_Lite
 
     //////////////////////////////////////////////
 
-#else
+#else   // #if ( USE_LITTLEFS || USE_SPIFFS )
 
-#ifndef EEPROM_SIZE
-#define EEPROM_SIZE     2048
-#else
-#if (EEPROM_SIZE > 2048)
-#warning EEPROM_SIZE must be <= 2048. Reset to 2048
-#undef EEPROM_SIZE
-#define EEPROM_SIZE     2048
-#elif (EEPROM_SIZE < 2048)
-#warning Preset EEPROM_SIZE <= 2048. Reset to 2048
-#undef EEPROM_SIZE
-#define EEPROM_SIZE     2048
-#endif
-    // FLAG_DATA_SIZE is 4, to store DRD/MRD flag
-#if (EEPROM_SIZE < FLAG_DATA_SIZE + CONFIG_DATA_SIZE)
-#warning EEPROM_SIZE must be > CONFIG_DATA_SIZE. Reset to 512
-#undef EEPROM_SIZE
-#define EEPROM_SIZE     2048
-#endif
-#endif
+  #ifndef EEPROM_SIZE
+    #define EEPROM_SIZE     2048
+  #else
+    #if (EEPROM_SIZE > 2048)
+      #warning EEPROM_SIZE must be <= 2048. Reset to 2048
+      #undef EEPROM_SIZE
+      #define EEPROM_SIZE     2048
+    #elif (EEPROM_SIZE < 2048)
+      #warning Preset EEPROM_SIZE <= 2048. Reset to 2048
+      #undef EEPROM_SIZE
+      #define EEPROM_SIZE     2048
+    #endif
+      // FLAG_DATA_SIZE is 4, to store DRD/MRD flag
+    #if (EEPROM_SIZE < FLAG_DATA_SIZE + CONFIG_DATA_SIZE)
+      #warning EEPROM_SIZE must be > CONFIG_DATA_SIZE. Reset to 512
+      #undef EEPROM_SIZE
+      #define EEPROM_SIZE     2048
+    #endif
+  #endif
 
-#ifndef EEPROM_START
-#define EEPROM_START     0      //define 256 in DRD/MRD
-#else
-#if (EEPROM_START + FLAG_DATA_SIZE + CONFIG_DATA_SIZE + FORCED_CONFIG_PORTAL_FLAG_DATA_SIZE > EEPROM_SIZE)
-#error EPROM_START + FLAG_DATA_SIZE + CONFIG_DATA_SIZE + FORCED_CONFIG_PORTAL_FLAG_DATA_SIZE > EEPROM_SIZE. Please adjust.
-#endif
-#endif
+  #ifndef EEPROM_START
+    #define EEPROM_START     0      //define 256 in DRD/MRD
+  #else
+    #if (EEPROM_START + FLAG_DATA_SIZE + CONFIG_DATA_SIZE + FORCED_CONFIG_PORTAL_FLAG_DATA_SIZE > EEPROM_SIZE)
+      #error EPROM_START + FLAG_DATA_SIZE + CONFIG_DATA_SIZE + FORCED_CONFIG_PORTAL_FLAG_DATA_SIZE > EEPROM_SIZE. Please adjust.
+    #endif
+  #endif
 
-    // Stating positon to store ESP_WM_LITE_config
-#define CONFIG_EEPROM_START    (EEPROM_START + FLAG_DATA_SIZE)
+  // Stating positon to store ESP_WM_LITE_config
+  #define CONFIG_EEPROM_START    (EEPROM_START + FLAG_DATA_SIZE)
 
     //////////////////////////////////////////////
 
@@ -2125,6 +2149,7 @@ class ESPAsync_WiFiManager_Lite
       EEPROM.put(CONFIG_EEPROM_START + CONFIG_DATA_SIZE, readForcedConfigPortalFlag);
       EEPROM.commit();
     }
+    
     //////////////////////////////////////////////
 
     void clearForcedCP()
@@ -2467,7 +2492,7 @@ class ESPAsync_WiFiManager_Lite
       return true;
     }
 
-#endif
+#endif    // #if ( USE_LITTLEFS || USE_SPIFFS )
 
     //////////////////////////////////////////////
 
@@ -2931,8 +2956,8 @@ class ESPAsync_WiFiManager_Lite
     //////////////////////////////////////////////
 
 #ifndef CONFIG_TIMEOUT
-#warning Default CONFIG_TIMEOUT = 60s
-#define CONFIG_TIMEOUT      60000L
+  #warning Default CONFIG_TIMEOUT = 60s
+  #define CONFIG_TIMEOUT      60000L
 #endif
 
     void startConfigurationMode()
@@ -3001,11 +3026,13 @@ class ESPAsync_WiFiManager_Lite
         // CaptivePortal
         // if DNSServer is started with "*" for domain name, it will reply with provided IP to all DNS requests
         dnsServer->start(DNS_PORT, "*", portal_apIP);
-        // replay to all requests with same HTML
-        server->onNotFound([this](AsyncWebServerRequest *request)
+        
+        // reply to all requests with same HTML
+        server->onNotFound([this](AsyncWebServerRequest * request)
         {
           handleRequest(request);
         });
+        
         server->begin();
       }
 

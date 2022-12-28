@@ -16,6 +16,7 @@
 ## Table of Contents
 
 * [Changelog](#changelog)
+  * [Release v1.9.1](#release-v191)
   * [Release v1.9.0](#release-v190)
   * [Release v1.8.2](#release-v182)
   * [Release v1.8.1](#release-v181)
@@ -35,6 +36,13 @@
 
 
 ## Changelog
+
+
+### Release v1.9.1
+
+1. Add `Captive Portal` using AsyncDNSServer. Check [Captive portal #22](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/pull/22)
+2. Cleanup reset code. Check [cleanup reset code #23](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/pull/23)
+3. Periodical code clean-up
 
 ### Release v1.9.0
 
