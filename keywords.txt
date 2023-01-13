@@ -42,6 +42,8 @@ setCustomsHeadElement   KEYWORD2
 getCustomsHeadElement   KEYWORD2
 setCORSHeader   KEYWORD2
 getCORSHeader   KEYWORD2
+extLoadDynamicData  KEYWORD2
+extSaveDynamicData  KEYWORD2
 
 #######################################
 

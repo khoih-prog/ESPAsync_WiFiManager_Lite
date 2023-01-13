@@ -9,7 +9,7 @@
   Built by Khoi Hoang https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite
   Licensed under MIT license
 
-  Version: 1.9.1
+  Version: 1.10.1
 
   Version Modified By   Date        Comments
   ------- -----------  ----------   -----------
@@ -27,6 +27,7 @@
   1.8.2   K Hoang      21/02/2022  Optional Board_Name in Menu. Optimize code by using passing by reference
   1.9.0   K Hoang      09/09/2022  Fix ESP32 chipID and add getChipOUI()
   1.9.1   K Hoang      28/12/2022  Add Captive Portal using AsyncDNSServer
+  1.10.1  K Hoang      12/01/2023  Added public methods to load and save dynamic data. Bump up to v1.10.1
  *****************************************************************************************************************************/
 
 #pragma once
@@ -61,13 +62,13 @@
 ///////////////////////////////////////////
 
 #ifndef ESP_ASYNC_WIFI_MANAGER_LITE_VERSION
-  #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION             "ESPAsync_WiFiManager_Lite v1.9.1"
+  #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION             "ESPAsync_WiFiManager_Lite v1.10.1"
 
   #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION_MAJOR       1
-  #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION_MINOR       9
+  #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION_MINOR       10
   #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION_PATCH       1
 
-  #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION_INT         1009001
+  #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION_INT         1010001
 #endif
 
 ///////////////////////////////////////////
