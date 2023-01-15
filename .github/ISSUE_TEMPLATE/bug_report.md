@@ -38,7 +38,7 @@ If applicable, add screenshots to help explain your problem.
 Please ensure to specify the following:
 
 * Arduino IDE version (e.g. 1.8.19) or Platform.io version
-* `ESP8266` or `ESP32` Core Version (e.g. ESP8266 core v3.1.0 or ESP32 v2.0.6)
+* `ESP8266` or `ESP32` Core Version (e.g. ESP8266 core v3.1.1 or ESP32 v2.0.6)
 * Contextual information (e.g. what you were trying to achieve)
 * Simplest possible steps to reproduce
 * Anything that might be relevant in your opinion, such as:
@@ -53,7 +53,7 @@ Please be educated, civilized and constructive as you've always been. Disrespect
 
 ```
 Arduino IDE version: 1.8.19
-ESP8266 Core Version 3.1.0
+ESP8266 Core Version 3.1.1
 OS: Ubuntu 20.04 LTS
 Linux xy-Inspiron-3593 5.15.0-58-generic #64~20.04.1-Ubuntu SMP Fri Jan 6 16:42:31 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux
 
