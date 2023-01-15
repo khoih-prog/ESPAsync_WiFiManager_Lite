@@ -427,7 +427,7 @@ extern ESP_WM_LITE_Configuration defaultConfig;
 
 // -- HTML page fragments
 
-const char ESP_WM_LITE_HTML_HEAD_START[] /*PROGMEM*/ = "<!DOCTYPE html><html><head><title>ESP_ASYNC_WM_LITE</title>";
+const char ESP_WM_LITE_HTML_HEAD_START[] /*PROGMEM*/ = "<!DOCTYPE html><html><head><title>ESP_ASYNC_WM_LITE</title><meta name='viewport' content='width=device-width, initial-scale=1'>";
 
 const char ESP_WM_LITE_HTML_HEAD_STYLE[] /*PROGMEM*/ =
   "<style>div,input{padding:5px;font-size:1em;}input{width:95%;}body{text-align: center;}button{background-color:#16A1E7;color:#fff;line-height:2.4rem;font-size:1.2rem;width:100%;}fieldset{border-radius:0.3rem;margin:0px;}</style>";
@@ -1393,7 +1393,7 @@ class ESPAsync_WiFiManager_Lite
 #endif
 
 #if USING_CORS_FEATURE
-    const char* _CORS_Header        = WM_HTTP_CORS_ALLOW_ALL;   //"*";
+    const char* _CORS_Header        = WM_HTTP_CORS_ALLOW_ALL;   // "*";
 #endif
 
     //////////////////////////////////////
@@ -2656,6 +2656,7 @@ class ESPAsync_WiFiManager_Lite
 #endif
 
 #if SCAN_WIFI_NETWORKS
+
       ESP_WML_LOGDEBUG1(WiFiNetworksFound, F(" SSIDs found, generating HTML now"));
       // Replace HTML <input...> with <select...>, based on WiFi network scan in startConfigurationMode()
 
@@ -2683,9 +2684,7 @@ class ESPAsync_WiFiManager_Lite
       ESP_WML_LOGDEBUG1(F("pitem:"), pitem);
       pitem.replace("[[input_id1]]", "<input id='id1' list='SSIDs'>" + String(ESP_WM_LITE_DATALIST_START) + "'SSIDs'>" +
                     ListOfSSIDs + ESP_WM_LITE_DATALIST_END);
-
       ESP_WML_LOGDEBUG1(F("pitem:"), pitem);
-
 #else
       pitem.replace("[[input_id]]",  "<select id='id'>"  + ListOfSSIDs + ESP_WM_LITE_SELECT_END);
       pitem.replace("[[input_id1]]", "<select id='id1'>" + ListOfSSIDs + ESP_WM_LITE_SELECT_END);
