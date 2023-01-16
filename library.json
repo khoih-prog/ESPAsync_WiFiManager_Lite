@@ -25,21 +25,18 @@
   "dependencies": 
   [
     {
-      "owner": "me-no-dev",
       "name": "AsyncTCP",
-      "version": ">=1.1.1",
-      "platforms": ["espressif32"]
+      "version": "https://github.com/me-no-dev/AsyncTCP",
+      "platforms": [ "espressif32"]
     },
     {
-      "owner": "me-no-dev",
       "name": "ESPAsyncTCP",
-      "version": ">=1.2.2",
-      "platforms": ["espressif8266"]
+      "version": "https://github.com/khoih-prog/ESPAsyncTCP",
+      "platforms": [ "espressif8266"]
     },
     {
-      "owner": "me-no-dev",
       "name": "ESP Async WebServer",
-      "version": ">=1.2.3",
+      "version": "https://github.com/khoih-prog/ESPAsyncWebServer",
       "platforms": ["espressif8266", "espressif32"]
     },
     {
@@ -49,9 +46,8 @@
       "platforms": ["espressif8266"]
     },
     {
-      "owner": "devyte",
       "name": "ESPAsyncDNSServer",
-      "version": "^1.0.0",
+      "version": "https://github.com/khoih-prog/ESPAsyncDNSServer",
       "platforms": ["espressif8266", "espressif32"]
     },
     {
