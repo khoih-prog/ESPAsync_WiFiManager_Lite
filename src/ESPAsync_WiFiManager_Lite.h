@@ -1301,6 +1301,8 @@ class ESPAsync_WiFiManager_Lite
 
     bool extLoadDynamicData()
     {
+#if ( USE_LITTLEFS || USE_SPIFFS )
+
   #if ESP8266
       // SPIFFS and LittleFS do auto-format if not yet
       if (!FileFS.begin())
@@ -1314,12 +1316,20 @@ class ESPAsync_WiFiManager_Lite
       }
 
       return loadDynamicData();
+
+#else   // #if ( USE_LITTLEFS || USE_SPIFFS )
+
+      return EEPROM_getDynamicData();
+
+#endif   // #if ( USE_LITTLEFS || USE_SPIFFS )
     }
 
     //////////////////////////////////////////////
 
     void extSaveDynamicData()
     {
+#if ( USE_LITTLEFS || USE_SPIFFS )
+
   #if ESP8266
       // SPIFFS and LittleFS do auto-format if not yet
       if (!FileFS.begin())
@@ -1333,6 +1343,12 @@ class ESPAsync_WiFiManager_Lite
       }
 
       saveDynamicData();
+
+#else   // #if ( USE_LITTLEFS || USE_SPIFFS )
+
+      EEPROM_putDynamicData();
+
+#endif   // #if ( USE_LITTLEFS || USE_SPIFFS )
     }
 
 #endif
