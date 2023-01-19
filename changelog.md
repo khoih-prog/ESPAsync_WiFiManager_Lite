@@ -16,6 +16,7 @@
 ## Table of Contents
 
 * [Changelog](#changelog)
+  * [Release v1.10.3](#release-v1103)
   * [Release v1.10.2](#release-v1102)
   * [Release v1.10.1](#release-v1101)
   * [Release v1.9.1](#release-v191)
@@ -39,10 +40,14 @@
 
 ## Changelog
 
+### Release v1.10.3
+
+1. Fix compiler error if EEPROM is used. Check [fix compiler error if EEPROM is used #29](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/pull/29)
+2. Fix compiler error in PIO. Check [Unable to compile basic example for NodeMCU-32s #28](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/issues/28)
+
 ### Release v1.10.2
 
 1. Add Config Portal scaling support to mobile devices. Check [Mobile scale #26](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/pull/26)
-
 
 ### Release v1.10.1
 

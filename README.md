@@ -207,8 +207,8 @@ This [**ESPAsync_WiFiManager_Lite** library](https://github.com/khoih-prog/ESPAs
  1. [`Arduino IDE 1.8.19+` for Arduino](https://github.com/arduino/Arduino). [![GitHub release](https://img.shields.io/github/release/arduino/Arduino.svg)](https://github.com/arduino/Arduino/releases/latest)
  2. [`ESP8266 Core 3.1.1+`](https://github.com/esp8266/Arduino) for ESP8266-based boards. [![Latest release](https://img.shields.io/github/release/esp8266/Arduino.svg)](https://github.com/esp8266/Arduino/releases/latest/). To use ESP8266 core 2.7.1+ for LittleFS.
  3. [`ESP32 Core 2.0.6+`](https://github.com/espressif/arduino-esp32) for ESP32-based boards. [![Latest release](https://img.shields.io/github/release/espressif/arduino-esp32.svg)](https://github.com/espressif/arduino-esp32/releases/latest/)
- 4. [`ESPAsyncWebServer v1.2.3+`](https://github.com/me-no-dev/ESPAsyncWebServer) for all ESP32/ESP8266-based boards. You have to use the latest [forked ESPAsyncWebServer](https://github.com/khoih-prog/ESPAsyncWebServer) if the PR [Fix compiler error for ESP32-C3 and mbed TLS v2.7.0+ #970](https://github.com/me-no-dev/ESPAsyncWebServer/pull/970) hasn't been merged. **To install manually for Arduino IDE**
- 5. [`ESPAsyncDNSServer v1.0.0+`](https://github.com/devyte/ESPAsyncDNSServer) or [`ESPAsyncDNSServer v1.0.0+`](https://github.com/khoih-prog/ESPAsyncDNSServer/releases/tag/v1.0.0) for all ESP32/ESP8266-based boards.
+ 4. [Forked ESPAsyncWebServer](https://github.com/khoih-prog/ESPAsyncWebServer). **To install manually for Arduino IDE**
+ 5. [`ESPAsyncDNSServer v1.0.0+`](https://github.com/khoih-prog/ESPAsyncDNSServer/releases/tag/v1.0.0) for all ESP32/ESP8266-based boards.
  6. [`ESPAsyncTCP v1.2.2+`](https://github.com/me-no-dev/ESPAsyncTCP) for ESP8266-based boards. **To install manually, not via Arduino IDE Library Manager**
  7. [`AsyncTCP v1.1.1+`](https://github.com/me-no-dev/AsyncTCP) for ESP32-based boards. **To install manually, not via Arduino IDE Library Manager**
  8. [`ESP_DoubleResetDetector v1.3.2+`](https://github.com/khoih-prog/ESP_DoubleResetDetector) if using DRD feature. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/ESP_DoubleResetDetector.svg?)](https://www.ardu-badge.com/ESP_DoubleResetDetector).
@@ -837,7 +837,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```cpp
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
-ESPAsync_WiFiManager_Lite v1.10.2
+ESPAsync_WiFiManager_Lite v1.10.3
 ESP_MultiResetDetector v1.3.2
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -912,7 +912,7 @@ CCC
 
 
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
-ESPAsync_WiFiManager_Lite v1.10.2
+ESPAsync_WiFiManager_Lite v1.10.3
 ESP_MultiResetDetector v1.3.2
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1004,7 +1004,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```cpp
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP8266_NODEMCU
-ESPAsync_WiFiManager_Lite v1.10.2
+ESPAsync_WiFiManager_Lite v1.10.3
 ESP_MultiResetDetector v1.3.2
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1079,7 +1079,7 @@ CCC
 
 
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP8266_NODEMCU
-ESPAsync_WiFiManager_Lite v1.10.2
+ESPAsync_WiFiManager_Lite v1.10.3
 ESP_MultiResetDetector v1.3.2
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1170,7 +1170,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```cpp
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
-ESPAsync_WiFiManager_Lite v1.10.2
+ESPAsync_WiFiManager_Lite v1.10.3
 ESP_MultiResetDetector v1.3.2
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1283,7 +1283,7 @@ entry 0x4004c190
 
 
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
-ESPAsync_WiFiManager_Lite v1.10.2
+ESPAsync_WiFiManager_Lite v1.10.3
 ESP_MultiResetDetector v1.3.2
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1386,7 +1386,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```cpp
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
-ESPAsync_WiFiManager_Lite v1.10.2
+ESPAsync_WiFiManager_Lite v1.10.3
 ESP_MultiResetDetector v1.3.2
 LittleFS Flag read = 0xFFFC0003
 multiResetDetectorFlag = 0xFFFC0003
@@ -1429,7 +1429,7 @@ entry 0x4004c190
 
 ```cpp
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
-ESPAsync_WiFiManager_Lite v1.10.2
+ESPAsync_WiFiManager_Lite v1.10.3
 ESP_MultiResetDetector v1.3.2
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1485,7 +1485,7 @@ This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAs
 
 ```cpp
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
-ESPAsync_WiFiManager_Lite v1.10.2
+ESPAsync_WiFiManager_Lite v1.10.3
 ESP_MultiResetDetector v1.3.2
 LittleFS Flag read = 0xFFFC0003
 multiResetDetectorFlag = 0xFFFC0003
@@ -1530,7 +1530,7 @@ CCCC CCCCC CCCCC C
 
 ```cpp
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
-ESPAsync_WiFiManager_Lite v1.10.2
+ESPAsync_WiFiManager_Lite v1.10.3
 ESP_MultiResetDetector v1.3.2
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1577,7 +1577,7 @@ This is the terminal output when running [**ESPAsync_WiFi**](examples/ESPAsync_W
 
 ```cpp
 Starting ESPAsync_WiFi using LittleFS on ESP32S3_DEV
-ESPAsync_WiFiManager_Lite v1.10.2
+ESPAsync_WiFiManager_Lite v1.10.3
 ESP_MultiResetDetector v1.3.2
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1619,7 +1619,7 @@ This is the terminal output when running [**ESPAsync_WiFi**](examples/ESPAsync_W
 
 ```cpp
 Starting ESPAsync_WiFi using LittleFS on ESP32C3_DEV
-ESPAsync_WiFiManager_Lite v1.10.2
+ESPAsync_WiFiManager_Lite v1.10.3
 ESP_MultiResetDetector v1.3.2
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1752,17 +1752,20 @@ Please help contribute to this project and add your name here.
 
 1. Thanks to [Michael H. "bizprof"](https://github.com/bizprof). With the impressive new feature :
   - `Enable scan of WiFi networks for selection in Configuration Portal`. Check [PR for v1.3.0 - Enable scan of WiFi networks #10](https://github.com/khoih-prog/WiFiManager_NINA_Lite/pull/10) leading to v1.5.0
-2. Thanks to [Holger Müller](https://github.com/hmueller01) for creating the following merged PRs leading to `v1.9.1`, `v1.10.1`, then `v1.10.2`
+2. Thanks to [Holger Müller](https://github.com/hmueller01) for creating the following merged PRs leading to many new versions
   - [Captive portal #22](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/pull/22)
   - [cleanup reset code #23](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/pull/23)
   - [added public methods to load and save dynamic data #24](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/pull/24)
   - [Mobile scale #26](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/pull/26)
-  
+  - [fix compiler error if EEPROM is used #29](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/pull/29)
+3. Thanks to [securelpb](https://github.com/securelpb) for report issue, leading to `v1.10.3` to fix the problem with PIO
+  - [Unable to compile basic example for NodeMCU-32s #28](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/issues/28)
   
 <table>
   <tr>
     <td align="center"><a href="https://github.com/bizprof"><img src="https://github.com/bizprof.png" width="100px;" alt="bizprof"/><br /><sub><b>⭐️⭐️ Michael H. "bizprof"</b></sub></a><br /></td>
     <td align="center"><a href="https://github.com/hmueller01"><img src="https://github.com/hmueller01.png" width="100px;" alt="hmueller01"/><br /><sub><b>⭐️ Holger Müller</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/securelpb"><img src="https://github.com/securelpb.png" width="100px;" alt="securelpb"/><br /><sub><b>securelpb</b></sub></a><br /></td>
   </tr> 
 </table>
 
