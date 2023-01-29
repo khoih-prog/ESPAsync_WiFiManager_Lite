@@ -119,7 +119,6 @@ void check_status()
 
   //KH
 #define HEARTBEAT_INTERVAL    5000L
-
   // Print WiFi hearbeat, Publish MQTT Topic every HEARTBEAT_INTERVAL (5) seconds.
   if ((millis() > checkstatus_timeout) || (checkstatus_timeout == 0))
   {
@@ -290,16 +289,15 @@ void MQTT_connect()
 }
 
 #if USING_CUSTOMS_STYLE
-  const char NewCustomsStyle[] /*PROGMEM*/ =
-  "<style>div,input{padding:5px;font-size:1em;}input{width:95%;}body{text-align: center;}\
-  button{background-color:blue;color:white;line-height:2.4rem;font-size:1.2rem;width:100%;}fieldset{border-radius:0.3rem;margin:0px;}</style>";
+const char NewCustomsStyle[] PROGMEM =
+  "<style>div,input{padding:5px;font-size:1em;}input{width:95%;}body{text-align: center;}"\
+  "button{background-color:blue;color:white;line-height:2.4rem;font-size:1.2rem;width:100%;}fieldset{border-radius:0.3rem;margin:0px;}</style>";
 #endif
 
 void setup()
 {
   // Debug console
   Serial.begin(115200);
-
   while (!Serial);
 
   pinMode(LED_PIN, OUTPUT);
@@ -320,6 +318,12 @@ void setup()
 
   ESPAsync_WiFiManager = new ESPAsync_WiFiManager_Lite();
 
+  String AP_SSID = "your_customized_ssid";
+  String AP_PWD  = "your_customized_pwd";
+  
+  // Set customized AP SSID and PWD
+  ESPAsync_WiFiManager->setConfigPortal(AP_SSID, AP_PWD);
+
   // Optional to change default AP IP(192.168.4.1) and channel(10)
   //ESPAsync_WiFiManager->setConfigPortalIP(IPAddress(192, 168, 120, 1));
   ESPAsync_WiFiManager->setConfigPortalChannel(0);
@@ -329,16 +333,16 @@ void setup()
 #endif
 
 #if USING_CUSTOMS_HEAD_ELEMENT
-  ESPAsync_WiFiManager->setCustomsHeadElement("<style>html{filter: invert(10%);}</style>");
+  ESPAsync_WiFiManager->setCustomsHeadElement(PSTR("<style>html{filter: invert(10%);}</style>"));
 #endif
 
 #if USING_CORS_FEATURE
-  ESPAsync_WiFiManager->setCORSHeader("Your Access-Control-Allow-Origin");
+  ESPAsync_WiFiManager->setCORSHeader(PSTR("Your Access-Control-Allow-Origin"));
 #endif
 
   // Set customized DHCP HostName
   ESPAsync_WiFiManager->begin(HOST_NAME);
-  //Or use default Hostname "ESP-WiFiNINA-XXXXXX"
+  //Or use default Hostname "ESP_XXXXXX"
   //ESPAsync_WiFiManager->begin();
 }
 
