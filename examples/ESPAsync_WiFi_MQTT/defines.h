@@ -59,12 +59,15 @@
 
 // LittleFS has higher priority than SPIFFS
 #if ( defined(ESP_ARDUINO_VERSION_MAJOR) && (ESP_ARDUINO_VERSION_MAJOR >= 2) )
-  #define USE_LITTLEFS    true
-  #define USE_SPIFFS      false
+  #define USE_LITTLEFS          true
+  #define USE_SPIFFS            false
 #elif defined(ARDUINO_ESP32C3_DEV)
   // For core v1.0.6-, ESP32-C3 only supporting SPIFFS and EEPROM. To use v2.0.0+ for LittleFS
   #define USE_LITTLEFS          false
   #define USE_SPIFFS            true
+#else
+  #define USE_LITTLEFS          true
+  #define USE_SPIFFS            false  
 #endif
 
 /////////////////////////////////////////////
