@@ -56,8 +56,8 @@
     * [13.2 Interval between reconnection WiFi if lost](#132-interval-between-reconnection-wifi-if-lost)
   * [14. Not using Board_Name on Config_Portal](#14-Not-using-Board_Name-on-Config_Portal) 
 * [Examples](#examples)
-  * [ 1. ESPAsync_WiFi](examples/ESPAsync_WiFi)
-  * [ 2. ESPAsync_WiFi_MQTT](examples/ESPAsync_WiFi_MQTT)
+  * [ 1. ESPAsync_WiFi](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/tree/main/examples/ESPAsync_WiFi)
+  * [ 2. ESPAsync_WiFi_MQTT](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/tree/main/examples/ESPAsync_WiFi_MQTT)
 * [So, how it works?](#so-how-it-works)
 * [Important Notes](#important-notes)
 * [How to use default Credentials and have them pre-loaded onto Config Portal](#how-to-use-default-credentials-and-have-them-pre-loaded-onto-config-portal)
@@ -187,7 +187,7 @@ Thanks to this [ESPAsync_WiFiManager_Lite library](https://github.com/khoih-prog
 - ServeStatic plugin that supports cache, Last-Modified, default index and more
 - Simple template processing engine to handle templates
 
-To appreciate the power of the [ESPAsyncWebServer](https://github.com/me-no-dev/ESPAsyncWebServer) and underlying Async libraries, please compare the more efficient [Async_ESP32_FSWebServer example](examples/Async_ESP32_FSWebServer) example with the complicated twin [ESP32_FSWebServer](https://github.com/khoih-prog/ESP_WiFiManager/tree/master/examples/ESP32_FSWebServer).
+To appreciate the power of the [ESPAsyncWebServer](https://github.com/me-no-dev/ESPAsyncWebServer) and underlying Async libraries, please compare the more efficient [Async_ESP32_FSWebServer example](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/tree/main/examples/Async_ESP32_FSWebServer) example with the complicated twin [ESP32_FSWebServer](https://github.com/khoih-prog/ESP_WiFiManager/tree/master/examples/ESP32_FSWebServer).
 
 
 #### Currently supported Boards
@@ -313,8 +313,8 @@ Look in file [**adc_common.c**](https://github.com/espressif/esp-idf/blob/master
 
 ## How It Works
 
-- The [**ESPAsync_WiFi**](examples/ESPAsync_WiFi) example shows how it works and should be used as the basis for a sketch that uses this library.
-- The concept of [**ESPAsync_WiFi**](examples/ESPAsync_WiFi) is that a new `ESP32/ESP8266 WiFi` will start a WiFi configuration portal when powered up, but has no valid stored Credentials or can't connect to WiFi APs after a pre-determined time.
+- The [**ESPAsync_WiFi**](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/tree/main/examples/ESPAsync_WiFi) example shows how it works and should be used as the basis for a sketch that uses this library.
+- The concept of [**ESPAsync_WiFi**](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/tree/main/examples/ESPAsync_WiFi) is that a new `ESP32/ESP8266 WiFi` will start a WiFi configuration portal when powered up, but has no valid stored Credentials or can't connect to WiFi APs after a pre-determined time.
 - There are 6 more custom parameters added in the sketch which you can use in your program later. In the example, they are: 2 sets of Blynk Servers and Tokens, Blynk Port and MQTT Server.
 - Using any WiFi enabled device with a browser (computer, phone, tablet) connect to the newly created AP and type in the configurable AP IP address (default 192.168.4.1). The Config Portal AP channel (default 10) is also configurable to avoid conflict with other APs.
 - The Config Portal is **auto-adjusted** to fix the 4 static parameters (WiFi SSIDs/PWDs) as well as 6 more dynamic custom parameters.
@@ -523,8 +523,8 @@ https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/blob/2902e0bfbd5c61194a9
 
 ### Examples
 
- 1. [ESPAsync_WiFi](examples/ESPAsync_WiFi)
- 2. [ESPAsync_WiFi_MQTT](examples/ESPAsync_WiFi_MQTT)
+ 1. [ESPAsync_WiFi](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/tree/main/examples/ESPAsync_WiFi)
+ 2. [ESPAsync_WiFi_MQTT](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/tree/main/examples/ESPAsync_WiFi_MQTT)
 
 ---
 ---
@@ -587,7 +587,7 @@ If you're already connected to a listed WiFi AP and don't want to change anythin
 
 See this example and modify as necessary
 
-#### 1. To always load [Default Credentials](examples/ESPAsync_WiFi_MQTT/Credentials.h) and override Config Portal data
+#### 1. To always load [Default Credentials](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/tree/main/examples/ESPAsync_WiFi_MQTT/Credentials.h) and override Config Portal data
 
 ```cpp
 // Used mostly for development and debugging. FORCES default values to be loaded each run.
@@ -595,7 +595,7 @@ See this example and modify as necessary
 bool LOAD_DEFAULT_CONFIG_DATA = true;
 ```
 
-#### 2. To load [Default Credentials](examples/ESPAsync_WiFi_MQTT/Credentials.h) when there is no valid Credentials.
+#### 2. To load [Default Credentials](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/tree/main/examples/ESPAsync_WiFi_MQTT/Credentials.h) when there is no valid Credentials.
 
 Config Portal data input will be override DEFAULT_CONFIG_DATA
 
@@ -605,7 +605,7 @@ Config Portal data input will be override DEFAULT_CONFIG_DATA
 bool LOAD_DEFAULT_CONFIG_DATA = false;
 ```
 
-#### 3. Example of [Default Credentials](examples/ESPAsync_WiFi_MQTT/Credentials.h)
+#### 3. Example of [Default Credentials](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/tree/main/examples/ESPAsync_WiFi_MQTT/Credentials.h)
 
 ```cpp
 /// Start Default Config Data //////////////////
@@ -692,7 +692,7 @@ ESP_WM_LITE_Configuration defaultConfig;
 
 ### How to add dynamic parameters from sketch
 
-Example of [Default dynamicParams](examples/ESPAsync_WiFi_MQTT/dynamicParams.h)
+Example of [Default dynamicParams](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/tree/main/examples/ESPAsync_WiFi_MQTT/dynamicParams.h)
 
 - To add custom parameters, just modify the example below
 
@@ -794,34 +794,34 @@ Please be noted that the following **reserved names are already used in library*
 ---
 ---
 
-### Example [ESPAsync_WiFi](examples/ESPAsync_WiFi)
+### Example [ESPAsync_WiFi](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/tree/main/examples/ESPAsync_WiFi)
 
 Please take a look at other examples, as well.
 
-#### 1. File [ESPAsync_WiFi.ino](examples/ESPAsync_WiFi/ESPAsync_WiFi.ino)
+#### 1. File [ESPAsync_WiFi.ino](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/tree/main/examples/ESPAsync_WiFi/ESPAsync_WiFi.ino)
 
 
-https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/blob/2902e0bfbd5c61194a98d81da3a47e155c106138/examples/ESPAsync_WiFi/ESPAsync_WiFi.ino#L13-L150
+https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/blob/716c86cb91fe507cdd2bfa5d89f901c287a9b832/examples/ESPAsync_WiFi/ESPAsync_WiFi.ino#L13-L158
 
 
 ---
 
-#### 2. File [defines.h](examples/ESPAsync_WiFi/defines.h)
+#### 2. File [defines.h](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/tree/main/examples/ESPAsync_WiFi/defines.h)
 
-https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/blob/2902e0bfbd5c61194a98d81da3a47e155c106138/examples/ESPAsync_WiFi/defines.h#L13-L146
-
----
-
-#### 3. File [Credentials.h](examples/ESPAsync_WiFi/Credentials.h)
-
-https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/blob/2902e0bfbd5c61194a98d81da3a47e155c106138/examples/ESPAsync_WiFi/Credentials.h#L13-L100
+https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/blob/716c86cb91fe507cdd2bfa5d89f901c287a9b832/examples/ESPAsync_WiFi/defines.h#L13-L152
 
 ---
 
-#### 4. File [dynamicParams.h](examples/ESPAsync_WiFi/dynamicParams.h)
+#### 3. File [Credentials.h](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/tree/main/examples/ESPAsync_WiFi/Credentials.h)
+
+https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/blob/716c86cb91fe507cdd2bfa5d89f901c287a9b832/examples/ESPAsync_WiFi/Credentials.h#L13-L100
+
+---
+
+#### 4. File [dynamicParams.h](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/tree/main/examples/ESPAsync_WiFi/dynamicParams.h)
 
 
-https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/blob/2902e0bfbd5c61194a98d81da3a47e155c106138/examples/ESPAsync_WiFi/dynamicParams.h#L13-L74
+https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/blob/716c86cb91fe507cdd2bfa5d89f901c287a9b832/examples/ESPAsync_WiFi/dynamicParams.h#L13-L74
 
 ---
 ---
@@ -829,15 +829,15 @@ https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/blob/2902e0bfbd5c61194a9
 
 ### Debug Terminal output Samples
 
-### 1. [ESPAsync_WiFi_MQTT](examples/ESPAsync_WiFi_MQTT) on ESP32_DEV
+### 1. [ESPAsync_WiFi_MQTT](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/tree/main/examples/ESPAsync_WiFi_MQTT) on ESP32_DEV
 
-This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAsync_WiFi_MQTT) example on **ESP32_DEV**:
+This is the terminal output when running [**ESPAsync_WiFi_MQTT**](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/tree/main/examples/ESPAsync_WiFi_MQTT) example on **ESP32_DEV**:
 
 #### 1.1. No Config Data => Open Config Portal
 
 ```cpp
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
-ESPAsync_WiFiManager_Lite v1.10.3
+ESPAsync_WiFiManager_Lite v1.10.5
 ESP_MultiResetDetector v1.3.2
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -912,7 +912,7 @@ CCC
 
 
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
-ESPAsync_WiFiManager_Lite v1.10.3
+ESPAsync_WiFiManager_Lite v1.10.5
 ESP_MultiResetDetector v1.3.2
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -996,15 +996,15 @@ W TW
 
 ---
 
-### 2. [ESPAsync_WiFi_MQTT](examples/ESPAsync_WiFi_MQTT) on ESP8266_NODEMCU
+### 2. [ESPAsync_WiFi_MQTT](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/tree/main/examples/ESPAsync_WiFi_MQTT) on ESP8266_NODEMCU
 
-This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAsync_WiFi_MQTT) example on **ESP8266_NODEMCU**:
+This is the terminal output when running [**ESPAsync_WiFi_MQTT**](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/tree/main/examples/ESPAsync_WiFi_MQTT) example on **ESP8266_NODEMCU**:
 
 #### 2.1. No Config Data => Open Config Portal
 
 ```cpp
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP8266_NODEMCU
-ESPAsync_WiFiManager_Lite v1.10.3
+ESPAsync_WiFiManager_Lite v1.10.5
 ESP_MultiResetDetector v1.3.2
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1079,7 +1079,7 @@ CCC
 
 
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP8266_NODEMCU
-ESPAsync_WiFiManager_Lite v1.10.3
+ESPAsync_WiFiManager_Lite v1.10.5
 ESP_MultiResetDetector v1.3.2
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1162,15 +1162,15 @@ H
 
 ---
 
-### 3. [ESPAsync_WiFi_MQTT](examples/ESPAsync_WiFi_MQTT) on ESP32S2_DEV
+### 3. [ESPAsync_WiFi_MQTT](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/tree/main/examples/ESPAsync_WiFi_MQTT) on ESP32S2_DEV
 
-This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAsync_WiFi_MQTT) example on **ESP32S2_DEV**:
+This is the terminal output when running [**ESPAsync_WiFi_MQTT**](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/tree/main/examples/ESPAsync_WiFi_MQTT) example on **ESP32S2_DEV**:
 
 #### 3.1. No Config Data => Open Config Portal
 
 ```cpp
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
-ESPAsync_WiFiManager_Lite v1.10.3
+ESPAsync_WiFiManager_Lite v1.10.5
 ESP_MultiResetDetector v1.3.2
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1283,7 +1283,7 @@ entry 0x4004c190
 
 
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
-ESPAsync_WiFiManager_Lite v1.10.3
+ESPAsync_WiFiManager_Lite v1.10.5
 ESP_MultiResetDetector v1.3.2
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1377,16 +1377,16 @@ H
 
 ---
 
-### 4. [ESPAsync_WiFi_MQTT](examples/ESPAsync_WiFi_MQTT) on ESP32S2_DEV to demo MultiResetDetector
+### 4. [ESPAsync_WiFi_MQTT](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/tree/main/examples/ESPAsync_WiFi_MQTT) on ESP32S2_DEV to demo MultiResetDetector
 
-This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAsync_WiFi_MQTT) example on **ESP32S2_DEV**
+This is the terminal output when running [**ESPAsync_WiFi_MQTT**](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/tree/main/examples/ESPAsync_WiFi_MQTT) example on **ESP32S2_DEV**
 
 
 #### 4.1. MultiResetDetected => Open Config Portal
 
 ```cpp
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
-ESPAsync_WiFiManager_Lite v1.10.3
+ESPAsync_WiFiManager_Lite v1.10.5
 ESP_MultiResetDetector v1.3.2
 LittleFS Flag read = 0xFFFC0003
 multiResetDetectorFlag = 0xFFFC0003
@@ -1429,7 +1429,7 @@ entry 0x4004c190
 
 ```cpp
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32S2_DEV
-ESPAsync_WiFiManager_Lite v1.10.3
+ESPAsync_WiFiManager_Lite v1.10.5
 ESP_MultiResetDetector v1.3.2
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1477,15 +1477,15 @@ TWTWTWT
 
 ---
 
-### 5. [ESPAsync_WiFi_MQTT](examples/ESPAsync_WiFi_MQTT) on ESP32_DEV to demo WiFi Scan
+### 5. [ESPAsync_WiFi_MQTT](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/tree/main/examples/ESPAsync_WiFi_MQTT) on ESP32_DEV to demo WiFi Scan
 
-This is the terminal output when running [**ESPAsync_WiFi_MQTT**](examples/ESPAsync_WiFi_MQTT) example on **ESP32_DEV** with WiFi Scan for selection in Configuration Portal
+This is the terminal output when running [**ESPAsync_WiFi_MQTT**](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/tree/main/examples/ESPAsync_WiFi_MQTT) example on **ESP32_DEV** with WiFi Scan for selection in Configuration Portal
 
 #### 5.1 MRD/DRD => Open Config Portal
 
 ```cpp
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
-ESPAsync_WiFiManager_Lite v1.10.3
+ESPAsync_WiFiManager_Lite v1.10.5
 ESP_MultiResetDetector v1.3.2
 LittleFS Flag read = 0xFFFC0003
 multiResetDetectorFlag = 0xFFFC0003
@@ -1530,7 +1530,7 @@ CCCC CCCCC CCCCC C
 
 ```cpp
 Starting ESPAsync_WiFi_MQTT using LittleFS on ESP32_DEV
-ESPAsync_WiFiManager_Lite v1.10.3
+ESPAsync_WiFiManager_Lite v1.10.5
 ESP_MultiResetDetector v1.3.2
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1570,14 +1570,14 @@ TWTWTWTW TWTWTWTWTWTW
 
 ---
 
-### 6. [ESPAsync_WiFi](examples/ESPAsync_WiFi) on ESP32S3_DEV
+### 6. [ESPAsync_WiFi](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/tree/main/examples/ESPAsync_WiFi) on ESP32S3_DEV
 
 
-This is the terminal output when running [**ESPAsync_WiFi**](examples/ESPAsync_WiFi) example on **ESP32S3_DEV**
+This is the terminal output when running [**ESPAsync_WiFi**](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/tree/main/examples/ESPAsync_WiFi) example on **ESP32S3_DEV**
 
 ```cpp
 Starting ESPAsync_WiFi using LittleFS on ESP32S3_DEV
-ESPAsync_WiFiManager_Lite v1.10.3
+ESPAsync_WiFiManager_Lite v1.10.5
 ESP_MultiResetDetector v1.3.2
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1611,15 +1611,15 @@ H
 
 ---
 
-### 7. [ESPAsync_WiFi](examples/ESPAsync_WiFi) on ESP32C3_DEV using LittleFS
+### 7. [ESPAsync_WiFi](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/tree/main/examples/ESPAsync_WiFi) on ESP32C3_DEV using LittleFS
 
 
-This is the terminal output when running [**ESPAsync_WiFi**](examples/ESPAsync_WiFi) example on **ESP32C3_DEV** using LittleFS
+This is the terminal output when running [**ESPAsync_WiFi**](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/tree/main/examples/ESPAsync_WiFi) example on **ESP32C3_DEV** using LittleFS
 
 
 ```cpp
 Starting ESPAsync_WiFi using LittleFS on ESP32C3_DEV
-ESPAsync_WiFiManager_Lite v1.10.3
+ESPAsync_WiFiManager_Lite v1.10.5
 ESP_MultiResetDetector v1.3.2
 LittleFS Flag read = 0xFFFE0001
 multiResetDetectorFlag = 0xFFFE0001
@@ -1741,7 +1741,9 @@ Submit issues to: [ESPAsync_WiFiManager_Lite issues](https://github.com/khoih-pr
 36. Add `Captive Portal` using AsyncDNSServer
 37. Add public methods to load and save dynamic data
 38. Add Config Portal `scaling` support to mobile devices
-
+39. Using PROGMEM for strings
+40. Default LittleFS for ESP8266 in examples
+41. Improve `README.md` so that links can be used in other sites, such as `PIO`
 
 ---
 ---
@@ -1758,13 +1760,15 @@ Please help contribute to this project and add your name here.
   - [added public methods to load and save dynamic data #24](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/pull/24)
   - [Mobile scale #26](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/pull/26)
   - [fix compiler error if EEPROM is used #29](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/pull/29)
+  - [implement PROGMEM strings, alignment with ESP_WiFiManager_Lite #31](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/pull/31)
+  - [Example fixes #32](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/pull/32)
 3. Thanks to [securelpb](https://github.com/securelpb) for report issue, leading to `v1.10.3` to fix the problem with PIO
   - [Unable to compile basic example for NodeMCU-32s #28](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/issues/28)
   
 <table>
   <tr>
     <td align="center"><a href="https://github.com/bizprof"><img src="https://github.com/bizprof.png" width="100px;" alt="bizprof"/><br /><sub><b>⭐️⭐️ Michael H. "bizprof"</b></sub></a><br /></td>
-    <td align="center"><a href="https://github.com/hmueller01"><img src="https://github.com/hmueller01.png" width="100px;" alt="hmueller01"/><br /><sub><b>⭐️ Holger Müller</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/hmueller01"><img src="https://github.com/hmueller01.png" width="100px;" alt="hmueller01"/><br /><sub><b>⭐️⭐️ Holger Müller</b></sub></a><br /></td>
     <td align="center"><a href="https://github.com/securelpb"><img src="https://github.com/securelpb.png" width="100px;" alt="securelpb"/><br /><sub><b>securelpb</b></sub></a><br /></td>
   </tr> 
 </table>

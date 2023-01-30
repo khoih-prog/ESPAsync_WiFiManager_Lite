@@ -16,6 +16,7 @@
 ## Table of Contents
 
 * [Changelog](#changelog)
+  * [Release v1.10.5](#release-v1105)
   * [Release v1.10.3](#release-v1103)
   * [Release v1.10.2](#release-v1102)
   * [Release v1.10.1](#release-v1101)
@@ -39,6 +40,14 @@
 
 
 ## Changelog
+
+### Release v1.10.5
+
+1. Using PROGMEM for strings in examples. Check [Example fixes #32](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/pull/32)
+2. Using PROGMEM for HTML strings. Check [implement PROGMEM strings, alignment with ESP_WiFiManager_Lite #31](https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite/pull/31)
+3. Default LittleFS for ESP8266 in examples
+4. Improve `README.md` so that links can be used in other sites, such as `PIO`
+5. Sync with `ESP_WiFiManager_Lite` v1.10.5
 
 ### Release v1.10.3
 

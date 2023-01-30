@@ -9,7 +9,7 @@
   Built by Khoi Hoang https://github.com/khoih-prog/ESPAsync_WiFiManager_Lite
   Licensed under MIT license
 
-  Version: 1.10.3
+  Version: 1.10.5
 
   Version Modified By   Date        Comments
   ------- -----------  ----------   -----------
@@ -30,6 +30,7 @@
   1.10.1  K Hoang      12/01/2023  Added public methods to load and save dynamic data. Bump up to v1.10.1
   1.10.2  K Hoang      15/01/2023  Add Config Portal scaling support to mobile devices
   1.10.3  K Hoang      19/01/2023  Fix compiler error if EEPROM is used
+  1.10.5  K Hoang      29/01/2023  Using PROGMEM for strings. Sync with ESP_WiFiManager_Lite v1.10.5
  *****************************************************************************************************************************/
 
 #pragma once
@@ -64,13 +65,13 @@
 ///////////////////////////////////////////
 
 #ifndef ESP_ASYNC_WIFI_MANAGER_LITE_VERSION
-  #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION             "ESPAsync_WiFiManager_Lite v1.10.3"
+  #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION             "ESPAsync_WiFiManager_Lite v1.10.5"
 
   #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION_MAJOR       1
   #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION_MINOR       10
-  #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION_PATCH       3
+  #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION_PATCH       5
 
-  #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION_INT         1010003
+  #define ESP_ASYNC_WIFI_MANAGER_LITE_VERSION_INT         1010005
 #endif
 
 ///////////////////////////////////////////
